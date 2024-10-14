@@ -1,0 +1,67 @@
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .logo {
+    width: 300px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .app-name {
+    color: #3B82F6;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  .tagline, .app-title {
+    font-size: 24px;
+    margin: 5px 0;
+  }
+  
+  .app-title {
+    font-weight: bold;
+  }
+  
+  .description {
+    max-width: 400px;
+    margin: 20px 0;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .sign-in, .sign-up {
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    position: relative;
+    top: 0;
+    box-shadow: 0 2px 0 #DC2626;
+    -webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+    -ms-transition: all 0.1s ease;
+    -o-transition: all 0.1s ease;
+}
+  
+  .sign-in:hover, .sign-up:hover {
+    background-color: #DC2626;
+  }
+  
+  .sign-in:active, .sign-up:active {
+    top: 2px;
+    box-shadow: none;
+  }
