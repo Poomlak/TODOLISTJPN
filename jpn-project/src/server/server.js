@@ -19,7 +19,7 @@ db.connect((err) => {
         console.error('Database connection failed:', err);
         return;
     }
-    console.log('Connected to the database.');
+    console.log('Connected to the database..');
 });
 
 
