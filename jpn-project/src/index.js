@@ -4,14 +4,14 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import Home from "./Home";
-import Navbar from "./Navbar";
+import Navbar from "./navbars/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; // สำหรับใช้งาน JavaScript ของ Bootstrap เช่น dropdown, collapse
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Navbar />
+    <Navbar/>
     <App />
   </React.StrictMode>
 );
