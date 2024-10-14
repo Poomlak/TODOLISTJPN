@@ -1,5 +1,5 @@
 import React from "react";
-import jpnLogo from './jpn_logo.png';
+import jpnLogo from './navbars/jpn_logo.png';
 import './Home.css';
 
 const Home = () => {
