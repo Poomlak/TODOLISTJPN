@@ -1,8 +1,13 @@
-import React from 'react';
-import './Navbar.css';
-import jpnLogo from './jpn_logo.png'; 
-
+import React from "react";
+import "./Navbar.css";
+import jpnLogo from "./jpn_logo.png";
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
+
+  const goSignIn = () => {
+    navigate("/signin");
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div className="container-fluid">
@@ -13,25 +18,44 @@ const Navbar = () => {
             <div className="brand-text-sub">(JPN Todolist)</div>
           </div>
         </a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+        <div
+          className="collapse navbar-collapse justify-content-center"
+          id="navbarNav"
+        >
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="/">Home</a>
+              <a className="nav-link" href="/">
+                Home
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/about">About Us</a>
+              <a className="nav-link" href="/about">
+                About Us
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/todo">Todo</a>
+              <a className="nav-link" href="/todo">
+                Todo
+              </a>
             </li>
           </ul>
         </div>
         <div className="navbar-nav">
           <button className="btn btn-sign-up">Sign Up</button>
-          <button className="btn btn-sign-in">Sign In</button>
+          <button className="btn btn-sign-in" onClick={goSignIn}>
+            Sign In
+          </button>
         </div>
       </div>
     </nav>
