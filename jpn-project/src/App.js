@@ -9,8 +9,6 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <h1>JPN Todolist</h1>
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<Signin />} />
