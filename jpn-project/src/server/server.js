@@ -53,6 +53,26 @@ app.get('/server/serverTest', (req, res) => {
     });
 }); 
 
+app.post('/signup', (req, res) => {
+    const { fname, lname, birthday, email, tel, username, password } = req.body;
+  
+    
+    if (!fname || !lname || !birthday || !email || !tel || !username || !password) {
+      return res.status(400).send('Missing required fields');
+    }
+  
+    const query = 'INSERT INTO member_id (member_fname, member_lname, member_birthday, member_email, member_tel, member_username, member_password) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  
+    db.query(query, [fname, lname, birthday, email, tel, username, password], (err, result) => {
+      if (err) {
+        console.error('MySQL Error:', err); 
+        return res.status(500).send('Error inserting member');
+      }
+      res.status(200).send('Member registered successfully');
+    });
+  });
+  
+
 // Start the server
 app.listen(port, () => {
     console.log('Listening on port', "http://localhost:"+port ,"ใส่ข้างหลังต่อด้วยดูว่าข้อมูลมีไหม");
