@@ -1,71 +1,107 @@
-.center-content {
+.signin-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
-  text-align: center;
-  padding: 20px;
+  min-height: 76vh;
+  background-color: #ffffff;
 }
 
-.logo {
-  width: 300px;
-  height: auto;
-  margin-bottom: 10px;
+.signin-form {
+  padding: 2rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.app-name {
-  color: #3b82f6;
-  font-size: 36px;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-.tagline,
-.app-title {
-  font-size: 24px;
-  margin: 5px 0;
-}
-
-.app-title {
-  font-weight: bold;
-}
-
-.description {
-  max-width: 400px;
-  margin: 20px 0;
-}
-
-.buttons {
+.logo-container {
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
-.sign-in,
-.sign-up {
+.jpn-logo {
+  width: 10rem;
+  height: 10rem;
+}
+
+.signin-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+}
+
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.signin-button {
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.signin-button:hover {
+  background-color: #2563eb;
+}
+
+.sign_up{
+  padding: 0.5rem 1rem;
   background-color: #ef4444;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.1s ease;
-  position: relative;
-  top: 0;
-  box-shadow: 0 2px 0 #dc2626;
-  -webkit-transition: all 0.1s ease;
-  -moz-transition: all 0.1s ease;
-  -ms-transition: all 0.1s ease;
-  -o-transition: all 0.1s ease;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+    
 }
-
-.sign-in:hover,
-.sign-up:hover {
+.sign_up:hover {
   background-color: #dc2626;
 }
 
-.sign-in:active,
-.sign-up:active {
-  top: 2px;
-  box-shadow: none;
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
+
+.password-container input {
+  flex-grow: 1;
+}
+
+.toggle-password-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.password-toggle-icon {
+  width: 24px;
+  height: 24px;
+}
+
+

@@ -64,73 +64,56 @@ const Signup = () => {
         <img src={jpnLogo} alt="JPN Todolist Logo" className="logo" />
         <h1 className="app-title">Create an account</h1>
       </div>
+
       <div className="form-container">
-        <form className="signup-form" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="First Name"
-            name="fname"
-            value={formData.fname}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            name="lname"
-            value={formData.lname}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="date"
-            placeholder="Birthday"
-            name="birthday"
-            value={formData.birthday}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            placeholder="E-mail"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="tel"
-            placeholder="Telephone"
-            name="tel"
-            value={formData.tel}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Re-password"
-            name="rePassword"
-            value={formData.rePassword}
-            onChange={handleChange}
-            required
-          />
-          <button className="sign-up" type="submit">Sign Up</button>
+        <form className="signup-form">
+          <div className="input-group">
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="repassword">Re-password:</label>
+            <input
+              type="password"
+              id="repassword"
+              placeholder="Re-enter your password"
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="birthday">Birthday:</label>
+            <input type="date" id="birthday" />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="email">E-mail:</label>
+            <input type="email" id="email" placeholder="Enter your email" />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="telephone">Telephone:</label>
+            <input
+              type="tel"
+              id="telephone"
+              placeholder="Enter your phone number"
+            />
+          </div>
+
+          <button className="sign-up">Sign Up</button>
         </form>
       </div>
     </div>
