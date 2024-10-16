@@ -66,13 +66,43 @@ const Signup = () => {
       </div>
 
       <div className="form-container">
-        <form className="signup-form">
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="fname">First Name:</label>
+            <input
+              type="text"
+              id="fname"
+              name="fname"
+              value={formData.fname}
+              onChange={handleChange}
+              placeholder="Enter your first name"
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="lname">Last Name:</label>
+            <input
+              type="text"
+              id="lname"
+              name="lname"
+              value={formData.lname}
+              onChange={handleChange}
+              placeholder="Enter your last name"
+              required
+            />
+          </div>
+
           <div className="input-group">
             <label htmlFor="username">Username:</label>
             <input
               type="text"
               id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
               placeholder="Enter your username"
+              required
             />
           </div>
 
@@ -81,39 +111,66 @@ const Signup = () => {
             <input
               type="password"
               id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Enter your password"
+              required
             />
           </div>
 
           <div className="input-group">
-            <label htmlFor="repassword">Re-password:</label>
+            <label htmlFor="rePassword">Re-password:</label>
             <input
               type="password"
-              id="repassword"
+              id="rePassword"
+              name="rePassword"
+              value={formData.rePassword}
+              onChange={handleChange}
               placeholder="Re-enter your password"
+              required
             />
           </div>
 
           <div className="input-group">
             <label htmlFor="birthday">Birthday:</label>
-            <input type="date" id="birthday" />
+            <input
+              type="date"
+              id="birthday"
+              name="birthday"
+              value={formData.birthday}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="input-group">
             <label htmlFor="email">E-mail:</label>
-            <input type="email" id="email" placeholder="Enter your email" />
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="telephone">Telephone:</label>
             <input
-              type="tel"
-              id="telephone"
-              placeholder="Enter your phone number"
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              required
             />
           </div>
 
-          <button className="sign-up">Sign Up</button>
+          <div className="input-group">
+            <label htmlFor="tel">Telephone:</label>
+            <input
+              type="tel"
+              id="tel"
+              name="tel"
+              value={formData.tel}
+              onChange={handleChange}
+              placeholder="Enter your phone number"
+              required
+            />
+          </div>
+
+          <button className="sign-up" type="submit">Sign Up</button>
         </form>
       </div>
     </div>
