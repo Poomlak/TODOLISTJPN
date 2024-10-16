@@ -1,21 +1,44 @@
 import React from "react";
-import jpnLogo from "../navbars/jpn_logo.png";
 import "./Aboutus.css";
+import neww from "./6430300480.jpg";
+import jame from "./6430300633.jpg";
+import poom from "./6430300749.jpg";
 
 const Aboutus = () => {
+  const profiles = [
+    { img: neww, name: "นายน่านฟ้า สุทธิภูล", id: "6430300480" },
+    { img: jame, name: "นายพัชรพล ขจรกลิ่น", id: "6430300633" },
+    { img: poom, name: "นายภูมิลักษณ์ พรหมดนตรี", id: "6430300749" },
+  ];
+
+  const getNameStyle = (name) => {
+    if (name === "นายภูมิลักษณ์ พรหมดนตรี") {
+      return { fontSize: "1.1rem" };
+    }
+    return {};
+  };
+
   return (
-    <div className="center-content">
-      <h1>About us หน้าสมาชิก</h1>
-      {/* <img src={jpnLogo} alt="JPN Todolist Logo" className="logo" />
-      <h2 className="tagline">ควบคุมการจัดตารางเวลาง่ายๆโดยใช้</h2>
-      <h2 className="app-title">JPN Todolist</h2>
-      <p className="description">
-        Become focused, organized, and calm with todo app. The World's #1 task manager app.
-      </p>
-      <div className="buttons">
-        <button className="sign-in">Sign In</button>
-        <button className="sign-up">Sign Up</button>
-      </div> */}
+    <div className="aboutus-container">
+      <h1 className="aboutus-title">About us</h1>
+      <div className="profiles">
+        {profiles.map((profile, index) => (
+          <div key={index} className="profile">
+            <div className="profile-image-container">
+              <img src={profile.img} alt={profile.name} className="profile-image" />
+            </div>
+            <div className="profile-info">
+              <h2 
+                className="profile-name"
+                style={getNameStyle(profile.name)}
+              >
+                {profile.name}
+              </h2>
+              <p className="profile-id">{profile.id}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
