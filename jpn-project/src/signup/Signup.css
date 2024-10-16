@@ -1,0 +1,78 @@
+.container-signup {
+  display: flex;
+  align-items: flex-start; /* จัดรูปและฟอร์มให้อยู่ต้นบรรทัดเดียวกัน */
+  justify-content: space-evenly; /* กระจายรูปภาพและฟอร์ม */
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+  gap: 50px; /* ระยะห่างระหว่างรูปกับฟอร์ม */
+  padding-top: 10%;
+  /* padding-left: 15%; */
+}
+
+.logo-and-title {
+  display: flex;
+  flex-direction: column; /* จัดรูปภาพและหัวข้อให้อยู่ในแนวตั้ง */
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.logo {
+  width: 300px;
+  height: auto;
+}
+
+.app-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 400px; /* กำหนดความกว้างสูงสุดของฟอร์ม */
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+}
+
+.signup-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.signup-form input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+.sign-up {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 0 #dc2626;
+}
+
+.sign-up:hover {
+  background-color: #dc2626;
+}
+
+.sign-up:active {
+  top: 2px;
+  box-shadow: none;
+}

@@ -8,6 +8,13 @@ const Navbar = () => {
   const goSignIn = () => {
     navigate("/signin");
   };
+  const goSignup = () => {
+    navigate("/signup");
+  };
+  // const goAboutus = () => {
+  //   navigate("/aboutus");
+  // };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div className="container-fluid">
@@ -40,7 +47,7 @@ const Navbar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/about">
+              <a className="nav-link" href="/aboutus">
                 About Us
               </a>
             </li>
@@ -52,7 +59,9 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-nav">
-          <button className="btn btn-sign-up">Sign Up</button>
+          <button className="btn btn-sign-up" onClick={goSignup}>
+            Sign Up
+          </button>
           <button className="btn btn-sign-in" onClick={goSignIn}>
             Sign In
           </button>
