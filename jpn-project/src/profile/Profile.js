@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
+
 const Profile = () => {
   const [profile, setProfile] = useState({
     username: "",
@@ -50,107 +52,115 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile-container">
-      <h1>สวัสดี , {profile.username}</h1>
+    <>
+      <NavbartodomainAndprofile />
+      <div className="profile-container">
+        <h1>สวัสดี , {profile.username}</h1>
 
-      <div className="profile-image">
-        <img
-          src={image || "https://via.placeholder.com/150"}
-          alt="Profile"
-          className="profile-picture"
-        />
-        {isEditing && (
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="upload-button"
+        <div className="profile-image">
+          <img
+            src={image || "https://via.placeholder.com/150"}
+            alt="Profile"
+            className="profile-picture"
           />
-        )}
-      </div>
-
-      <div className="profile-details">
-        <div className="input-group">
-          <label>Username :</label>
-          <input
-            type="text"
-            name="username"
-            value={profile.username}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-          />
+          {isEditing && (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="upload-button"
+            />
+          )}
         </div>
 
-        <div className="input-group">
-          <label>Password :</label>
-          <div className="password-field">
+        <div className="profile-details">
+          <div className="input-group">
+            <label htmlFor="username">Username :</label>
             <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={profile.password}
+              type="text"
+              id="username"
+              name="username"
+              value={profile.username}
               onChange={handleInputChange}
               readOnly={!isEditing}
             />
-            <span
-              onClick={togglePasswordVisibility}
-              className="password-toggle"
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="password">Password :</label>
+            <div className="password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={profile.password}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+              />
+              <span
+                onClick={togglePasswordVisibility}
+                className="password-toggle"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="birthday">Birthday :</label>
+            <input
+              type="text"
+              id="birthday"
+              name="birthday"
+              value={profile.birthday}
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="email">E-mail :</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={profile.email}
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="tel">Telephone :</label>
+            <input
+              type="text"
+              id="tel"
+              name="telephone"
+              value={profile.telephone}
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+            />
           </div>
         </div>
 
-        <div className="input-group">
-          <label>Birthday :</label>
-          <input
-            type="text"
-            name="birthday"
-            value={profile.birthday}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>E-mail :</label>
-          <input
-            type="email"
-            name="email"
-            value={profile.email}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Telephone :</label>
-          <input
-            type="text"
-            name="telephone"
-            value={profile.telephone}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-          />
+        <div className="profile-buttons">
+          {isEditing ? (
+            <>
+              <button className="btn save" onClick={handleSave}>
+                บันทึก
+              </button>
+              <button className="btn back" onClick={() => setIsEditing(false)}>
+                ย้อนกลับ
+              </button>
+            </>
+          ) : (
+            <button className="btn edit" onClick={() => setIsEditing(true)}>
+              แก้ไข
+            </button>
+          )}
         </div>
       </div>
-
-      <div className="profile-buttons">
-        {isEditing ? (
-          <>
-            <button className="btn save" onClick={handleSave}>
-              บันทึก
-            </button>
-            <button className="btn back" onClick={() => setIsEditing(false)}>
-              ย้อนกลับ
-            </button>
-          </>
-        ) : (
-          <button className="btn edit" onClick={() => setIsEditing(true)}>
-            แก้ไข
-          </button>
-        )}
-      </div>
-    </div>
+    </>
   );
 };
 
