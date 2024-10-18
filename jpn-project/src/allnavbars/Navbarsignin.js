@@ -45,7 +45,7 @@ const Navbarsignin = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/todo">
+              <a className="nav-link" href="/menutodo">
                 Todo
               </a>
             </li>
