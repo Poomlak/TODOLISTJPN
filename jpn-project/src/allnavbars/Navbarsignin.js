@@ -1,17 +1,13 @@
 import React from "react";
-import "../navbars/Navbar.css";
+import "./Navbarsignin.css";
 import jpnLogo from "./jpn_logo.png";
 import { useNavigate } from "react-router-dom";
-const Navbarsignup = () => {
+const Navbarsignin = () => {
   const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
 
-  const goSignin = () => {
-    navigate("/signin");
+  const goSignup = () => {
+    navigate("/signup");
   };
-  // const goAboutus = () => {
-  //   navigate("/aboutus");
-  // };
-
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div className="container-fluid">
@@ -56,8 +52,8 @@ const Navbarsignup = () => {
           </ul>
         </div>
         <div className="navbar-nav">
-          <button className="btn btn-sign-in" onClick={goSignin}>
-            Sign in
+          <button className="btn btn-sign-up" onClick={goSignup}>
+            Sign Up
           </button>
         </div>
       </div>
@@ -65,4 +61,4 @@ const Navbarsignup = () => {
   );
 };
 
-export default Navbarsignup;
+export default Navbarsignin;

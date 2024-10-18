@@ -8,12 +8,12 @@ import Todomain from "./todomain/Todomain";
 import Profile from "./profile/Profile";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Navbar from "./navbars/Navbar";
+import Navbarsignup from "./allnavbars/Navbarsignup";
 import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<Signin />} />

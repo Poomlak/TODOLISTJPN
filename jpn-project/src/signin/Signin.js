@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import jpnLogo from "../navbars/jpn_logo.png";
 import "./Signin.css";
 import axios from "axios";
+import Navbarsignin from "../allnavbars/Navbarsignin";
 
 const Signin = () => {
   const [formData, setFormData] = useState({
@@ -36,6 +37,8 @@ const Signin = () => {
   };
 
   return (
+    <>
+    <Navbarsignin/>
     <div className="signin-container">
       <div className="signin-form">
         <div className="logo-container">
@@ -95,6 +98,7 @@ const Signin = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 
