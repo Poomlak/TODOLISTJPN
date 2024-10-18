@@ -11,6 +11,7 @@ import Resetpass from "./signin/Resetpass";
 import "./App.css";
 import NavbartodomainAndprofile from "./allnavbars/Navbartodomain&profile";
 import Navbarmenutodo from "./allnavbars/Navbarmenutodo";
+import Menutodo from './menutodo/menutodo';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/todomain" element={<Todomain />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/resetpass" element={<Resetpass />} />
+        <Route path="/menutodo" element={<Menutodo />} />
       </Routes>
     </BrowserRouter>
   );

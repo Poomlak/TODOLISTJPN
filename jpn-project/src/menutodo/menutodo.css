@@ -1,0 +1,55 @@
+.menu-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: white;
+}
+
+.list-container {
+    padding: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.list-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+.create-button {
+    background-color: #F5DEB3; /* สีพื้นหลังแบบ beige */
+    border: none;
+    padding: 15px 20px;
+    border-radius: 25px; /* ทำให้มีความโค้งมน */
+    font-size: 16px;
+    color: #000;
+    cursor: pointer;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* เพิ่มเงา */
+    transition: all 0.3s ease;
+}
+
+.create-button:hover {
+    background-color: #DEB887; /* สีเข้มขึ้นเมื่อ hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+/* ปรับให้รองรับหน้าจอขนาดต่างๆ */
+@media (max-width: 768px) {
+    .list-container {
+        padding: 20px;
+    }
+    
+    .create-button {
+        font-size: 14px;
+        padding: 12px 16px;
+    }
+}
