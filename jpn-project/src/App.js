@@ -7,8 +7,7 @@ import Todo from "./todo/Todo";
 import Todomain from "./todomain/Todomain";
 import Profile from "./profile/Profile";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-import Navbar from "./navbars/Navbar";
-import Navbarsignup from "./allnavbars/Navbarsignup";
+import Resetpass from "./signin/Resetpass";
 import "./App.css";
 import NavbartodomainAndprofile from "./allnavbars/Navbartodomain&profile";
 
@@ -23,6 +22,7 @@ function App() {
         <Route path="/todo" element={<Todo />} />
         <Route path="/todomain" element={<Todomain />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/resetpass" element={<Resetpass />} />
       </Routes>
     </BrowserRouter>
   );

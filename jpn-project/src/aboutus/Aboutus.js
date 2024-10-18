@@ -3,6 +3,7 @@ import "./Aboutus.css";
 import neww from "./6430300480.jpg";
 import jame from "./6430300633.jpg";
 import poom from "./6430300749.jpg";
+import Navbaraboutus from "../allnavbars/Navbarsaboutus";
 
 const Aboutus = () => {
   const profiles = [
@@ -19,27 +20,31 @@ const Aboutus = () => {
   };
 
   return (
-    <div className="aboutus-container">
-      <h1 className="aboutus-title">About us</h1>
-      <div className="profiles">
-        {profiles.map((profile, index) => (
-          <div key={index} className="profile">
-            <div className="profile-image-container">
-              <img src={profile.img} alt={profile.name} className="profile-image" />
+    <>
+      <Navbaraboutus />
+      <div className="aboutus-container">
+        <h1 className="aboutus-title">About us</h1>
+        <div className="profiles">
+          {profiles.map((profile, index) => (
+            <div key={index} className="profile">
+              <div className="profile-image-container">
+                <img
+                  src={profile.img}
+                  alt={profile.name}
+                  className="profile-image"
+                />
+              </div>
+              <div className="profile-info">
+                <h2 className="profile-name" style={getNameStyle(profile.name)}>
+                  {profile.name}
+                </h2>
+                <p className="profile-id">{profile.id}</p>
+              </div>
             </div>
-            <div className="profile-info">
-              <h2 
-                className="profile-name"
-                style={getNameStyle(profile.name)}
-              >
-                {profile.name}
-              </h2>
-              <p className="profile-id">{profile.id}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
