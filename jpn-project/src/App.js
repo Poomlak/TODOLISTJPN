@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Resetpass from "./signin/Resetpass";
 import "./App.css";
 import NavbartodomainAndprofile from "./allnavbars/Navbartodomain&profile";
+import Navbarmenutodo from "./allnavbars/Navbarmenutodo";
 
 function App() {
   return (
