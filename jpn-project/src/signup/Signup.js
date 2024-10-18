@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import jpnLogo from "../navbars/jpn_logo.png";
 import "./Signup.css";
 import axios from "axios";
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -20,42 +21,78 @@ const Signup = () => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // ตรวจสอบว่ารหัสผ่านตรงกัน
     if (formData.password !== formData.rePassword) {
-      alert('Passwords do not match');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Passwords do not match!',
+      });
       return;
     }
 
-    // ส่งข้อมูลไปยัง API
-    axios.post('http://localhost:5000/signup', {
-      fname: formData.fname,
-      lname: formData.lname,
-      birthday: formData.birthday,
-      email: formData.email,
-      tel: formData.tel,
-      username: formData.username,
-      password: formData.password,
-    })
-      .then(response => {
-        alert('Member registered successfully');
-        setFormData({
-          fname: '',
-          lname: '',
-          birthday: '',
-          email: '',
-          tel: '',
-          username: '',
-          password: '',
-          rePassword: ''
-        });
-      })
-      .catch(error => {
-        console.error('There was an error registering the member!', error);
-        alert('Error registering member');
+    try {
+      // ตรวจสอบว่า username, email, tel เคยมีในระบบหรือไม่
+      const checkResponse = await axios.post('http://localhost:5000/checkUser', {
+        username: formData.username,
+        email: formData.email,
+        tel: formData.tel
       });
+
+      // ถ้า username, email, tel เคยมีในระบบ
+      if (checkResponse.data.exists) {
+        Swal.fire({
+          icon: 'error',
+          title: 'ผู้ใช้งานนี้ได้มีอยู่ในระบบแล้ว',
+          text: 'username, email, หรือ phone number ได้มีลงทะเบียนไว้ในระบบแล้ว โปรดลองใหม่อีกครั้ง.',
+        });
+        return;
+      }
+
+      // ถ้าไม่มีในระบบ ก็ลงทะเบียนใหม่
+      const registerResponse = await axios.post('http://localhost:5000/signup', {
+        fname: formData.fname,
+        lname: formData.lname,
+        birthday: formData.birthday,
+        email: formData.email,
+        tel: formData.tel,
+        username: formData.username,
+        password: formData.password,
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'ลงทะเบียนสำเร็จ',
+        text: 'โปรดรอสักครู่จะทำการเข้าไปหน้า login',
+        confirmButtonText: 'OK'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.pathname = "/signin"; 
+        }
+    });
+    
+
+      setFormData({
+        fname: '',
+        lname: '',
+        birthday: '',
+        email: '',
+        tel: '',
+        username: '',
+        password: '',
+        rePassword: ''
+      });
+    } catch (error) {
+      console.error('There was an error registering the member!', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'There was an error registering the member!',
+      });
+    }
   };
 
   return (
