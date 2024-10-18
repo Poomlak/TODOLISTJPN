@@ -102,6 +102,22 @@ app.post('/login', (req, res) => {
         });
     });
 });
+app.post('/checkUser', (req, res) => {
+    const { username, email, tel } = req.body;
+
+    const query = 'SELECT * FROM member_id WHERE member_username = ? OR member_email = ? OR member_tel = ?';
+    db.query(query, [username, email, tel], (err, results) => {
+        if (err) {
+            return res.status(500).send('Error checking user');
+        }
+
+        if (results.length > 0) {
+            return res.json({ exists: true });
+        } else {
+            return res.json({ exists: false });
+        }
+    });
+});
 
 
 
