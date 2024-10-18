@@ -1,0 +1,89 @@
+.profile-container {
+  text-align: center;
+  margin: 50px auto;
+  width: 400px;
+  font-family: Arial, sans-serif;
+}
+
+.profile-image {
+  margin: 20px 0;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.upload-button {
+  margin-top: 10px;
+}
+
+.profile-details {
+  margin-top: 20px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  width: 100px;
+  margin-right: 10px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.password-field {
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn.edit {
+  background-color: #f44336;
+}
+
+.btn.save {
+  background-color: #4caf50;
+}
+
+.btn.back {
+  background-color: #2196f3;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}

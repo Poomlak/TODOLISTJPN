@@ -6,6 +6,22 @@ const bcrypt = require('bcrypt');
 const app = express();
 const port = process.env.PORT || 5000; 
 
+//const ของ reset password นะอิอิ
+const crypto = require('crypto');
+const nodemailer = require('nodemailer'); 
+//  https://myaccount.google.com/apppasswords
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', 
+    auth: {
+      user: 'webapp.otp@gmail.com',
+      pass: 'gggzyhrrphsoapsn'
+    }
+  });
+  // OTP
+  const generateOtp = () => {
+    return crypto.randomBytes(3).toString('hex'); 
+  };
+
 const db = mysql.createConnection({
     host: '26.11.35.119',   
     user: 'root',           
@@ -120,8 +136,50 @@ app.post('/checkUser', (req, res) => {
 });
 
 
-
-
+app.post('/send-otp', (req, res) => {
+    const { identifier } = req.body;
+    
+    // ตรวจสอบว่ามี username หรือ email ใน DB หรือไม่
+    const query = "SELECT member_email FROM member_id WHERE member_username = ? OR member_email = ?";
+    db.query(query, [identifier, identifier], (err, result) => {
+      if (err || result.length === 0) {
+        return res.status(400).send('Username or email not found');
+      }
+  
+      const email = result[0].member_email;
+      const otp = generateOtp();
+  
+      // เก็บ OTP ใน DB หรือ session
+      // ส่งอีเมลพร้อม OTP
+      transporter.sendMail({
+        to: email,
+        subject: 'Your OTP Code',
+        text: `Your OTP code is ${otp}`
+      });
+  
+      res.status(200).send('OTP sent');
+    });
+  });
+  
+  app.post('/reset-password', (req, res) => {
+    const { otp, newPassword } = req.body;
+  
+    // ตรวจสอบ OTP (คุณอาจต้องเก็บ OTP ไว้ใน DB หรือ session แล้วเทียบตรงนี้)
+    if (otp === 'expected_otp') {
+      const hashedPassword = crypto.createHash('sha256').update(newPassword).digest('hex');
+      
+      // อัพเดต password ใน DB
+      const query = "UPDATE member_id SET member_password = ? WHERE member_email = ?";
+      db.query(query, [hashedPassword, 'user_email@example.com'], (err, result) => {
+        if (err) {
+          return res.status(500).send('Failed to reset password');
+        }
+        res.status(200).send('Password reset successful');
+      });
+    } else {
+      res.status(400).send('Invalid OTP');
+    }
+  });
 
 
 
