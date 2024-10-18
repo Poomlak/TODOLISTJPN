@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   });
   // OTP
   const generateOtp = () => {
-    return crypto.randomBytes(3).toString('hex'); 
+    return Math.floor(100000 + Math.random() * 900000).toString(); 
   };
 
 const db = mysql.createConnection({
@@ -136,10 +136,10 @@ app.post('/checkUser', (req, res) => {
 });
 
 
+// Send OTP
 app.post('/send-otp', (req, res) => {
     const { identifier } = req.body;
-    
-    // ตรวจสอบว่ามี username หรือ email ใน DB หรือไม่
+  
     const query = "SELECT member_email FROM member_id WHERE member_username = ? OR member_email = ?";
     db.query(query, [identifier, identifier], (err, result) => {
       if (err || result.length === 0) {
@@ -149,37 +149,50 @@ app.post('/send-otp', (req, res) => {
       const email = result[0].member_email;
       const otp = generateOtp();
   
-      // เก็บ OTP ใน DB หรือ session
-      // ส่งอีเมลพร้อม OTP
-      transporter.sendMail({
-        to: email,
-        subject: 'Your OTP Code',
-        text: `Your OTP code is ${otp}`
-      });
+      // เก็บ OTP ในฐานข้อมูล (อาจจะต้องสร้างตารางใหม่เพื่อเก็บ OTP) 
+      const insertOtpQuery = "INSERT INTO otp_table (email, otp) VALUES (?, ?) ON DUPLICATE KEY UPDATE otp = ?";
+      db.query(insertOtpQuery, [email, otp, otp], (err) => {
+        if (err) {
+          return res.status(500).send('Failed to save OTP');
+        }
   
-      res.status(200).send('OTP sent');
+        // ส่งอีเมลพร้อม OTP
+        transporter.sendMail({
+          to: email,
+          subject: 'Your OTP Code',
+          text: `Your OTP code is ${otp}`
+        });
+  
+        res.status(200).send('OTP sent');
+      });
     });
   });
   
-  app.post('/reset-password', (req, res) => {
+  // Reset Password
+  app.post('/reset-password', async (req, res) => {
     const { otp, newPassword } = req.body;
   
-    // ตรวจสอบ OTP (คุณอาจต้องเก็บ OTP ไว้ใน DB หรือ session แล้วเทียบตรงนี้)
-    if (otp === 'expected_otp') {
-      const hashedPassword = crypto.createHash('sha256').update(newPassword).digest('hex');
-      
+    // ตรวจสอบ OTP
+    const checkOtpQuery = "SELECT email FROM otp_table WHERE otp = ?";
+    db.query(checkOtpQuery, [otp], async (err, result) => {
+      if (err || result.length === 0) {
+        return res.status(400).send('Invalid OTP');
+      }
+  
+      const email = result[0].email;
+      const hashedPassword = await bcrypt.hash(newPassword, 10); // เข้ารหัสรหัสผ่าน
+  
       // อัพเดต password ใน DB
-      const query = "UPDATE member_id SET member_password = ? WHERE member_email = ?";
-      db.query(query, [hashedPassword, 'user_email@example.com'], (err, result) => {
+      const updatePasswordQuery = "UPDATE member_id SET member_password = ? WHERE member_email = ?";
+      db.query(updatePasswordQuery, [hashedPassword, email], (err) => {
         if (err) {
           return res.status(500).send('Failed to reset password');
         }
         res.status(200).send('Password reset successful');
       });
-    } else {
-      res.status(400).send('Invalid OTP');
-    }
+    });
   });
+  
 
 
 
