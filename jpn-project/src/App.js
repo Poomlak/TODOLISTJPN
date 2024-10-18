@@ -9,6 +9,7 @@ import Profile from "./profile/Profile";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Resetpass from "./signin/Resetpass";
 import "./App.css";
+import NavbartodomainAndprofile from "./allnavbars/Navbartodomain&profile";
 
 function App() {
   return (
