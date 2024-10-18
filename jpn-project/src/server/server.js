@@ -159,8 +159,10 @@ app.post('/send-otp', (req, res) => {
         // ส่งอีเมลพร้อม OTP
         transporter.sendMail({
           to: email,
-          subject: 'Your OTP Code',
-          text: `Your OTP code is ${otp}`
+          subject: 'Your OTP Code for JPN-Todolist',
+          text: `Your OTP code is ${otp} \n
+          Dont forget your password ;-; \n
+          Thank you`
         });
   
         res.status(200).send('OTP sent');
