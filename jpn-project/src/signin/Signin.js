@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import jpnLogo from "../navbars/jpn_logo.png";
 import "./Signin.css";
 import axios from "axios";
 import Navbarsignin from "../allnavbars/Navbarsignin";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Signin = () => {
-  const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
+  const navigate = useNavigate();
 
   const goReset = () => {
     navigate("/resetpass");
@@ -35,11 +36,29 @@ const Signin = () => {
         username: formData.username,
         password: formData.password,
       });
-      console.log(response);
-      alert("Login successful");
+      await Swal.fire({
+        icon: 'success',
+        title: 'Login Success',
+        text: 'คุณได้เข้าสู่ระบบเรียบร้อยแล้ว!',
+        confirmButtonText: 'ตกลง'
+      });
+
+      // ทำการเปลี่ยนเส้นทางไปยังหน้าอื่น (เช่น หน้าโปรไฟล์)
+      window.location.href = "/profile"; // เปลี่ยนเป็นเส้นทางที่ต้องการ
+      
+      // เก็บ username ลง localStorage
+      localStorage.setItem("username", formData.username);
+      
+      // นำทางไปยังหน้าที่ต้องการหลังจากล็อกอินสำเร็จ
+      navigate("/profile");
     } catch (error) {
       console.error("Error logging in:", error.response.data);
-      alert("Invalid username or password");
+      await Swal.fire({
+        icon: 'error',
+        title: 'Invalid User',
+        text: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง.',
+        confirmButtonText: 'ตกลง'
+      });
     }
   };
 
@@ -83,11 +102,9 @@ const Signin = () => {
                   onClick={togglePasswordVisibility}
                 >
                   <img
-                    src={
-                      showPassword
-                        ? "https://cdn.discordapp.com/attachments/861532175925116928/1296001688376709130/image.png?ex=6710b321&is=670f61a1&hm=535724526a15ce2bbfea95b3f1785a3044f4336224c942bbe641957bede828c1&"
-                        : "https://cdn.discordapp.com/attachments/861532175925116928/1296001359476166726/image.png?ex=6710b2d2&is=670f6152&hm=18d411368535db5cc89775501579453130649b5b4fbfc6d94298b5496aef480d&"
-                    }
+                    src={showPassword
+                      ? "https://cdn.discordapp.com/attachments/861532175925116928/1296001688376709130/image.png?ex=6710b321&is=670f61a1&hm=535724526a15ce2bbfea95b3f1785a3044f4336224c942bbe641957bede828c1&"
+                      : "https://cdn.discordapp.com/attachments/861532175925116928/1296001359476166726/image.png?ex=6710b2d2&is=670f6152&hm=18d411368535db5cc89775501579453130649b5b4fbfc6d94298b5496aef480d&"}
                     alt="Toggle Password Visibility"
                     className="password-toggle-icon"
                   />

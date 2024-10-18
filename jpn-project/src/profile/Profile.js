@@ -1,34 +1,41 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
 import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
-    username: "",
-    password: "",
-    birthday: "",
-    email: "",
-    telephone: "",
+    member_id: null,
+    member_fname: "",
+    member_lname: "",
+    member_birthday: "",
+    member_email: "",
+    member_tel: "",
+    member_username: "",
+    member_password: "",
+    member_image_url: "" // เพิ่มฟิลด์สำหรับ URL รูปภาพ
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // สถานะแก้ไข
-  const [image, setImage] = useState(null); // เก็บรูปโปรไฟล์
+  const [isEditing, setIsEditing] = useState(false);
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const data = {
-        username: "Jame test",
-        password: "password123",
-        birthday: "12/03/45",
-        email: "Jametest@gmail.com",
-        telephone: "0812345678",
-      };
-      setProfile(data);
+      if (username) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/profile/${username}`);
+          console.log(response.data); // ดูข้อมูลที่ได้รับจาก API
+          setProfile(response.data);
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        }
+      }
     };
     fetchProfile();
-  }, []);
+  }, [username]);
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -39,36 +46,67 @@ const Profile = () => {
     setProfile({ ...profile, [name]: value });
   };
 
-  const handleSave = () => {
-    console.log("บันทึกข้อมูล:", profile);
-    setIsEditing(false); // ปิดโหมดแก้ไข
-  };
+  const handleSave = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/profile/${profile.member_username}`, {
+        password: profile.member_password,
+        birthday: profile.member_birthday,
+        email: profile.member_email,
+        telephone: profile.member_tel,
+        imageUrl: profile.member_image_url // ส่ง URL รูปภาพไปอัปเดตใน DB
+      });
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
+
+      console.log(response.data);
+      setIsEditing(false);
+       // แสดง SweetAlert2 เมื่ออัปเดตสำเร็จ
+    await Swal.fire({
+      icon: 'success',
+      title: 'อัปเดตสำเร็จ!',
+      text: 'โปรไฟล์ของคุณได้ถูกอัปเดตแล้ว.',
+      confirmButtonText: 'ตกลง'
+    });
+
+    // รีเฟรชหน้าเพื่อดึงข้อมูลใหม่
+    window.location.reload();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert('Failed to update profile. Please check your input or try again later.');
     }
   };
+
+  // ฟังก์ชันตรวจสอบ URL รูปภาพ
+  const isValidImageUrl = (url) => {
+    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+  };
+
+  
 
   return (
     <>
       <NavbartodomainAndprofile />
       <div className="profile-container">
-        <h1>สวัสดี , {profile.username}</h1>
+        <h1>สวัสดี , {profile.member_fname} {profile.member_lname}</h1>
 
         <div className="profile-image">
+        
+
           <img
-            src={image || "https://via.placeholder.com/150"}
+            src={profile.member_image_url && profile.member_image_url.startsWith('http') ? profile.member_image_url : "https://via.placeholder.com/150"}
             alt="Profile"
             className="profile-picture"
           />
+
+
+
           {isEditing && (
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="upload-button"
+              type="text"
+              name="member_image_url"
+              value={profile.member_image_url}
+              onChange={handleInputChange}
+              placeholder="Enter image URL"
+              className="url-input"
             />
           )}
         </div>
@@ -79,8 +117,8 @@ const Profile = () => {
             <input
               type="text"
               id="username"
-              name="username"
-              value={profile.username}
+              name="member_username"
+              value={profile.member_username}
               onChange={handleInputChange}
               readOnly={!isEditing}
             />
@@ -92,15 +130,12 @@ const Profile = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
-                name="password"
-                value={profile.password}
+                name="member_password"
+                value={profile.member_password}
                 onChange={handleInputChange}
                 readOnly={!isEditing}
               />
-              <span
-                onClick={togglePasswordVisibility}
-                className="password-toggle"
-              >
+              <span onClick={togglePasswordVisibility} className="password-toggle">
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
@@ -111,8 +146,8 @@ const Profile = () => {
             <input
               type="text"
               id="birthday"
-              name="birthday"
-              value={profile.birthday}
+              name="member_birthday"
+              value={profile.member_birthday}
               onChange={handleInputChange}
               readOnly={!isEditing}
             />
@@ -123,8 +158,8 @@ const Profile = () => {
             <input
               type="email"
               id="email"
-              name="email"
-              value={profile.email}
+              name="member_email"
+              value={profile.member_email}
               onChange={handleInputChange}
               readOnly={!isEditing}
             />
@@ -135,8 +170,8 @@ const Profile = () => {
             <input
               type="text"
               id="tel"
-              name="telephone"
-              value={profile.telephone}
+              name="member_tel"
+              value={profile.member_tel}
               onChange={handleInputChange}
               readOnly={!isEditing}
             />

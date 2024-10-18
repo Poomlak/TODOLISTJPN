@@ -11,7 +11,9 @@ const NavbartodomainAndprofile = () => {
   };
 
   const goHome = () => {
-    navigate("/");
+    localStorage.removeItem("token"); // หรือชื่อที่คุณใช้เก็บ token
+    localStorage.removeItem("username"); // ลบ username ออกจาก localStorage
+    navigate("/signin"); // เปลี่ยนเส้นทางไปยังหน้าลงชื่อเข้าใช้
   };
  
   return (

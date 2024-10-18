@@ -80,15 +80,35 @@ app.post('/signup', async (req, res) => {
     });
 });
 
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'your_secret_key'; // ควรเก็บ SECRET_KEY ไว้ใน environment variables
+
+
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1]; // คาดหวังรูปแบบ "Bearer token"
+
+  if (!token) return res.sendStatus(401); // ถ้าไม่มี token
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+      if (err) return res.sendStatus(403); // ถ้า token ไม่ถูกต้อง
+      req.user = user; // เก็บข้อมูลผู้ใช้ไว้ใน req.user
+      next();
+  });
+};
+
+app.get('/user', authenticateToken, (req, res) => {
+  // ใช้ req.user เพื่อเข้าถึงข้อมูลผู้ใช้
+  res.json({ message: 'Welcome, ' + req.user.username });
+});
+
+
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    
     if (!username || !password) {
         return res.status(400).send('Missing username or password');
     }
 
-    
     const query = 'SELECT * FROM member_id WHERE member_username = ?';
     db.query(query, [username], (err, results) => {
         if (err) {
@@ -102,7 +122,6 @@ app.post('/login', (req, res) => {
 
         const user = results[0];
 
-        
         bcrypt.compare(password, user.member_password, (err, isMatch) => {
             if (err) {
                 console.error('Error comparing passwords:', err);
@@ -113,11 +132,15 @@ app.post('/login', (req, res) => {
                 return res.status(401).send('Invalid username or password');
             }
 
-            
-            res.status(200).send('Login successful');
+            // สร้าง JWT
+            const token = jwt.sign({ id: user.id, username: user.member_username }, SECRET_KEY, { expiresIn: '1h' });
+
+            res.status(200).json({ message: 'Login successful', token }); // ส่งกลับ token
         });
     });
 });
+
+
 app.post('/checkUser', (req, res) => {
     const { username, email, tel } = req.body;
 
@@ -160,9 +183,9 @@ app.post('/send-otp', (req, res) => {
         transporter.sendMail({
           to: email,
           subject: 'Your OTP Code for JPN-Todolist',
-          text: `Your OTP code is ${otp} \n
-          Dont forget your password ;-; \n
-          Thank you`
+          text: `Your OTP code is ${otp} \nDont forget your password ;-; \nThank you`
+          
+          
         });
   
         res.status(200).send('OTP sent');
@@ -195,6 +218,101 @@ app.post('/send-otp', (req, res) => {
     });
   });
   
+// Profile API
+app.get("/api/profile/:username", (req, res) => {
+  const username = req.params.username;
+
+  const query = `
+    SELECT member_id, member_fname, member_lname, member_birthday, member_email, member_tel, member_username, member_password, member_image_url 
+    FROM member_id 
+    WHERE member_username = ?
+  `;
+
+  db.query(query, [username], (error, results) => {
+    if (error) {
+      console.error("Error fetching profile:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    if (results.length > 0) {
+      const user = results[0];
+      res.status(200).json({
+        member_id: user.member_id,
+        member_fname: user.member_fname,
+        member_lname: user.member_lname,
+        member_birthday: user.member_birthday,
+        member_email: user.member_email,
+        member_tel: user.member_tel,
+        member_username: user.member_username,
+        member_password: user.member_password, // ส่งรหัสผ่านแบบปกติ
+        member_image_url: user.member_image_url // เพิ่ม URL ของรูปภาพ
+      });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  });
+});
+
+
+
+app.put("/api/profile/:username", async (req, res) => {
+  const username = req.params.username;
+  const { password, birthday, email, telephone, imageUrl } = req.body;
+
+  try {
+    // ดึงข้อมูลผู้ใช้ปัจจุบันเพื่อตรวจสอบรหัสผ่าน
+    db.query(
+      "SELECT member_password FROM member_id WHERE member_username = ?",
+      [username],
+      async (error, results) => {
+        if (error) {
+          console.error("Error fetching profile:", error);
+          return res.status(500).json({ message: "Server error" });
+        }
+
+        const currentPassword = results[0]?.member_password;
+
+        // ถ้ามีการส่ง password ใหม่เข้ามา จะทำการ hash ถ้าไม่มีก็จะใช้ password เดิม
+        const hashedPassword =
+          password && password !== currentPassword
+            ? await bcrypt.hash(password, 10)
+            : currentPassword;
+
+        const query = `
+          UPDATE member_id 
+          SET 
+            member_birthday = ?, 
+            member_email = ?, 
+            member_tel = ?, 
+            member_password = ?, 
+            member_image_url = ?
+          WHERE member_username = ?
+        `;
+
+        db.query(
+          query,
+          [birthday, email, telephone, hashedPassword, imageUrl, username],
+          (error, results) => {
+            if (error) {
+              console.error("Error updating profile:", error);
+              return res.status(500).json({ message: "Server error" });
+            }
+            res.status(200).json({ message: "Profile updated successfully" });
+          }
+        );
+      }
+    );
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
+
+
 
 
 
