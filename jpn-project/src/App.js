@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import Navbar from "./navbars/Navbar";
 import Navbarsignup from "./allnavbars/Navbarsignup";
 import "./App.css";
+import NavbartodomainAndprofile from "./allnavbars/Navbartodomain&profile";
 
 function App() {
   return (
