@@ -4,6 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Navbarprofile from "../allnavbars/Navbarprofile";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -91,7 +92,7 @@ const Profile = () => {
 
   return (
     <>
-      <NavbartodomainAndprofile />
+      <Navbarprofile />
       <div className="profile-container">
         <h1>สวัสดี , {profile.member_fname} {profile.member_lname}</h1>
 
