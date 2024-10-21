@@ -65,7 +65,8 @@ const Resetpass = () => {
         <div className="resetpass-form">
           {!isOtpSent ? (
             <div className="send-otp-section">
-              <label>Username or Email</label>
+            <label>Username or Email</label>
+            <div className="input-btn-container">
               <input
                 type="text"
                 name="identifier"
@@ -76,6 +77,7 @@ const Resetpass = () => {
               />
               <button onClick={handleSendOtp} className="btn-send-otp">Send OTP</button>
             </div>
+          </div>
           ) : (
             <div className="reset-password-section">
               <label>Enter OTP</label>
