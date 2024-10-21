@@ -354,10 +354,12 @@ app.post("/send-update-email", (req, res) => {
 });
 
 
-app.get("/api/diary", (req, res) => {
-  const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ?";
-  const username = "admin"; // Adjust as necessary
+app.get("/api/diary/:username", (req, res) => {
+  const { token } = req.body; // ดึง token จาก request body
+  const username = req.params.username; // รับ username จาก URL
 
+  const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ?";
+  
   db.query(sql, [username], (err, result) => {
     if (err) {
       console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", err);
@@ -365,12 +367,13 @@ app.get("/api/diary", (req, res) => {
     }
 
     if (result.length > 0) {
-      res.json(result); // Send all data
+      res.json(result);
     } else {
       res.status(404).json({ message: "ไม่พบข้อมูลไดอารี" });
     }
   });
 });
+
 
 app.put("/api/diary/update-timestamp", (req, res) => {
   const sql = "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_username = ?";
@@ -405,11 +408,15 @@ app.post("/api/diary/create", (req, res) => {
 });
 
 app.put("/api/diary/update/:oldName", (req, res) => {
-  const { newName } = req.body; // ดึงชื่อใหม่จาก request body
-  const oldName = req.params.oldName;
+  const { newName, username } = req.body; // ดึงชื่อใหม่และ username จาก request body
+  const oldName = req.params.oldName; // ดึงชื่อสมุดเดิมจาก params
+
+  // ตรวจสอบว่ามีการส่งทั้งชื่อใหม่และ username มาหรือไม่
+  if (!newName || !username) {
+    return res.status(400).json({ message: "กรุณาส่งชื่อใหม่และชื่อผู้ใช้" });
+  }
 
   const sql = "UPDATE `member_diary` SET `diary_namebook` = ? WHERE `diary_namebook` = ? AND `diary_username` = ?";
-  const username = "admin"; // หรือใช้ username จาก token หรือ session
 
   db.query(sql, [newName, oldName, username], (err, result) => {
     if (err) {
@@ -424,6 +431,7 @@ app.put("/api/diary/update/:oldName", (req, res) => {
     }
   });
 });
+
 
 
 
