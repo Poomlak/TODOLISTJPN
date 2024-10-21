@@ -25,6 +25,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/resetpass" element={<Resetpass />} />
         <Route path="/menutodo" element={<Menutodo />} />
+        <Route path="/todomain/:index" element={<Todomain />} />
       </Routes>
     </BrowserRouter>
   );

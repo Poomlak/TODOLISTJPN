@@ -459,6 +459,21 @@ app.delete("/api/diary/delete", (req, res) => {
   });
 });
 
+app.get('/api/diary', (req, res) => {
+  const diaryName = req.query.diaryName; // ดึง diaryName จาก query
+
+  db.query('SELECT * FROM diary_list WHERE diary_namebook = ?', [diaryName], (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: "Error fetching diary", error: err });
+    }
+    if (results.length > 0) {
+      res.json(results); // ส่งข้อมูลไดอารี
+    } else {
+      res.status(404).json({ message: "Diary not found" });
+    }
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {

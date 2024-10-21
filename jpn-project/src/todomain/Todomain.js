@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import "./Todomain.css";
+import { useLocation } from "react-router-dom";
 import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
 
 const Todomain = () => {
+  const location = useLocation();
+  const { diaryName } = location.state || {};
+  console.log(diaryName);
   const [diary, setDiary] = useState({
     diary_namebook: "",
     member_createdbook: "",
@@ -16,12 +20,20 @@ const Todomain = () => {
   // ฟังก์ชันเพื่อดึงข้อมูลไดอารีจากฐานข้อมูล
   const fetchDiary = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/diary");
-      setDiary(response.data);
+      // ตรวจสอบว่า diaryName มีค่าหรือไม่
+      if (diaryName) {
+        const response = await axios.get(`http://localhost:5000/api/diary?diaryName=${diaryName}`);
+        setDiary(response.data);
+        console.log(response.data); // ส่งข้อมูลทั้งหมดที่พบ
+
+      } else {
+        console.error("diaryName is undefined");
+      }
     } catch (error) {
       console.error("Error fetching diary:", error);
     }
   };
+  
 
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -57,7 +69,7 @@ const Todomain = () => {
 
   useEffect(() => {
     fetchDiary(); // ดึงข้อมูลเมื่อ component ถูก mount
-  }, []);
+  }, [diaryName]); // เพิ่ม diaryName เป็น dependency
 
   const handleSelectDateTime = async () => {
     const { value: dateTime } = await Swal.fire({
@@ -275,8 +287,7 @@ const Todomain = () => {
           <div className="todo-card">
             <div>
               <div>
-                <h3>{diary.diary_namebook || "Diary Todo"}</h3>{" "}
-                {/* ชื่อไดอารี */}
+                <h3>{diary.diary_namebook || "Diary Todo"}</h3>
               </div>
               <div className="timestamp-container">
                 <p>
@@ -288,29 +299,17 @@ const Todomain = () => {
               </div>
             </div>
             <div className="button-group-Todo">
-              <button
-                className="add-button-Todo"
-                onClick={handleAddTask} // เรียกฟังก์ชันเพื่อเพิ่ม task
-              >
+              <button className="add-button-Todo" onClick={handleAddTask}>
                 +
               </button>
-              <button
-                className="date-button-Todo"
-                onClick={handleSelectDateTime}
-              >
+              <button className="date-button-Todo" onClick={handleSelectDateTime}>
                 Select Date & Time
               </button>
             </div>
           </div>
-          {/* แสดง Task ที่เพิ่มเข้ามา */}
           {tasks.map((task, index) => (
-            <div
-              className="todo-card-task"
-              key={index}
-              style={{ backgroundColor: task.color }}
-            >
+            <div className="todo-card-task" key={index} style={{ backgroundColor: task.color }}>
               <h3>{task.title}</h3>
-
               <div className="task-grid">
                 <div className="details-container-task">
                   <p>
@@ -318,7 +317,6 @@ const Todomain = () => {
                   </p>
                 </div>
                 <div></div>
-
                 <div className="timestamp-container-task">
                   <p>
                     Created: <i>{task.created}</i>
@@ -327,14 +325,9 @@ const Todomain = () => {
                     Notification Time: <i>{task.updated}</i>
                   </p>
                 </div>
-
                 <div className="button-group-task">
-                  <button onClick={() => handleUpdateTask(index)}>
-                    Update
-                  </button>
-                  <button onClick={() => handleDeleteTask(index)}>
-                    Delete
-                  </button>
+                  <button onClick={() => handleUpdateTask(index)}>Update</button>
+                  <button onClick={() => handleDeleteTask(index)}>Delete</button>
                 </div>
               </div>
             </div>

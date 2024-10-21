@@ -40,6 +40,7 @@ const Menutodo = () => {
   const goTodomain = (index, diaryName) => {
     navigate(`/todomain/${index}`, { state: { diaryName } });
   };
+  
 
   // Handle adding a new list
   const handleCreate = async () => {
