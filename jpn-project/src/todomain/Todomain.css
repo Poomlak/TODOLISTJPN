@@ -36,6 +36,34 @@
   color: #666;
 }
 
+.todo-card-task {
+  background-color: #f6efe1;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+  gap: 20px;
+}
+.todo-card-task h3 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.todo-card-task p {
+  margin: 5px 0;
+  color: #000000;
+}
+.task-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* แบ่งเป็น 2 คอลัมน์ */
+  gap: 20px;
+  align-items: start;
+}
+
 .button-group-Todo {
   display: flex;
   gap: 1rem;
@@ -87,4 +115,59 @@
   border-radius: 5px; /* มุมมน */
   margin: 10px 0; /* ระยะห่างด้านบนและล่าง */
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); /* เงา */
+}
+
+.detail-container {
+  background-color: #f9f9f9; /* สีพื้นหลัง */
+  padding: 10px; /* ระยะห่างภายใน */
+  border-radius: 5px; /* มุมมน */
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); /* เงา */
+}
+
+.timestamp-container-task {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+.details-container-task {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.button-group-task {
+  grid-column: span 3; /* ให้ปุ่มกินพื้นที่ 2 คอลัมน์ */
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #ff5c5c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #e54c4c;
+}
+
+.button-apply {
+  height: 50px;
+  padding: 10px 15px;
+  background-color: #ff5c5c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.button-apply:hover {
+  background-color: #e54c4c;
 }

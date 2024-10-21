@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "26.11.35.119",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -334,12 +334,13 @@ app.post("/send-update-email", (req, res) => {
     from: "webapp.otp@gmail.com",
     to: email,
     subject: "Profile Update Notification",
-    text: `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
-          `- Username: ${username}\n` +
-          `- Birthday: ${changes.birthday}\n` +
-          `- Telephone: ${changes.telephone}\n` +
-          `- Profile Image URL: ${changes.imageUrl}\n\n` +
-          "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
+    text:
+      `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
+      `- Username: ${username}\n` +
+      `- Birthday: ${changes.birthday}\n` +
+      `- Telephone: ${changes.telephone}\n` +
+      `- Profile Image URL: ${changes.imageUrl}\n\n` +
+      "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
   };
 
   // ส่งอีเมล
@@ -353,9 +354,9 @@ app.post("/send-update-email", (req, res) => {
   });
 });
 
-
 app.get("/api/diary", (req, res) => {
-  const sql = "SELECT `diary_namebook`, `member_createdbook`, `member_lastupdatedbook` FROM `member_diary` WHERE `diary_username` = ?"; // กรองตาม username
+  const sql =
+    "SELECT `diary_namebook`, `member_createdbook`, `member_lastupdatedbook` FROM `member_diary` WHERE `diary_username` = ?"; // กรองตาม username
   const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
 
   db.query(sql, [username], (err, result) => {
@@ -372,15 +373,17 @@ app.get("/api/diary", (req, res) => {
   });
 });
 
-
 app.put("/api/diary/update-timestamp", (req, res) => {
-  const sql = "UPDATE `member_diary` SET `member_lastupdatedbook` = NOW() WHERE `diary_username` = ?"; // อัปเดต timestamp ปัจจุบัน
+  const sql =
+    "UPDATE `member_diary` SET `member_lastupdatedbook` = NOW() WHERE `diary_username` = ?"; // อัปเดต timestamp ปัจจุบัน
   const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
 
   db.query(sql, [username], (err, result) => {
     if (err) {
       console.error("เกิดข้อผิดพลาดในการอัปเดต timestamp:", err);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
+      return res
+        .status(500)
+        .json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
     }
 
     if (result.affectedRows > 0) {
@@ -390,7 +393,6 @@ app.put("/api/diary/update-timestamp", (req, res) => {
     }
   });
 });
-
 
 // Start the server
 app.listen(port, () => {
