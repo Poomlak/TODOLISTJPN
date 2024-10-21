@@ -44,7 +44,7 @@ const Todomain = () => {
                 </p>
               </div>
             </div>
-            <div className="button-group">
+            <div className="button-group-Todo">
               <button className="add-button">+</button>
               <button className="date-button" onClick={handleSelectDate}>
                 Select Date

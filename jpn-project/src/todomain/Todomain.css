@@ -24,7 +24,7 @@
   justify-content: space-evenly;
   border-color: black;
   border: 2px solid;
-  gap: 50px;
+  gap: 300px;
 }
 
 .todo-card h3 {
@@ -36,10 +36,12 @@
   color: #666;
 }
 
-.button-group {
+.button-group-Todo {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-button {
