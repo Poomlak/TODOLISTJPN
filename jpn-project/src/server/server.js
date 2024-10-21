@@ -334,12 +334,12 @@ app.post("/send-update-email", (req, res) => {
     from: "webapp.otp@gmail.com",
     to: email,
     subject: "Profile Update Notification",
-    text: `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดทดังนี้:\n\n` +
-          `- Username: ${changes.username}\n` +
+    text: `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
+          `- Username: ${username}\n` +
           `- Birthday: ${changes.birthday}\n` +
           `- Telephone: ${changes.telephone}\n` +
           `- Profile Image URL: ${changes.imageUrl}\n\n` +
-          "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nBest regards,\nTodolist",
+          "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
   };
 
   // ส่งอีเมล
