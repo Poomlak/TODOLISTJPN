@@ -82,6 +82,7 @@ const Resetpass = () => {
             <div className="reset-password-section">
               <label>Enter OTP</label>
               <input
+                className="input-otp"
                 type="text"
                 name="otp"
                 placeholder="Enter OTP sent to your email"
@@ -89,8 +90,10 @@ const Resetpass = () => {
                 onChange={handleChange}
                 required
               />
+              
               <label>New Password</label>
               <input
+                className="input-password"
                 type="password"
                 name="newPassword"
                 placeholder="Enter new password"

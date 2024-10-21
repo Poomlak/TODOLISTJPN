@@ -1,38 +1,47 @@
-body {
-  font-family: 'Itim', sans-serif;
-  min-width: 1200px;
-  margin: 0;
-  padding: 0;
-}
-
-.navbar-brand,
-.brand-text,
-.brand-text-main,
-.brand-text-sub,
-.navbar-nav,
-.nav-link,
-.btn-sign-up,
-.btn-sign-in {
-  font-family: 'Itim', sans-serif;
-}
-
-
 .navbar {
   background-color: #aad7ec !important;
   padding: 10px 20px;
-  position: relative; /* เปลี่ยนจาก fixed เป็น relative */
+  position: relative;
   width: 100%;
   min-width: 1200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 90px; /* กำหนดความสูงที่แน่นอน */
+  height: 90px;
+}
+
+.welcome-text {
+  font-size: 20px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.profile-image-container {
+  width: 60px;
+  height: 60px;
+  margin-top: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.profile-image-small {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.navbar-nav {
+  align-items: center;
 }
 
 .navbar-brand {
   font-weight: bold;
   color: #333 !important;
-  position: relative; /* เปลี่ยนจาก absolute เป็น relative */
+  position: relative;
   display: flex;
   align-items: center;
   margin-left: 20px;
@@ -63,12 +72,11 @@ body {
   display: flex;
   align-items: center;
   font-size: larger;
-  margin-right: 40px;
+  margin-right: 60px;
 }
 
-.nav-item {
+.nav-itemm {
   display: inline-block;
-  margin-left: 80px;
 }
 
 .nav-link {
@@ -78,11 +86,9 @@ body {
   font-weight: bold;
 }
 
-.btn-sign-up,
-.btn-sign-in {
+.btn-logout {
   display: inline-block;
-  margin-left: 40px;
-  padding: 8px 20px;
+  margin-left: 60px;
   border-radius: 5px;
   font-weight: bold;
   background-color: black !important;
@@ -91,7 +97,7 @@ body {
 }
 
 .main-content {
-  padding-top: 20px; /* เพิ่มระยะห่างด้านบน */
+  padding-top: 20px;
   text-align: center;
 }
 
