@@ -353,6 +353,45 @@ app.post("/send-update-email", (req, res) => {
   });
 });
 
+
+app.get("/api/diary", (req, res) => {
+  const sql = "SELECT `diary_namebook`, `member_createdbook`, `member_lastupdatedbook` FROM `member_diary` WHERE `diary_username` = ?"; // กรองตาม username
+  const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
+
+  db.query(sql, [username], (err, result) => {
+    if (err) {
+      console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", err);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
+    }
+
+    if (result.length > 0) {
+      res.json(result[0]); // ส่งข้อมูลไดอารีแค่ 1 รายการ
+    } else {
+      res.status(404).json({ message: "ไม่พบข้อมูลไดอารี" });
+    }
+  });
+});
+
+
+app.put("/api/diary/update-timestamp", (req, res) => {
+  const sql = "UPDATE `member_diary` SET `member_lastupdatedbook` = NOW() WHERE `diary_username` = ?"; // อัปเดต timestamp ปัจจุบัน
+  const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
+
+  db.query(sql, [username], (err, result) => {
+    if (err) {
+      console.error("เกิดข้อผิดพลาดในการอัปเดต timestamp:", err);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
+    }
+
+    if (result.affectedRows > 0) {
+      res.json({ member_lastupdatedbook: new Date() }); // ส่งข้อมูล timestamp กลับไป
+    } else {
+      res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+    }
+  });
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(
