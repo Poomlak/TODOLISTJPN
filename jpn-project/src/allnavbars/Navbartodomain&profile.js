@@ -15,7 +15,7 @@ const NavbartodomainAndprofile = () => {
     localStorage.removeItem("username"); // ลบ username ออกจาก localStorage
     navigate("/signin"); // เปลี่ยนเส้นทางไปยังหน้าลงชื่อเข้าใช้
   };
- 
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div className="container-fluid">
@@ -53,7 +53,7 @@ const NavbartodomainAndprofile = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/Menu">
+              <a className="nav-link" href="/menutodo">
                 Menu
               </a>
             </li>
