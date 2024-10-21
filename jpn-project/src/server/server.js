@@ -326,6 +326,33 @@ app.put("/api/profile/:username", async (req, res) => {
   }
 });
 
+app.post("/send-update-email", (req, res) => {
+  const { email, username, changes } = req.body;
+
+  // สร้างเนื้อหาอีเมล
+  const mailOptions = {
+    from: "webapp.otp@gmail.com",
+    to: email,
+    subject: "Profile Update Notification",
+    text: `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
+          `- Username: ${username}\n` +
+          `- Birthday: ${changes.birthday}\n` +
+          `- Telephone: ${changes.telephone}\n` +
+          `- Profile Image URL: ${changes.imageUrl}\n\n` +
+          "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
+  };
+
+  // ส่งอีเมล
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+      return res.status(500).send("Failed to send update email");
+    }
+    console.log("Email sent:", info.response);
+    res.status(200).send("Update email sent successfully");
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(
