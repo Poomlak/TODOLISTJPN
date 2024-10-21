@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import jpnLogo from "../navbars/jpn_logo.png";
 import "./Signin.css";
 import axios from "axios";
@@ -35,6 +35,7 @@ const Signin = () => {
       const response = await axios.post("http://localhost:5000/login", {
         username: formData.username,
         password: formData.password,
+        
       });
       await Swal.fire({
         icon: 'success',
@@ -42,13 +43,14 @@ const Signin = () => {
         text: 'คุณได้เข้าสู่ระบบเรียบร้อยแล้ว!',
         confirmButtonText: 'ตกลง'
       });
+      console.log(response);
 
       // ทำการเปลี่ยนเส้นทางไปยังหน้าอื่น (เช่น หน้าโปรไฟล์)
       window.location.href = "/profile"; // เปลี่ยนเป็นเส้นทางที่ต้องการ
-      
+
       // เก็บ username ลง localStorage
       localStorage.setItem("username", formData.username);
-      
+
       // นำทางไปยังหน้าที่ต้องการหลังจากล็อกอินสำเร็จ
       navigate("/profile");
     } catch (error) {
@@ -112,13 +114,14 @@ const Signin = () => {
               </div>
             </div>
             <div className="button-group">
-              <button type="button " className="" onClick={goReset}>
+              <div onClick={goReset} className="resetpass-button">
                 Resetpass
-              </button>
+              </div>
+
               <button type="submit" className="signin-button">
                 Sign in
               </button>
-              <button type="button" className="sign_up">
+              <button type="button" className="sign_up" onClick={"/signup"}>
                 Sign Up
               </button>
             </div>

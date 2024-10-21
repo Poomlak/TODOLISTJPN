@@ -97,11 +97,30 @@
   background: none;
   border: none;
   cursor: pointer;
+  outline: none; 
+}
+
+.toggle-password-button:hover,
+.toggle-password-button:focus {
+  background: none; 
+  outline: none;    
 }
 
 .password-toggle-icon {
   width: 24px;
   height: 24px;
+  background: none;
+}
+
+
+.resetpass-button {
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer; 
+}
+
+.resetpass-button:hover {
+  text-decoration: underline; 
 }
 
 
