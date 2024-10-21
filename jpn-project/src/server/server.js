@@ -355,8 +355,8 @@ app.post("/send-update-email", (req, res) => {
 
 
 app.get("/api/diary", (req, res) => {
-  const sql = "SELECT `diary_namebook`, `member_createdbook`, `member_lastupdatedbook` FROM `member_diary` WHERE `diary_username` = ?"; // กรองตาม username
-  const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
+  const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ?";
+  const username = "admin"; // Adjust as necessary
 
   db.query(sql, [username], (err, result) => {
     if (err) {
@@ -365,17 +365,16 @@ app.get("/api/diary", (req, res) => {
     }
 
     if (result.length > 0) {
-      res.json(result[0]); // ส่งข้อมูลไดอารีแค่ 1 รายการ
+      res.json(result); // Send all data
     } else {
       res.status(404).json({ message: "ไม่พบข้อมูลไดอารี" });
     }
   });
 });
 
-
 app.put("/api/diary/update-timestamp", (req, res) => {
-  const sql = "UPDATE `member_diary` SET `member_lastupdatedbook` = NOW() WHERE `diary_username` = ?"; // อัปเดต timestamp ปัจจุบัน
-  const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
+  const sql = "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_username = ?";
+  const username = "admin"; // Adjust as necessary
 
   db.query(sql, [username], (err, result) => {
     if (err) {
@@ -384,9 +383,64 @@ app.put("/api/diary/update-timestamp", (req, res) => {
     }
 
     if (result.affectedRows > 0) {
-      res.json({ member_lastupdatedbook: new Date() }); // ส่งข้อมูล timestamp กลับไป
+      res.json({ message: "อัปเดต timestamp เรียบร้อย" });
     } else {
       res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+    }
+  });
+});
+
+
+app.post("/api/diary/create", (req, res) => {
+  const { diaryName, username } = req.body;
+  const sql = "INSERT INTO member_diary (diary_namebook, member_createdbook, member_lastupdatedbook, diary_username) VALUES (?, NOW(), NOW(), ?)";
+
+  db.query(sql, [diaryName, username], (err, result) => {
+    if (err) {
+      console.error("Error creating diary:", err);
+      return res.status(500).json({ message: "Error creating diary" });
+    }
+    res.status(201).json({ message: "Diary created successfully!" });
+  });
+});
+
+app.put("/api/diary/update/:oldName", (req, res) => {
+  const { newName } = req.body; // ดึงชื่อใหม่จาก request body
+  const oldName = req.params.oldName;
+
+  const sql = "UPDATE `member_diary` SET `diary_namebook` = ? WHERE `diary_namebook` = ? AND `diary_username` = ?";
+  const username = "admin"; // หรือใช้ username จาก token หรือ session
+
+  db.query(sql, [newName, oldName, username], (err, result) => {
+    if (err) {
+      console.error("เกิดข้อผิดพลาดในการอัปเดตชื่อ:", err);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตชื่อ" });
+    }
+
+    if (result.affectedRows > 0) {
+      res.json({ message: "อัปเดตชื่อเรียบร้อยแล้ว" });
+    } else {
+      res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+    }
+  });
+});
+
+
+
+app.delete("/api/diary/delete", (req, res) => {
+  const { name, username } = req.body;
+  const sql = "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
+
+  db.query(sql, [name, username], (err, result) => {
+    if (err) {
+      console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", err);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการลบข้อมูล" });
+    }
+
+    if (result.affectedRows > 0) {
+      res.json({ message: "ลบสำเร็จ" });
+    } else {
+      res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการลบ" });
     }
   });
 });

@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./menutodo.css";
 import Navbarmenutodo from "./../allnavbars/Navbarmenutodo";
 import logo from "../allnavbars/jpn_logo.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const MySwal = withReactContent(Swal);
 
 const Menutodo = () => {
-  const [list, setList] = useState([
-    {
-      name: "Jame Diary Todo",
-      created: new Date().toLocaleString(),
-      updated: new Date().toLocaleString(),
-    },
-  ]); // State to store the list of items
+  const [list, setList] = useState([]); // Initialize with an empty array
+  const [error, setError] = useState(null); // State for error handling
   const navigate = useNavigate();
 
-  // Go to "/todomain"
+  const fetchDiary = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/diary");
+      setList(response.data); // Set list with fetched data
+    } catch (error) {
+      console.error("Error fetching diary:", error);
+      setError("Error fetching diary"); // Set error message
+    }
+  };
+
+  // Fetch diary entries on component mount
+  useEffect(() => {
+    fetchDiary();
+  }, []);
+
+  // Navigate to "/todomain"
   const goTodomain = (listName) => {
-    // คุณอาจจะส่งค่าชื่อของรายการไปยังหน้านั้นได้ตามต้องการ
-    navigate("/todomain", { state: { listName } });
+    const username = "admin"; // Use the actual username if available
+    navigate("/todomain", { state: { listName, username } });
   };
 
   // Handle adding a new list
@@ -52,29 +63,47 @@ const Menutodo = () => {
     });
 
     if (listName) {
-      const newItem = {
-        name: listName,
-        created: new Date().toLocaleString(),
-        updated: new Date().toLocaleString(),
-      };
-      setList([...list, newItem]); // Add new item to the list
-      Swal.fire({
-        title: `สมุดรายการ: ${listName}`,
-        text: "บันทึกเรียบร้อย!",
-        icon: "success",
-        customClass: {
-          popup: "custom-success-popup",
-        },
-      });
+      try {
+        // Send data to API to create a new diary
+        await axios.post("http://localhost:5000/api/diary/create", {
+          diaryName: listName,
+          username: "admin" // Adjust username as necessary
+        });
+
+        // Update state with the new item
+        const newItem = {
+          diary_namebook: listName,
+          member_createdbook: new Date().toLocaleString(),
+          member_lastupdatedbook: new Date().toLocaleString(),
+        };
+        setList((prevList) => [...prevList, newItem]); // Add new item to the list
+
+        Swal.fire({
+          title: `สมุดรายการ: ${listName}`,
+          text: "บันทึกเรียบร้อย!",
+          icon: "success",
+          customClass: {
+            popup: "custom-success-popup",
+          },
+        });
+      } catch (error) {
+        console.error("Error creating diary:", error);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาดในการสร้างสมุดรายการ",
+          icon: "error",
+        });
+      }
     }
   };
 
   // Handle renaming an item
   const handleRename = async (index) => {
+    const oldName = list[index].diary_namebook; // Get old name from list
+
     const { value: newName } = await MySwal.fire({
       title: "เปลี่ยนชื่อสมุดรายการ",
       input: "text",
-      inputValue: list[index].name,
+      inputValue: oldName, // Use old name as default value
       showCancelButton: true,
       confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
@@ -88,24 +117,36 @@ const Menutodo = () => {
     });
 
     if (newName) {
-      const updatedList = [...list];
-      updatedList[index] = {
-        ...updatedList[index],
-        name: newName,
-        updated: new Date().toLocaleString(),
-      };
-      setList(updatedList); // Update the name of the item
-      Swal.fire({
-        title: "เปลี่ยนชื่อสำเร็จ",
-        icon: "success",
-      });
+      try {
+        // Call API to update name
+        await axios.put(`http://localhost:5000/api/diary/update/${oldName}`, { newName });
+
+        const updatedList = list.map((item, idx) =>
+          idx === index
+            ? { ...item, diary_namebook: newName, member_lastupdatedbook: new Date().toLocaleString() }
+            : item
+        );
+        setList(updatedList); // Update the name of the item
+        Swal.fire({
+          title: "เปลี่ยนชื่อสำเร็จ",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error("Error renaming diary:", error);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาดในการเปลี่ยนชื่อ",
+          icon: "error",
+        });
+      }
     }
   };
 
   // Handle deleting an item
-  const handleDelete = (index) => {
-    MySwal.fire({
-      title: "ต้องการลบสมุดบันทึกหรือไม่?",
+  const handleDelete = async (index) => {
+    const itemName = list[index].diary_namebook;
+
+    const result = await MySwal.fire({
+      title: `ต้องการลบ "${itemName}" หรือไม่?`,
       imageUrl: logo,
       imageWidth: 80,
       imageHeight: 80,
@@ -114,13 +155,29 @@ const Menutodo = () => {
       cancelButtonText: "ยกเลิก",
       confirmButtonColor: "#f44336",
       cancelButtonColor: "#4CAF50",
-    }).then((result) => {
-      if (result.isConfirmed) {
+    });
+
+    if (result.isConfirmed) {
+      try {
+        // Send request to API to delete
+        await axios.delete("http://localhost:5000/api/diary/delete", {
+          data: {
+            name: itemName,
+            username: "admin", // Adjust username as necessary
+          },
+        });
+
         const updatedList = list.filter((_, i) => i !== index);
         setList(updatedList); // Remove the item from the list
         Swal.fire("ลบสำเร็จ!", "", "success");
+      } catch (error) {
+        console.error("Error deleting diary:", error);
+        Swal.fire({
+          title: "เกิดข้อผิดพลาดในการลบ",
+          icon: "error",
+        });
       }
-    });
+    }
   };
 
   return (
@@ -134,23 +191,27 @@ const Menutodo = () => {
       </div>
       <div className="list-container">
         <div className="button-container">
-          {list.map((item, index) => (
-            <div key={index} className="list-item"  >
-              <div
-                className="list-content"
-                onClick={() => goTodomain(item.name)} // Navigate on click
-                style={{ cursor: "pointer" }}
-              >
-                <h3>{item.name}</h3>
-                <p>Created: {item.created}</p>
-                <p>Last Update: {item.updated}</p>
+          {list.length === 0 ? (
+            <p>กด "Create List" เพื่อสร้างรายการใหม่</p>
+          ) : (
+            list.map((item, index) => (
+              <div key={index} className="list-item">
+                <div
+                  className="list-content"
+                  onClick={() => goTodomain(item.diary_namebook)} // Pass diary name
+                  style={{ cursor: "pointer" }}
+                >
+                  <h3>{item.diary_namebook}</h3>
+                  <p>Created: {item.member_createdbook}</p>
+                  <p>Last Update: {item.member_lastupdatedbook}</p>
+                </div>
+                <div className="action-buttons">
+                  <button className="rename-button" onClick={() => handleRename(index)}>Rename</button>
+                  <button className="delete-button" onClick={() => handleDelete(index)}>Delete</button>
+                </div>
               </div>
-              <div className="action-buttons">
-                <button className="rename-button" onClick={() => handleRename(index)}>Rename</button>
-                <button className="delete-button" onClick={() => handleDelete(index)}>Delete</button>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
