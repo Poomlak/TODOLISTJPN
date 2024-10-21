@@ -12,6 +12,9 @@ const Signin = () => {
   const goReset = () => {
     navigate("/resetpass");
   };
+  const goSignup = () => {
+    navigate("/signup");
+  };
 
   const [formData, setFormData] = useState({
     username: "",
@@ -121,7 +124,7 @@ const Signin = () => {
               <button type="submit" className="signin-button">
                 Sign in
               </button>
-              <button type="button" className="sign_up" onClick={"/signup"}>
+              <button type="button" className="sign_up" onClick={goSignup}>
                 Sign Up
               </button>
             </div>
