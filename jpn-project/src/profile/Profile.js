@@ -53,32 +53,39 @@ const Profile = () => {
         birthday: profile.member_birthday,
         email: profile.member_email,
         telephone: profile.member_tel,
-        imageUrl: profile.member_image_url // ส่ง URL รูปภาพไปอัปเดตใน DB
+        imageUrl: profile.member_image_url, // ส่ง URL รูปภาพไปอัปเดตใน DB
       });
-
-
-      console.log(response.data);
-      setIsEditing(false);
-       // แสดง SweetAlert2 เมื่ออัปเดตสำเร็จ
-    await Swal.fire({
-      icon: 'success',
-      title: 'อัปเดตสำเร็จ!',
-      text: 'โปรไฟล์ของคุณได้ถูกอัปเดตแล้ว.',
-      confirmButtonText: 'ตกลง'
-    });
-
-    // รีเฟรชหน้าเพื่อดึงข้อมูลใหม่
-    window.location.reload();
+      console.log(response);
+  
+      // แสดง SweetAlert2 เมื่ออัปเดตสำเร็จ
+      await Swal.fire({
+        icon: 'success',
+        title: 'อัปเดตสำเร็จ!',
+        text: 'โปรไฟล์ของคุณได้ถูกอัปเดตแล้ว.',
+        confirmButtonText: 'ตกลง'
+      });
+  
+      // ส่งอีเมลแจ้งเตือนเมื่ออัปเดตโปรไฟล์เสร็จ
+      await axios.post("http://localhost:5000/send-update-email", {
+        email: profile.member_email, // ส่งอีเมลของผู้ใช้
+        username: profile.member_username,
+        changes: {
+          birthday: profile.member_birthday,
+          telephone: profile.member_tel,
+          imageUrl: profile.member_image_url,
+        },
+      });
+  
+      // รีเฟรชหน้าเพื่อดึงข้อมูลใหม่
+      window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert('Failed to update profile. Please check your input or try again later.');
+      alert("Failed to update profile. Please check your input or try again later.");
     }
   };
+  
 
-  // ฟังก์ชันตรวจสอบ URL รูปภาพ
-  const isValidImageUrl = (url) => {
-    return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
-  };
+  
 
   
 
