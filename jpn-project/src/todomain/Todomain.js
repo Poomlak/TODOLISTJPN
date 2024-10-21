@@ -34,7 +34,9 @@ const Todomain = () => {
         <div className="todo-container">
           <div className="todo-card">
             <div>
-              <h3>Jame Diary Todo</h3>
+              <div>
+                <h3>Jame Diary Todo</h3>
+              </div>
               <div className="timestamp-container">
                 <p>
                   Created: <i>ตั้ว timestamp</i>
@@ -45,8 +47,8 @@ const Todomain = () => {
               </div>
             </div>
             <div className="button-group-Todo">
-              <button className="add-button">+</button>
-              <button className="date-button" onClick={handleSelectDate}>
+              <button className="add-button-Todo">+</button>
+              <button className="date-button-Todo" onClick={handleSelectDate}>
                 Select Date
               </button>
             </div>

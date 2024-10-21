@@ -13,7 +13,7 @@
 }
 
 .todo-card {
-  background-color: #f5f5dc;
+  background-color: #f6efe1;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -24,7 +24,7 @@
   justify-content: space-evenly;
   border-color: black;
   border: 2px solid;
-  gap: 300px;
+  gap: 50%;
 }
 
 .todo-card h3 {
@@ -44,26 +44,35 @@
   justify-content: center;
 }
 
-.add-button {
+.add-button-Todo {
   background-color: #ff5c5c;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s; /* เพิ่มการเปลี่ยนแปลงสี */
 }
 
-.date-button {
+.add-button-Todo:hover {
+  background-color: #e54c4c; /* สีที่เข้มขึ้นเมื่อ hover */
+}
+
+.date-button-Todo {
   background-color: #f44336;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s; /* เพิ่มการเปลี่ยนแปลงสี */
 }
 
+.date-button-Todo:hover {
+  background-color: #d32f2f; /* สีที่เข้มขึ้นเมื่อ hover */
+}
 .add-task {
-  background-color: #f5f5dc;
+  background-color: #f6efe1;
   padding: 15px;
   text-align: center;
   border-radius: 8px;
