@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "26.11.35.119",
+  host: "localhost",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -334,13 +334,12 @@ app.post("/send-update-email", (req, res) => {
     from: "webapp.otp@gmail.com",
     to: email,
     subject: "Profile Update Notification",
-    text:
-      `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
-      `- Username: ${username}\n` +
-      `- Birthday: ${changes.birthday}\n` +
-      `- Telephone: ${changes.telephone}\n` +
-      `- Profile Image URL: ${changes.imageUrl}\n\n` +
-      "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
+    text: `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
+          `- Username: ${username}\n` +
+          `- Birthday: ${changes.birthday}\n` +
+          `- Telephone: ${changes.telephone}\n` +
+          `- Profile Image URL: ${changes.imageUrl}\n\n` +
+          "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
   };
 
   // ส่งอีเมล
@@ -354,17 +353,10 @@ app.post("/send-update-email", (req, res) => {
   });
 });
 
-<<<<<<< HEAD
-app.get("/api/diary", (req, res) => {
-  const sql =
-    "SELECT `diary_namebook`, `member_createdbook`, `member_lastupdatedbook` FROM `member_diary` WHERE `diary_username` = ?"; // กรองตาม username
-  const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
-=======
 
 app.get("/api/diary/:username", (req, res) => {
   const { token } = req.body; // ดึง token จาก request body
   const username = req.params.username; // รับ username จาก URL
->>>>>>> ba91e8fbd7df4cacb8286c62fe7f5c735891e197
 
   const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ?";
   
@@ -382,22 +374,20 @@ app.get("/api/diary/:username", (req, res) => {
   });
 });
 
+
 app.put("/api/diary/update-timestamp", (req, res) => {
-<<<<<<< HEAD
-  const sql =
-    "UPDATE `member_diary` SET `member_lastupdatedbook` = NOW() WHERE `diary_username` = ?"; // อัปเดต timestamp ปัจจุบัน
-  const username = "admin"; // เปลี่ยนเป็น username ที่ต้องการกรอง
-=======
+  const { username } = req.body; // ดึง username จาก request body
+
+  if (!username) {
+    return res.status(400).json({ message: "กรุณาระบุ username" });
+  }
+
   const sql = "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_username = ?";
-  const username = "admin"; // Adjust as necessary
->>>>>>> ba91e8fbd7df4cacb8286c62fe7f5c735891e197
 
   db.query(sql, [username], (err, result) => {
     if (err) {
       console.error("เกิดข้อผิดพลาดในการอัปเดต timestamp:", err);
-      return res
-        .status(500)
-        .json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
     }
 
     if (result.affectedRows > 0) {
@@ -408,8 +398,7 @@ app.put("/api/diary/update-timestamp", (req, res) => {
   });
 });
 
-<<<<<<< HEAD
-=======
+
 
 app.post("/api/diary/create", (req, res) => {
   const { diaryName, username } = req.body;
@@ -471,7 +460,6 @@ app.delete("/api/diary/delete", (req, res) => {
 });
 
 
->>>>>>> ba91e8fbd7df4cacb8286c62fe7f5c735891e197
 // Start the server
 app.listen(port, () => {
   console.log(
