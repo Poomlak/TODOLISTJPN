@@ -31,38 +31,57 @@
 }
 
 .main-create:hover {
-  background-color: #ebce98;
+  background-color: #EDD8AF;
   transform: translateY(-3px);
 }
 
 .list-container {
   padding: 20px 40px;
-  max-width: 800px; /* Increase width */
+  max-width: 800px; 
   margin: 0 auto;
-  margin-top: 20px; /* Space below header */
+  margin-top: 20px; 
 }
 
 .button-container {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Space between buttons */
+  gap: 16px; 
 }
 
+/* กล่องรายการพื้นฐาน */
 .list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #deb887;
+  background-color: #EDD8AF;
   padding: 18px 24px;
   border-radius: 25px;
   font-size: 16px;
   color: #006064;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  position: relative; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; 
 }
+
+/* ลูกเล่นเมื่อ hover */
+.list-item:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); 
+  background-color: #ffe0b2; 
+}
+
+/* ลูกเล่นเมื่อถูกกด (active state) */
+.list-item:active {
+  transform: translateY(3px) scale(0.98); 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); 
+  background-color: #ffcc80; 
+}
+
 
 .list-content {
   text-align: left;
 }
+
 
 .rename-button, .delete-button {
   background-color: red;

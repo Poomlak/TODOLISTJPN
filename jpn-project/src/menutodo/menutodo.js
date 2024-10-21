@@ -18,8 +18,10 @@ const Menutodo = () => {
   ]); // State to store the list of items
   const navigate = useNavigate();
 
-  const goTodomain = () => {
-    navigate("/todomain");
+  // Go to "/todomain"
+  const goTodomain = (listName) => {
+    // คุณอาจจะส่งค่าชื่อของรายการไปยังหน้านั้นได้ตามต้องการ
+    navigate("/todomain", { state: { listName } });
   };
 
   // Handle adding a new list
@@ -64,7 +66,6 @@ const Menutodo = () => {
           popup: "custom-success-popup",
         },
       });
-      goTodomain();
     }
   };
 
@@ -134,15 +135,19 @@ const Menutodo = () => {
       <div className="list-container">
         <div className="button-container">
           {list.map((item, index) => (
-            <div key={index} className="list-item">
-              <div className="list-content">
+            <div key={index} className="list-item"  >
+              <div
+                className="list-content"
+                onClick={() => goTodomain(item.name)} // Navigate on click
+                style={{ cursor: "pointer" }}
+              >
                 <h3>{item.name}</h3>
                 <p>Created: {item.created}</p>
                 <p>Last Update: {item.updated}</p>
               </div>
               <div className="action-buttons">
-                <button className="rename-button" onClick={() => handleRename(index)}>rename</button>
-                <button className="delete-button" onClick={() => handleDelete(index)}>del</button>
+                <button className="rename-button" onClick={() => handleRename(index)}>Rename</button>
+                <button className="delete-button" onClick={() => handleDelete(index)}>Delete</button>
               </div>
             </div>
           ))}
