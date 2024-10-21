@@ -1,93 +1,83 @@
 .menu-container {
   width: 100%;
   min-height: 100vh;
-  background-color: white;
+  background-color: #f7f8fa; /* Keep soft background */
 }
 
-.list-container {
-  padding: 40px;
-  max-width: 600px;
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  max-width: 800px; /* Make it wider */
   margin: 0 auto;
 }
 
 .list-title {
-  font-size: 24px;
+  font-size: 28px; /* Slightly larger */
   color: #333;
-  margin-bottom: 30px;
-  font-weight: normal;
+  font-weight: 600;
+}
+
+.main-create {
+  background-color: #deb887;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 18px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.main-create:hover {
+  background-color: #ebce98;
+  transform: translateY(-3px);
+}
+
+.list-container {
+  padding: 20px 40px;
+  max-width: 800px; /* Increase width */
+  margin: 0 auto;
+  margin-top: 20px; /* Space below header */
 }
 
 .button-container {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* ระยะห่างระหว่างปุ่ม */
+  gap: 16px; /* Space between buttons */
 }
 
-.create-button {
-  background-color: #f5deb3; /* สีพื้นหลังแบบ beige */
-  border: none;
-  padding: 15px 20px;
-  border-radius: 25px; /* ทำให้มีความโค้งมน */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #deb887;
+  padding: 18px 24px;
+  border-radius: 25px;
   font-size: 16px;
-  color: #000;
-  cursor: pointer;
+  color: #006064;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+.list-content {
   text-align: left;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* เพิ่มเงา */
-  transition: all 0.3s ease;
 }
 
-.create-button:hover {
-  background-color: #deb887; /* สีเข้มขึ้นเมื่อ hover */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+.rename-button, .delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-left: 10px;
 }
 
-/* ปรับให้รองรับหน้าจอขนาดต่างๆ */
-@media (max-width: 768px) {
-  .list-container {
-    padding: 20px;
-  }
-
-  .create-button {
-    font-size: 14px;
-    padding: 12px 16px;
-  }
-}
-.custom-popup {
-  background-color: #f0f8ff; /* พื้นหลังสีฟ้าอ่อน */
-  border-radius: 15px; /* ขอบมน */
-  padding: 20px;
-  font-family: "Arial", sans-serif;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2); /* เงารอบกล่อง */
+.rename-button {
+  background-color: #4CAF50;
 }
 
-.custom-title {
-  color: #4caf50; /* สีเขียว */
-  font-weight: bold;
-  font-size: 24px;
-}
-
-.custom-html {
-  color: #555;
-  margin-top: 10px;
-  font-size: 18px;
-}
-
-.custom-confirm-button {
-  background-color: #4caf50 !important; /* ปุ่มยืนยันสีเขียว */
-  color: white !important;
-  border-radius: 8px;
-  padding: 10px 20px;
-}
-
-.custom-cancel-button {
-  background-color: #f44336 !important; /* ปุ่มยกเลิกสีแดง */
-  color: white !important;
-  border-radius: 8px;
-  padding: 10px 20px;
-}
-
-.custom-success-popup {
-  background-color: #e8f5e9; /* สีพื้นหลังสำเร็จ */
-  color: #2e7d32;
+.rename-button:hover, .delete-button:hover {
+  opacity: 0.8;
 }

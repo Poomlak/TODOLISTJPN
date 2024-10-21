@@ -1,30 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./menutodo.css";
 import Navbarmenutodo from "./../allnavbars/Navbarmenutodo";
-import logo from "../allnavbars/jpn_logo.png"; // นำเข้ารูป
+import logo from "../allnavbars/jpn_logo.png";
 import { useNavigate } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
 const Menutodo = () => {
-  const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
+  const [list, setList] = useState([
+    {
+      name: "Jame Diary Todo",
+      created: new Date().toLocaleString(),
+      updated: new Date().toLocaleString(),
+    },
+  ]); // State to store the list of items
+  const navigate = useNavigate();
+
   const goTodomain = () => {
     navigate("/todomain");
   };
+
+  // Handle adding a new list
   const handleCreate = async () => {
     const { value: listName } = await MySwal.fire({
-      //   title: <strong>JPN</strong>,
       html: (
         <div>
-          <p>กรอกชื่อสมุดรายการ :</p>
-          <input
-            type="text"
-            id="list-name"
-            className="swal2-input"
-            placeholder="ชื่อสมุด"
-          />
+          <h4>กรอกชื่อสมุดรายการ:</h4>
+          <input id="list-name" className="swal2-input" placeholder="ชื่อสมุดรายการ" />
         </div>
       ),
       imageUrl: logo,
@@ -46,8 +50,14 @@ const Menutodo = () => {
     });
 
     if (listName) {
+      const newItem = {
+        name: listName,
+        created: new Date().toLocaleString(),
+        updated: new Date().toLocaleString(),
+      };
+      setList([...list, newItem]); // Add new item to the list
       Swal.fire({
-        title: `สมุดรายการ: ${listName}`, // เปลี่ยนชื่อกล่องเป็นค่าที่กรอกมา
+        title: `สมุดรายการ: ${listName}`,
         text: "บันทึกเรียบร้อย!",
         icon: "success",
         customClass: {
@@ -58,24 +68,84 @@ const Menutodo = () => {
     }
   };
 
+  // Handle renaming an item
+  const handleRename = async (index) => {
+    const { value: newName } = await MySwal.fire({
+      title: "เปลี่ยนชื่อสมุดรายการ",
+      input: "text",
+      inputValue: list[index].name,
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#4CAF50",
+      cancelButtonColor: "#f44336",
+      inputValidator: (value) => {
+        if (!value) {
+          return "กรุณากรอกชื่อใหม่!";
+        }
+      },
+    });
+
+    if (newName) {
+      const updatedList = [...list];
+      updatedList[index] = {
+        ...updatedList[index],
+        name: newName,
+        updated: new Date().toLocaleString(),
+      };
+      setList(updatedList); // Update the name of the item
+      Swal.fire({
+        title: "เปลี่ยนชื่อสำเร็จ",
+        icon: "success",
+      });
+    }
+  };
+
+  // Handle deleting an item
+  const handleDelete = (index) => {
+    MySwal.fire({
+      title: "ต้องการลบสมุดบันทึกหรือไม่?",
+      imageUrl: logo,
+      imageWidth: 80,
+      imageHeight: 80,
+      showCancelButton: true,
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#f44336",
+      cancelButtonColor: "#4CAF50",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedList = list.filter((_, i) => i !== index);
+        setList(updatedList); // Remove the item from the list
+        Swal.fire("ลบสำเร็จ!", "", "success");
+      }
+    });
+  };
+
   return (
     <div className="menu-container">
       <Navbarmenutodo />
+      <div className="list-header">
+        <h1 className="list-title">List-Book</h1>
+        <button className="main-create" onClick={handleCreate}>
+          Create List
+        </button>
+      </div>
       <div className="list-container">
-        <h2 className="list-title">List-Book</h2>
         <div className="button-container">
-          <button className="create-button" onClick={handleCreate}>
-            Create #1
-          </button>
-          <button className="create-button" onClick={handleCreate}>
-            Create #2
-          </button>
-          <button className="create-button" onClick={handleCreate}>
-            Create #3
-          </button>
-          <button className="create-button" onClick={handleCreate}>
-            Create #4
-          </button>
+          {list.map((item, index) => (
+            <div key={index} className="list-item">
+              <div className="list-content">
+                <h3>{item.name}</h3>
+                <p>Created: {item.created}</p>
+                <p>Last Update: {item.updated}</p>
+              </div>
+              <div className="action-buttons">
+                <button className="rename-button" onClick={() => handleRename(index)}>rename</button>
+                <button className="delete-button" onClick={() => handleDelete(index)}>del</button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
