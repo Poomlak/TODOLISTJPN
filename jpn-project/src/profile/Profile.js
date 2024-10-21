@@ -125,14 +125,15 @@ const Profile = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Password :</label>
+            <label htmlFor="password">Change Password :</label>
             <div className="password-field">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="member_password"
-                value={profile.member_password}
+                // value={profile.member_password}
                 onChange={handleInputChange}
+                placeholder="You can change password here"
                 readOnly={!isEditing}
               />
               <span onClick={togglePasswordVisibility} className="password-toggle">
