@@ -1,0 +1,79 @@
+.center-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 80vh;
+  flex-direction: column;
+  padding-top: 5%;
+}
+
+.todo-container {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.todo-card {
+  background-color: #f5f5dc;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  justify-content: space-evenly;
+  border-color: black;
+  border: 2px solid;
+  gap: 50px;
+}
+
+.todo-card h3 {
+  margin: 0;
+}
+
+.todo-card p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.add-button {
+  background-color: #ff5c5c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.date-button {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-task {
+  background-color: #f5f5dc;
+  padding: 15px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  color: #555;
+}
+
+.timestamp-container {
+  background-color: #f9f9f9; /* สีพื้นหลัง */
+  padding: 10px; /* ระยะห่างภายใน */
+  border-radius: 5px; /* มุมมน */
+  margin: 10px 0; /* ระยะห่างด้านบนและล่าง */
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); /* เงา */
+}

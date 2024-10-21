@@ -1,22 +1,60 @@
 import React from "react";
-import jpnLogo from "../navbars/jpn_logo.png";
+import Swal from "sweetalert2";
 import "./Todomain.css";
+import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
 
 const Todomain = () => {
+  const handleSelectDate = async () => {
+    const { value: selectedDate } = await Swal.fire({
+      title: "Select Date",
+      html: '<input type="date" id="date-input" className="swal2-input" />',
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      showCancelButton: true,
+      confirmButtonColor: "#4CAF50",
+      cancelButtonColor: "#f44336",
+      preConfirm: () => {
+        const date = document.getElementById("date-input").value;
+        if (!date) {
+          Swal.showValidationMessage("Please select a date!");
+        }
+        return date;
+      },
+    });
+
+    if (selectedDate) {
+      Swal.fire(`You selected: ${selectedDate}`);
+    }
+  };
+
   return (
-    <div className="center-content">
-      <h1>Todomain Jame Diary Todo</h1>
-      {/* <img src={jpnLogo} alt="JPN Todolist Logo" className="logo" />
-      <h2 className="tagline">ควบคุมการจัดตารางเวลาง่ายๆโดยใช้</h2>
-      <h2 className="app-title">JPN Todolist</h2>
-      <p className="description">
-        Become focused, organized, and calm with todo app. The World's #1 task manager app.
-      </p>
-      <div className="buttons">
-        <button className="sign-in">Sign In</button>
-        <button className="sign-up">Sign Up</button>
-      </div> */}
-    </div>
+    <>
+      <NavbartodomainAndprofile />
+      <div className="center-content">
+        <div className="todo-container">
+          <div className="todo-card">
+            <div>
+              <h3>Jame Diary Todo</h3>
+              <div className="timestamp-container">
+                <p>
+                  Created: <i>ตั้ว timestamp</i>
+                </p>
+                <p>
+                  Last update: <i>ตั้ว timestamp</i>
+                </p>
+              </div>
+            </div>
+            <div className="button-group">
+              <button className="add-button">+</button>
+              <button className="date-button" onClick={handleSelectDate}>
+                Select Date
+              </button>
+            </div>
+          </div>
+          <div className="add-task">Add some first book list Click +</div>
+        </div>
+      </div>
+    </>
   );
 };
 
