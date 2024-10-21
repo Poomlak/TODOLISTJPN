@@ -354,20 +354,20 @@ app.post("/send-update-email", (req, res) => {
 });
 
 
-app.get("/api/diary/:username", (req, res) => {
-  const { token } = req.body; // ดึง token จาก request body
-  const username = req.params.username; // รับ username จาก URL
+app.get("/api/userDiary", (req, res) => {
+  const username = req.query.username; // รับ username จาก query
+  const diaryName = req.query.diaryName; // รับ diary_namebook จาก query
+  console.log(username,diaryName)
+  const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ? AND diary_namebook = ?";
 
-  const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ?";
-  
-  db.query(sql, [username], (err, result) => {
+  db.query(sql, [username, diaryName], (err, result) => {
     if (err) {
       console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", err);
       return res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
     }
 
     if (result.length > 0) {
-      res.json(result);
+      res.json(result[0]); // ส่งข้อมูล object แรก
     } else {
       res.status(404).json({ message: "ไม่พบข้อมูลไดอารี" });
     }
@@ -375,28 +375,35 @@ app.get("/api/diary/:username", (req, res) => {
 });
 
 
-app.put("/api/diary/update-timestamp", (req, res) => {
-  const { username } = req.body; // ดึง username จาก request body
 
-  if (!username) {
+
+
+app.put("/api/diary/update-timestamp", (req, res) => {
+  const { diary_username } = req.body;
+  console.log(diary_username)
+  if (!diary_username) {
+    console.error("Username not provided");
     return res.status(400).json({ message: "กรุณาระบุ username" });
   }
 
-  const sql = "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_username = ?";
+  const sql = "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_namebook = ?";
 
-  db.query(sql, [username], (err, result) => {
+  db.query(sql, [diary_username], (err, result) => {
     if (err) {
-      console.error("เกิดข้อผิดพลาดในการอัปเดต timestamp:", err);
+      console.error("Error updating timestamp:", err);
       return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
     }
 
     if (result.affectedRows > 0) {
       res.json({ message: "อัปเดต timestamp เรียบร้อย" });
     } else {
+      console.error("No record found to update for username:", diary_username);
       res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
     }
   });
 });
+
+
 
 
 
@@ -474,6 +481,26 @@ app.get('/api/diary', (req, res) => {
   });
 });
 
+app.get("/api/diary/:username", (req, res) => {
+  const { token } = req.body; // ดึง token จาก request body
+  const username = req.params.username; // รับ username จาก URL
+
+  const sql =
+    "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ?";
+
+  db.query(sql, [username], (err, result) => {
+    if (err) {
+      console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", err);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
+    }
+
+    if (result.length > 0) {
+      res.json(result);
+    } else {
+      res.status(404).json({ message: "ไม่พบข้อมูลไดอารี" });
+    }
+  });
+});
 
 // Start the server
 app.listen(port, () => {

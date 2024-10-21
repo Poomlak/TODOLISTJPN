@@ -8,17 +8,46 @@ import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
 const Todomain = () => {
   const location = useLocation();
   const { diaryName } = location.state || {};
-  console.log(diaryName);
+  console.log('hello',diaryName);
   const [diary, setDiary] = useState({
     diary_namebook: "",
     member_createdbook: "",
     member_lastupdatedbook: "",
   });
+  const [user, setUser] = useState({
+    diary_namebook: "",
+    member_createdbook: "",
+    member_lastupdatedbook: "",
+  });
+  
   const [tasks, setTasks] = useState([]); // State สำหรับเก็บ tasks
   const [selectedDateTime, setSelectedDateTime] = useState(""); // State สำหรับวันที่และเวลาที่เลือก
 
-  // ฟังก์ชันเพื่อดึงข้อมูลไดอารีจากฐานข้อมูล
+  const fetchUser = async () => {
+    const username = localStorage.getItem("username"); // ดึง username จาก localStorage
+    const diaryName = location.state?.diaryName; // ดึง diaryName
+  
+    if (!diaryName) {
+      console.error("diaryName is undefined");
+      return;
+    }
+  
+    try {
+      const response = await axios.get("http://localhost:5000/api/userDiary", {
+        params: { username, diaryName } // ส่ง username และ diaryName ใน params
+      });
+      setUser(response.data); // สมมติว่า response.data เป็น object
+      console.log(response.data)
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+  
+  
+
+  
   const fetchDiary = async () => {
+    
     try {
       // ตรวจสอบว่า diaryName มีค่าหรือไม่
       if (diaryName) {
@@ -34,7 +63,14 @@ const Todomain = () => {
     }
   };
   
-
+  useEffect(() => {
+    if (diaryName) {
+      fetchDiary();
+      fetchUser();
+    } else {
+      console.error("diaryName is undefined in useEffect");
+    }
+  }, [diaryName]);
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
     return date.toLocaleString("en-GB", {
@@ -67,9 +103,8 @@ const Todomain = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDiary(); // ดึงข้อมูลเมื่อ component ถูก mount
-  }, [diaryName]); // เพิ่ม diaryName เป็น dependency
+
+  
 
   const handleSelectDateTime = async () => {
     const { value: dateTime } = await Swal.fire({
@@ -259,25 +294,28 @@ const Todomain = () => {
   };
 
   const handleApply = async () => {
-    const currentTime = new Date().toISOString(); // เวลาปัจจุบันในรูปแบบ ISO
+    const diaryUsername = diaryName; // เปลี่ยนเป็น username ที่คุณต้องการ
+  
     try {
       const response = await axios.put(
         "http://localhost:5000/api/diary/update-timestamp",
-        { member_lastupdatedbook: currentTime } // ส่งเวลาไปยัง API
+        { diary_username: diaryUsername }
       );
-
+  
       if (response.data) {
         setDiary((prevState) => ({
           ...prevState,
-          member_lastupdatedbook: response.data.member_lastupdatedbook, // อัปเดตใน state
+          member_lastupdatedbook: response.data.member_lastupdatedbook 
         }));
         Swal.fire("Success!", "Timestamp has been updated!", "success");
       }
     } catch (error) {
-      console.error("Error updating timestamp:", error);
+      console.error("Error updating timestamp:", error.response ? error.response.data : error.message);
       Swal.fire("Error!", "Failed to update timestamp!", "error");
     }
   };
+  
+  
 
   return (
     <>
@@ -287,14 +325,14 @@ const Todomain = () => {
           <div className="todo-card">
             <div>
               <div>
-                <h3>{diary.diary_namebook || "Diary Todo"}</h3>
+                <h3>{user.diary_namebook || "Diary Todo"}</h3>
               </div>
               <div className="timestamp-container">
                 <p>
-                  Created: <i>{formatDate(diary.member_createdbook)}</i>
+                  Created: <i>{formatDate(user.member_createdbook)}</i>
                 </p>
                 <p>
-                  Last update: <i>{formatDate(diary.member_lastupdatedbook)}</i>
+                  Last update: <i>{formatDate(user.member_lastupdatedbook)}</i>
                 </p>
               </div>
             </div>
