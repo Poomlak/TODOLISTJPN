@@ -379,25 +379,27 @@ app.get("/api/userDiary", (req, res) => {
 
 
 app.put("/api/diary/update-timestamp", (req, res) => {
-  const { diary_username } = req.body;
-  console.log(diary_username)
-  if (!diary_username) {
-    console.error("Username not provided");
-    return res.status(400).json({ message: "กรุณาระบุ username" });
-  }
+  const diary_namebook = req.body.data.diary_namebook;
+  const diary_Username =req.body.data.diary_username;
+  console.log("data from frontend",req.body);
+  // console.log("namebook",diary_namebook);
+  // console.log("username",diary_Username);
 
-  const sql = "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_namebook = ?";
+  const sql =
+    "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_namebook = ? AND diary_username =?"; // อัปเดต timestamp ปัจจุบัน
+  
 
-  db.query(sql, [diary_username], (err, result) => {
+  db.query(sql, [diary_namebook,diary_Username], (err, result) => {
     if (err) {
-      console.error("Error updating timestamp:", err);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
+      console.error("เกิดข้อผิดพลาดในการอัปเดต timestamp:", err);
+      return res
+        .status(500)
+        .json({ message: "เกิดข้อผิดพลาดในการอัปเดต timestamp" });
     }
 
     if (result.affectedRows > 0) {
-      res.json({ message: "อัปเดต timestamp เรียบร้อย" });
+      res.json({ member_lastupdatedbook: new Date() }); // ส่งข้อมูล timestamp กลับไป
     } else {
-      console.error("No record found to update for username:", diary_username);
       res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
     }
   });

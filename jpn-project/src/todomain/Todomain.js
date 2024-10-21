@@ -64,12 +64,16 @@ const Todomain = () => {
   };
   
   useEffect(() => {
+    
     if (diaryName) {
       fetchDiary();
       fetchUser();
+      
+
     } else {
       console.error("diaryName is undefined in useEffect");
     }
+    
   }, [diaryName]);
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -294,16 +298,23 @@ const Todomain = () => {
   };
 
   const handleApply = async () => {
-    const diaryUsername = diaryName; // เปลี่ยนเป็น username ที่คุณต้องการ
-  
+   
+    const diaryNamebook = diaryName; // เปลี่ยนเป็น username ที่คุณต้องการ
+    const username = localStorage.getItem("username");
+    
     try {
       const response = await axios.put(
         "http://localhost:5000/api/diary/update-timestamp",
-        { diary_username: diaryUsername }
+        {
+          data: {
+            diary_namebook: diaryNamebook,
+            diary_username: username,
+          },
+        }
       );
-  
+      console.log("testtt",response.data.member_lastupdatedbook)
       if (response.data) {
-        setDiary((prevState) => ({
+        setUser((prevState) => ({
           ...prevState,
           member_lastupdatedbook: response.data.member_lastupdatedbook 
         }));
