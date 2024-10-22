@@ -64,8 +64,10 @@ app.get("/server/serverTest", (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
+  
   const { fname, lname, birthday, email, tel, username, password } = req.body;
-
+  console.log(req.body.username);
+  const lowercaseusername = username.toLowerCase();
   if (
     !fname ||
     !lname ||
@@ -86,7 +88,7 @@ app.post("/signup", async (req, res) => {
 
   db.query(
     query,
-    [fname, lname, birthday, email, tel, username, hashedPassword],
+    [fname, lname, birthday, email, tel, lowercaseusername, hashedPassword],
     (err, result) => {
       if (err) {
         console.error("MySQL Error:", err);
