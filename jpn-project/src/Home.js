@@ -1,5 +1,5 @@
 import React from "react";
-import jpnLogo from "./navbars/jpn_logo.png";
+import jpnLogoo from "./navbars/jpn_logo.png";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./navbars/Navbar";
@@ -27,16 +27,16 @@ const Home = () => {
       {isLoggedIn ? <Navbarprofile /> : <Navbar />}
       
       <div className="center-content">
-        <img src={jpnLogo} alt="JPN Todolist Logo" className="logo" />
+        <img src={jpnLogoo} alt="JPN Todolist Logo" className="logoo" />
         <h2 className="tagline">ควบคุมการจัดตารางเวลาง่ายๆโดยใช้</h2>
-        <h2 className="app-title">JPN Todolist</h2>
-        <p className="description">
+        <h2 className="app-titlee">JPN Todolist</h2>
+        <p className="descriptionn">
           Become focused, organized, and calm with todo app. The World's #1 task
           manager app.
         </p>
         {!isLoggedIn && ( // Show sign-in and sign-up buttons only if the user is not logged in
           <div className="buttons">
-            <button className="sign-in" onClick={goSignIn}>
+            <button className="sign-inn" onClick={goSignIn}>
               Sign In
             </button>
             <button className="sign-upp" onClick={goSignup}>

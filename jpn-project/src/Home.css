@@ -1,6 +1,6 @@
 /* Reset และ Global Styles */
 body {
-  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+  background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) !important;
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
@@ -35,12 +35,14 @@ body {
 }
 
 /* Logo Animation */
-.logo {
+.logoo {
   width: 220px;
   height: auto;
   margin-bottom: 30px;
+
   animation: floatLogo 6s ease-in-out infinite;
   filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+  -webkit-animation: floatLogo 6s ease-in-out infinite;
 }
 
 @keyframes floatLogo {
@@ -53,7 +55,7 @@ body {
 }
 
 /* Typography Styles */
-.app-title {
+.app-titlee {
   background: linear-gradient(120deg, #2563eb, #3b82f6);
   -webkit-background-clip: text;
   color: transparent;
@@ -72,7 +74,7 @@ body {
   animation: slideUp 0.8s ease-out;
 }
 
-.description {
+.descriptionn {
   max-width: 500px;
   font-size: 18px;
   line-height: 1.8;
@@ -89,7 +91,7 @@ body {
   animation: slideUp 0.8s ease-out 0.3s backwards;
 }
 
-.sign-in, .sign-upp {
+.sign-inn, .sign-upp {
   padding: 14px 36px;
   font-size: 16px;
   font-weight: 600;
@@ -101,7 +103,7 @@ body {
   overflow: hidden;
 }
 
-.sign-in {
+.sign-inn {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
@@ -113,12 +115,12 @@ body {
   box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
 }
 
-.sign-in:hover, .sign-upp:hover {
+.sign-inn:hover, .sign-upp:hover {
   transform: translateY(-3px) scale(1.05);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-.sign-in::after, .sign-upp::after {
+.sign-inn::after, .sign-upp::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -131,7 +133,7 @@ body {
   transition: transform 0.5s;
 }
 
-.sign-in:hover::after, .sign-upp:hover::after {
+.sign-inn:hover::after, .sign-upp:hover::after {
   transform: translate(-50%, -50%) scale(1);
 }
 
@@ -193,7 +195,7 @@ body {
     max-width: 280px;
   }
 
-  .sign-in, .sign-upp {
+  .sign-inn, .sign-upp {
     width: 100%;
   }
 }

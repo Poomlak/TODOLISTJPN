@@ -31,7 +31,6 @@
 
 /* Logo styles */
 .logo-container {
-  margin-left: 120px;
   margin-bottom: 2rem;
   animation: logoFloat 6s ease-in-out infinite;
 }
@@ -42,6 +41,7 @@
 }
 
 .jpn-logo {
+  margin-left: 120px;
   width: 120px;
   height: 120px;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));

@@ -8,7 +8,7 @@
 }
 
 body {
-  background: #f0f2f5;
+  background: #e9f0ff;
 }
 
 .container-signup {
@@ -16,13 +16,11 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 100vh;
+  min-height: 80vh;
   background: linear-gradient(135deg, #ece9e6, #ffffff);
   padding: 20px;
-  gap: 10px;
-  padding-top: 5%;
-
-  position: relative;
+  gap: 20px;
+  
 }
 
 .logo-and-title {
@@ -30,35 +28,21 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  align-items: center;
 }
 
 .logo {
-  margin-right: 100px;
   width: 250px;
+  margin-right: 100px;
   height: auto;
-  padding-top: 5%;
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
 }
 
-.app-title1 {
+.app-title {
   font-size: 40px;
   font-weight: bold;
   color: #333;
   margin-right: 100px;
-  margin-bottom: 20px;
-  padding-top: 10%;
-  font-family: "Itim", sans-serif;
-  position: relative;
-}
-.app-title2 {
-  font-size: 30px;
-  font-weight: bold;
-  color: #343a40;
-  margin-bottom: 20px;
-  padding-top: 10%;
-  font-family: "Itim", sans-serif;
-  position: relative;
-  font-style: italic;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .form-container {
@@ -70,8 +54,9 @@ body {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   width: 100%;
-  max-width: 400px;
-  font-family: "Itim", sans-serif;
+  animation: fadeIn 0.8s ease-in-out;
+  -webkit-animation: fadeIn 0.8s ease-in-out;
+
 }
 
 .signup-form {
@@ -82,14 +67,13 @@ body {
 
 .input-group {
   display: flex;
-  align-items: center; /* จัดให้ label และ input อยู่ในแนวเดียวกัน */
-  gap: 10px; /* ระยะห่างระหว่าง label และ input */
-  font-family: "Itim", sans-serif;
+  align-items: center;
+  gap: 10px;
 }
 
 .input-group label {
-  width: 100px; /* กำหนดความกว้างของ label */
-  font-size: 18px;
+  width: 120px;
+  font-size: 16px;
 }
 
 .signup-form input {
@@ -114,9 +98,7 @@ body {
   padding: 12px 25px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.1s ease;
-  box-shadow: 0 2px 0 #dc2626;
-  font-family: "Itim", sans-serif;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .sign-up:hover {
@@ -138,9 +120,4 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.custom-label {
-  font-family: "Itim", sans-serif;
-  font-size: 30px;
 }

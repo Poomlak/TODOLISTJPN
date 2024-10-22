@@ -109,13 +109,15 @@
 }
 
 .navbar-auth {
+  margin-left: 50px;
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.btn-sign-up,
-.btn-sign-in {
+.btn-sign-upp,
+.btn-sign-inn {
+  margin-left: 10px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -129,37 +131,41 @@
   transition: all 0.3s ease;
 }
 
-.btn-sign-up {
+.btn-sign-upp {
   background-color: #4299e1;
   color: white;
 }
 
-.btn-sign-in {
+.btn-sign-inn {
   background-color: #2d3748;
   color: white;
 }
 
-.btn-sign-up:hover,
-.btn-sign-in:hover {
+.btn-sign-upp:hover,
+.btn-sign-inn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.btn-sign-up:hover {
+.btn-sign-upp:hover {
   background-color: #3182ce;
 }
 
-.btn-sign-in:hover {
+.btn-sign-inn:hover {
   background-color: #1a202c;
 }
 
 /* Animation for icons */
-.btn-sign-up i,
-.btn-sign-in i {
+.btn-sign-upp i,
+.btn-sign-inn i {
   transition: transform 0.3s ease;
+  -webkit-transition: transform 0.3s ease;
+  -moz-transition: transform 0.3s ease;
+  -ms-transition: transform 0.3s ease;
+  -o-transition: transform 0.3s ease;
 }
 
-.btn-sign-up:hover i,
-.btn-sign-in:hover i {
+.btn-sign-upp:hover i,
+.btn-sign-inn:hover i {
   transform: rotate(10deg);
 }

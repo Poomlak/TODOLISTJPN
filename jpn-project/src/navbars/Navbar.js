@@ -71,11 +71,11 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-auth">
-          <button className="btn-sign-up" onClick={goSignup}>
+          <button className="btn-sign-upp" onClick={goSignup}>
             <i className="fas fa-user-plus"></i>
             <span>Sign Up</span>
           </button>
-          <button className="btn-sign-in" onClick={goSignIn}>
+          <button className="btn-sign-inn" onClick={goSignIn}>
             <i className="fas fa-sign-in-alt"></i>
             <span>Sign In</span>
           </button>
