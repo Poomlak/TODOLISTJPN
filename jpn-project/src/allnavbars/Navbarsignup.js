@@ -1,18 +1,39 @@
+// Navbarsignup.js
 import React from "react";
 import "../navbars/Navbar.css";
 import jpnLogo from "./jpn_logo.png";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
 const Navbarsignup = () => {
-  const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
+  const navigate = useNavigate();
 
   const goSignin = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     navigate("/signin");
   };
-  // const goAboutus = () => {
-  //   navigate("/aboutus");
-  // };
+
+  const handleMenuClick = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเข้าสู่ระบบ",
+        text: "คุณต้องเข้าสู่ระบบก่อนเข้าใช้งานเมนู",
+        confirmButtonText: "เข้าสู่ระบบ",
+        showCancelButton: true,
+        cancelButtonText: "ยกเลิก",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/signin");
+        }
+      });
+    } else {
+      navigate("/menutodo");
+    }
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
@@ -51,8 +72,8 @@ const Navbarsignup = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/menutodo">
-                Todo
+              <a className="nav-link" href="#" onClick={handleMenuClick}>
+                Menu
               </a>
             </li>
           </ul>

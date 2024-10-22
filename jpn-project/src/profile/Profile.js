@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Navbarprofile from "../allnavbars/Navbarprofile";

@@ -16,10 +16,9 @@
   white-space: nowrap;
 }
 
-.profile-image-container {
+.profile-image-containerr {
   width: 60px;
   height: 60px;
-  margin-top: 10px;
   border-radius: 50%;
   overflow: hidden;
   -webkit-border-radius: 50%;
