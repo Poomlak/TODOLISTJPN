@@ -1,160 +1,197 @@
+/* Container styles */
 .resetpass-container {
   width: 100%;
-  max-width: 700px;
-  margin: 2rem auto;
+  max-width: 600px;
+  margin: 3rem auto;
   padding: 2.5rem;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.05),
+    0 20px 48px rgba(0, 0, 0, 0.05),
+    0 1px 4px rgba(0, 0, 0, 0.1);
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: containerAppear 0.6s ease-out;
 }
 
 .resetpass-container:hover {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.1),
+    0 25px 58px rgba(0, 0, 0, 0.1);
 }
 
+/* Title styles */
 h1 {
   text-align: center;
-  color: #343a40;
-  font-family: 'Roboto', sans-serif;
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(120deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleFadeIn 0.8s ease-out;
 }
 
+/* Form styles */
 .resetpass-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
+  gap: 2rem;
 }
 
-.input-btn-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  gap: 12px;
+/* Label styles */
+label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  animation: fadeIn 0.6s ease-out;
 }
 
+/* Input styles */
 input {
+  width: 100%;
   padding: 0.85rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #ced4da;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
   font-size: 1rem;
-  width: calc(100% - 120px);
-  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  background: #f8fafc;
 }
 
 input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: #fff;
+}
+
+/* Button styles */
+.btn-send-otp, .btn-reset-password {
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-send-otp {
-  width: 120px;
-  padding: 0.75rem 0;
-  background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-send-otp:hover {
-  background-color: #0056b3;
-}
-
-.btn-send-otp:active {
-  transform: translateY(2px);
-}
-
-.reset-password-section {
-  width: 100%;
-}
-
-input[type="password"] {
-  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  min-width: 120px;
 }
 
 .btn-reset-password {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  background-color: #007bff;
-  margin-top: 20px;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 1.5rem;
 }
 
-.btn-reset-password:hover {
-  background-color: #0056b3;
+.btn-send-otp:hover, .btn-reset-password:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
-.btn-reset-password:active {
-  transform: translateY(2px);
+.btn-send-otp:active, .btn-reset-password:active {
+  transform: translateY(1px);
 }
 
-label {
-  align-self: flex-start;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #6c757d;
-  margin-bottom: 1rem; 
-  display: block; 
-}
-
+/* Section styles */
 .send-otp-section, .reset-password-section {
   width: 100%;
- 
+  animation: sectionSlideUp 0.6s ease-out;
 }
 
-.reset-password-section input {
-  margin-top: 0.5rem; 
+.input-btn-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
-.reset-password-section label {
-  margin-bottom: 1rem; 
-  margin-top: 1rem; 
-}
-.input-otp,
-.input-password {
-  width: 100%; /* Make inputs take up full width for better alignment */
-  border-radius: 8px; /* For a modern look with rounded corners */
-
+.input-otp, .input-password {
+  margin-bottom: 1rem;
 }
 
-.reset-password-section label {
-  margin-bottom: 0.5rem; /* Space between the label and input */
-  font-size: 14px; /* Ensure the labels are legible */
-  color: #6c757d;
+/* Animations */
+@keyframes containerAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@media (max-width: 600px) {
+@keyframes titleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sectionSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Loading state for buttons */
+.btn-send-otp:disabled, .btn-reset-password:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Success state animations */
+@keyframes successPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.success {
+  animation: successPulse 0.5s ease-out;
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
   .resetpass-container {
-    padding: 2rem 1.5rem;
+    margin: 1.5rem;
+    padding: 1.5rem;
   }
 
-  h1 {
-    font-size: 22px;
+  .input-btn-container {
+    flex-direction: column;
+  }
+
+  .btn-send-otp {
+    width: 100%;
   }
 
   input, .btn-send-otp, .btn-reset-password {
     font-size: 0.9rem;
-  }
-
-  input {
-    width: calc(100% - 110px);
-  }
-
-  .btn-send-otp {
-    width: 110px;
   }
 }

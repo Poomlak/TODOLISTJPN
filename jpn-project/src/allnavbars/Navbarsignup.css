@@ -114,7 +114,7 @@
     align-items: center;
 }
 
-.btn-sign-up {
+.btn-sign-in {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -126,21 +126,21 @@
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    background-color: #4299e1;
+    background-color: #2d3748;
     color: white;
 }
 
-.btn-sign-up:hover {
+.btn-sign-in:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background-color: #3182ce;
+    background-color: #1a202c;
 }
 
-.btn-sign-up i {
+.btn-sign-in i {
     transition: transform 0.3s ease;
 }
 
-.btn-sign-up:hover i {
+.btn-sign-in:hover i {
     transform: rotate(10deg);
 }
 
@@ -164,7 +164,7 @@
         width: 100%;
     }
 
-    .btn-sign-up {
+    .btn-sign-in {
         width: 100%;
         justify-content: center;
     }

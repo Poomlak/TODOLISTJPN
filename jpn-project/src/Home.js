@@ -39,7 +39,7 @@ const Home = () => {
             <button className="sign-in" onClick={goSignIn}>
               Sign In
             </button>
-            <button className="sign-up" onClick={goSignup}>
+            <button className="sign-upp" onClick={goSignup}>
               Sign Up
             </button>
           </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import jpnLogo from "../navbars/jpn_logo.png";
 import "./Signup.css";
 import axios from "axios";
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
 import Navbarsignup from "../allnavbars/Navbarsignup";
 
 const Signup = () => {
@@ -43,7 +43,6 @@ const Signup = () => {
         tel: formData.tel
       });
 
-      // ถ้า username, email, tel เคยมีในระบบ
       if (checkResponse.data.exists) {
         Swal.fire({
           icon: 'error',
@@ -53,7 +52,6 @@ const Signup = () => {
         return;
       }
 
-      // ถ้าไม่มีในระบบ ก็ลงทะเบียนใหม่
       const registerResponse = await axios.post('http://localhost:5000/signup', {
         fname: formData.fname,
         lname: formData.lname,
@@ -68,13 +66,18 @@ const Signup = () => {
         icon: 'success',
         title: 'ลงทะเบียนสำเร็จ',
         text: 'โปรดรอสักครู่จะทำการเข้าไปหน้า login',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        },
         confirmButtonText: 'OK'
-    }).then((result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
-            window.location.pathname = "/signin"; 
+          window.location.pathname = "/signin"; 
         }
-    });
-    
+      });
 
       setFormData({
         fname: '',

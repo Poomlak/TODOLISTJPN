@@ -1,88 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background: #f0f2f5;
+}
+
 .container-signup {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-evenly;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ece9e6, #ffffff);
   padding: 20px;
-  gap: 10px;
-  padding-top: 10%;
+  gap: 20px;
 }
 
 .logo-and-title {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
 .logo {
-  width: 300px;
+  margin-right: 100px;
+  width: 250px;
   height: auto;
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 .app-title {
-  font-size: 36px;
+  font-size: 40px;
   font-weight: bold;
-  color: #000;
+  color: #333;
+  margin-right: 100px;
   margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
   width: 100%;
-  max-width: 400px;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: 15px;
 }
 
 .input-group {
   display: flex;
-  align-items: center; /* จัดให้ label และ input อยู่ในแนวเดียวกัน */
-  gap: 10px; /* ระยะห่างระหว่าง label และ input */
+  align-items: center;
+  gap: 10px;
 }
 
 .input-group label {
-  width: 100px; /* กำหนดความกว้างของ label */
+  width: 120px;
   font-size: 16px;
 }
 
 .signup-form input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 16px;
-  flex: 1; /* ขยาย input field ให้กินพื้นที่ที่เหลือ */
+  transition: border-color 0.3s ease;
+  width: 100%;
 }
 
 .signup-form input:focus {
   border-color: #3b82f6;
+  box-shadow: 0px 0px 6px rgba(59, 130, 246, 0.5);
   outline: none;
 }
 
 .sign-up {
-  background-color: #ef4444;
+  background-color: #3b82f6;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 25px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.1s ease;
-  box-shadow: 0 2px 0 #dc2626;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .sign-up:hover {
-  background-color: #dc2626;
+  background-color: #2563eb;
+  transform: translateY(-2px);
 }
 
 .sign-up:active {
-  top: 2px;
-  box-shadow: none;
+  background-color: #1d4ed8;
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
