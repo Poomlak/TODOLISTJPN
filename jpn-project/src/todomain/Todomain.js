@@ -288,7 +288,7 @@ const Todomain = () => {
           const updatedDiaryData = [...diaryData];
           updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
           setDiary(updatedDiaryData); // อัพเดต state
-
+          
           Swal.fire("Task Updated!", "Your task has been updated!", "success");
         } else {
           // ถ้าสถานะไม่เป็น 200 ให้แสดงข้อผิดพลาด
@@ -302,6 +302,7 @@ const Todomain = () => {
         const updatedDiaryData = [...diaryData];
         updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
         setDiary(updatedDiaryData); // อัพเดต state
+        handleApply();
         console.error(
           "Error updating task:",
           error.response ? error.response.data : error.message
@@ -609,9 +610,7 @@ const Todomain = () => {
           ))}
           <div className="add-task">Add some first book list Click +</div>
         </div>
-        <div className="button-apply" onClick={handleApply}>
-          Apply
-        </div>
+        
       </div>
     </>
   );
