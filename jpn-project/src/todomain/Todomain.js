@@ -211,21 +211,29 @@ const Todomain = () => {
   // };
 
   const handleUpdateTask = async (index) => {
-    const taskToUpdate = diaryData[index]; // Use diaryData to get the task
+    const taskToUpdate = diaryData[index]; // ใช้ diaryData เพื่อดึงข้อมูล Task
 
     if (!taskToUpdate) {
       console.error("Task not found");
       return;
     }
 
-    // Create a custom HTML string with multiple inputs
+    // สร้าง HTML ที่กำหนดเองพร้อม input หลายตัว
     const { value: updatedFields } = await Swal.fire({
       title: "Update Task",
       html: `
-            <input id="swal-input1" class="swal2-input" placeholder="Task Title" value="${taskToUpdate.diary_todoTopic}">
-            <input id="swal-input2" class="swal2-input" placeholder="Task Details" value="${taskToUpdate.diary_todo}">
-            <input id="swal-input3" class="swal2-input" placeholder="Task Reminder" value="${taskToUpdate.diary_reminder}">
-        `,
+        <label for="swal-input1" style="display: block; margin: 5px 0;">Title:</label>
+        <input id="swal-input1" class="swal2-input" placeholder="Task Title" value="${taskToUpdate.diary_todoTopic}">
+    
+        <label for="swal-input2" style="display: block; margin: 5px 0;">Detail:</label>
+        <input id="swal-input2" class="swal2-input" placeholder="Task Details" value="${taskToUpdate.diary_todo}">
+    
+        <label for="swal-input3" style="display: block; margin: 5px 0;">Time and Date:</label>
+        <input type="datetime-local" id="swal-input3" class="swal2-input" value="${taskToUpdate.diary_reminder}">
+    
+        <label for="swal-input4" style="display: block; margin: 5px 0;">Color:</label>
+        <input type="color" id="swal-input4" class="swal2-input" value="${taskToUpdate.diary_color}" style="width: 50%; height: 50px; border: none; cursor: pointer; margin-top: 10px;">
+      `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Update",
@@ -233,42 +241,57 @@ const Todomain = () => {
         const title = document.getElementById("swal-input1").value;
         const details = document.getElementById("swal-input2").value;
         const reminder = document.getElementById("swal-input3").value;
+        const color = document.getElementById("swal-input4").value;
 
-        if (!title || !details || !reminder) {
+        if (!title || !details || !reminder || !color) {
           Swal.showValidationMessage("Please fill in all fields!");
         }
-        return { title, details, reminder }; // Return an object containing all values
+        console.log(reminder);
+        return { title, details, reminder, color }; // คืนค่าที่รวมทุกค่า
       },
     });
 
     if (updatedFields) {
-      // Create an updated task object
+      // แปลงค่า reminder จาก '2024-10-13T21:00' เป็นรูปแบบที่ต้องการ
+      const reminder = document.getElementById("swal-input3").value;
+      const UpdateTime = new Date(reminder);
+
+      // แปลงเวลาให้เป็นรูปแบบที่ต้องการ
+      const year = UpdateTime.getFullYear();
+      const month = String(UpdateTime.getMonth() + 1).padStart(2, "0"); // เพิ่ม 1 เพราะ months เริ่มที่ 0
+      const day = String(UpdateTime.getDate()).padStart(2, "0");
+      const hours = String(UpdateTime.getHours()).padStart(2, "0");
+      const minutes = String(UpdateTime.getMinutes()).padStart(2, "0");
+      const seconds = String(UpdateTime.getSeconds()).padStart(2, "0");
+
+      const formattedUpdateTime = `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+
       const updatedTask = {
         ...taskToUpdate,
         diary_todoTopic: updatedFields.title,
         diary_todo: updatedFields.details,
-        diary_reminder: updatedFields.reminder,
+        diary_reminder: formattedUpdateTime, // เปลี่ยนเป็นรูปแบบที่ต้องการ
+        diary_color: updatedFields.color,
       };
+
       console.log("Updated Task:", updatedTask);
 
-      // Call the update API
+      // เรียกใช้ API อัพเดต
       try {
         const response = await axios.put(
           "http://localhost:5000/api/diarylist/update",
           updatedTask
         );
-        // console.log("Response from server:", response.data); // Log the response data
 
         if (response.status === 200) {
-          // Check if the status is 200
-          // Update the diaryData state with the new task details
+          // เช็คสถานะว่าเป็น 200
           const updatedDiaryData = [...diaryData];
-          updatedDiaryData[index] = updatedTask; // Replace the task at the given index
-          setDiary(updatedDiaryData); // Update the state
+          updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
+          setDiary(updatedDiaryData); // อัพเดต state
 
           Swal.fire("Task Updated!", "Your task has been updated!", "success");
         } else {
-          // If the status is not 200, show an error
+          // ถ้าสถานะไม่เป็น 200 ให้แสดงข้อผิดพลาด
           Swal.fire(
             "Update Failed!",
             "There was an error updating the task.",
@@ -277,8 +300,8 @@ const Todomain = () => {
         }
       } catch (error) {
         const updatedDiaryData = [...diaryData];
-        updatedDiaryData[index] = updatedTask; // Replace the task at the given index
-        setDiary(updatedDiaryData); // Update the state
+        updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
+        setDiary(updatedDiaryData); // อัพเดต state
         console.error(
           "Error updating task:",
           error.response ? error.response.data : error.message
@@ -367,137 +390,155 @@ const Todomain = () => {
     }
   };
 
-
-
-
-
   const addNewDiary = (newDiary) => {
     // ใช้การกระจายเพื่อรวมข้อมูลเก่าและข้อมูลใหม่
-    setDiary(prevDiaries => [...prevDiaries, newDiary]);
-};
+    setDiary((prevDiaries) => [...prevDiaries, newDiary]);
+  };
 
   const handleAddTaskWithDateTime = async () => {
     // ขั้นตอนแรก: ให้ผู้ใช้เลือกวันที่และเวลา
     const { value: dateTime } = await Swal.fire({
-        title: "Select Date and Time",
-        html: `
+      title: "Select Date and Time",
+      html: `
             <input type="date" id="date-input" class="swal2-input" />
             <input type="time" id="time-input" class="swal2-input" />
         `,
-        confirmButtonText: "Confirm",
-        cancelButtonText: "Cancel",
-        showCancelButton: true,
-        confirmButtonColor: "#4CAF50",
-        cancelButtonColor: "#f44336",
-        preConfirm: () => {
-            const date = document.getElementById("date-input").value;
-            const time = document.getElementById("time-input").value;
-            if (!date || !time) {
-                Swal.showValidationMessage("Please select both date and time!");
-            }
-            console.log(`Selected Date: ${date}, Selected Time: ${time}`);
-            return `${date} ${time}`; // รวมวันที่และเวลา
-        },
+      confirmButtonText: "Confirm",
+      cancelButtonText: "Cancel",
+      showCancelButton: true,
+      confirmButtonColor: "#4CAF50",
+      cancelButtonColor: "#f44336",
+      preConfirm: () => {
+        const date = document.getElementById("date-input").value;
+        const time = document.getElementById("time-input").value;
+
+        // เช็คว่ามีการเลือกวันและเวลาหรือไม่
+        if (!date || !time) {
+          Swal.showValidationMessage("Please select both date and time!");
+          return; // หยุดการประมวลผล
+        }
+
+        // แปลงรูปแบบวันที่และเวลา
+        const formattedDateTime = `${date}T${time}`; // ใช้ T เพื่อรวมวันและเวลาในรูปแบบ ISO
+        const dateTimeObject = new Date(formattedDateTime);
+
+        // แปลงเป็นรูปแบบที่ต้องการ
+        const year = dateTimeObject.getFullYear();
+        const month = String(dateTimeObject.getMonth() + 1).padStart(2, "0"); // เพิ่ม 1 เพราะ months เริ่มที่ 0
+        const day = String(dateTimeObject.getDate()).padStart(2, "0");
+        const hours = String(dateTimeObject.getHours()).padStart(2, "0");
+        const minutes = String(dateTimeObject.getMinutes()).padStart(2, "0");
+        const seconds = String(dateTimeObject.getSeconds()).padStart(2, "0");
+
+        // คืนค่าตามรูปแบบที่ต้องการ
+        const formattedResult = `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+        console.log(`Selected Date and Time: ${formattedResult}`); // แสดงผลใน console
+        return formattedResult; // ส่งคืนวันที่และเวลาในรูปแบบที่ต้องการ
+      },
     });
 
     // ถ้าเลือกวันที่และเวลาแล้ว
     if (dateTime) {
-        const { value: title } = await Swal.fire({
-            title: "Enter Task Title",
-            input: "text",
-            inputPlaceholder: "Enter task title here...",
-            showCancelButton: true,
-            confirmButtonText: "Next",
-            cancelButtonText: "Cancel",
-            preConfirm: (inputValue) => {
-                if (!inputValue) {
-                    Swal.showValidationMessage("Please enter a title!");
-                }
-                return inputValue;
-            },
+      const { value: title } = await Swal.fire({
+        title: "Enter Task Title",
+        input: "text",
+        inputPlaceholder: "Enter task title here...",
+        showCancelButton: true,
+        confirmButtonText: "Next",
+        cancelButtonText: "Cancel",
+        preConfirm: (inputValue) => {
+          if (!inputValue) {
+            Swal.showValidationMessage("Please enter a title!");
+          }
+          return inputValue;
+        },
+      });
+
+      if (title) {
+        console.log(`Task Title: ${title}`);
+
+        const { value: detail } = await Swal.fire({
+          title: "Enter Task Details",
+          input: "text",
+          inputPlaceholder: "Enter task details here...",
+          showCancelButton: true,
+          confirmButtonText: "Add Task",
+          cancelButtonText: "Cancel",
+          preConfirm: (inputValue) => {
+            if (!inputValue) {
+              Swal.showValidationMessage("Please enter task details!");
+            }
+            return inputValue;
+          },
         });
 
-        if (title) {
-            console.log(`Task Title: ${title}`);
+        if (detail) {
+          console.log(`Task Details: ${detail}`);
 
-            const { value: detail } = await Swal.fire({
-                title: "Enter Task Details",
-                input: "text",
-                inputPlaceholder: "Enter task details here...",
-                showCancelButton: true,
-                confirmButtonText: "Add Task",
-                cancelButtonText: "Cancel",
-                preConfirm: (inputValue) => {
-                    if (!inputValue) {
-                        Swal.showValidationMessage("Please enter task details!");
-                    }
-                    return inputValue;
-                },
-            });
-
-            if (detail) {
-                console.log(`Task Details: ${detail}`);
-
-                const { value: color } = await Swal.fire({
-                    title: "Select Task Importance Color",
-                    html: `
+          const { value: color } = await Swal.fire({
+            title: "Select Task Importance Color",
+            html: `
                         <div style="text-align: center;">
                             <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
                             <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
                             <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
                         </div>
                     `,
-                    confirmButtonText: "Confirm",
-                    cancelButtonText: "Cancel",
-                    showCancelButton: true,
-                    preConfirm: () => {
-                        const colorValue = document.getElementById("color-input").value;
-                        if (!colorValue) {
-                            Swal.showValidationMessage("Please select a color!");
-                        }
-                        return colorValue;
-                    },
-                });
-                console.log("hello หนังสือชื่อไรครับ?",user.diary_namebook);
-                if (color) {
-                    console.log(`Task Color: ${color}`);
-                    const createdTime = new Date().toISOString(); // รับวันที่และเวลาปัจจุบันในรูปแบบ ISO
-                    const diaryName = user.diary_namebook; // แทนที่ด้วยชื่อไดอารี่ของคุณ
-                    console.log("สมุดไร",diaryName)
-                    
-                    // สร้างอ็อบเจ็กต์ใหม่สำหรับ Task
-                    const newTask = {
-                        diary_todoTopic: title,     // ชื่อ Task
-                        diary_todo: detail,         // รายละเอียด Task
-                        diary_color: color,         // สีที่เลือก
-                        diary_reminder: dateTime,   // วันและเวลาที่เลือก
-                        diary_namebook: diaryName,   // ชื่อไดอารี่
-                        diary_created: createdTime,
-                          // วันที่และเวลาที่สร้าง Task
-                    };
+            confirmButtonText: "Confirm",
+            cancelButtonText: "Cancel",
+            showCancelButton: true,
+            preConfirm: () => {
+              const colorValue = document.getElementById("color-input").value;
+              if (!colorValue) {
+                Swal.showValidationMessage("Please select a color!");
+              }
+              return colorValue;
+            },
+          });
+          console.log("hello หนังสือชื่อไรครับ?", user.diary_namebook);
+          if (color) {
+            console.log(`Task Color: ${color}`);
+            const createdTime = formatDate(new Date()); // รับวันที่และเวลาปัจจุบันในรูปแบบ ISO
+            const diaryName = user.diary_namebook; // แทนที่ด้วยชื่อไดอารี่ของคุณ
+            console.log("สมุดไร", diaryName);
 
-                    // ส่งข้อมูลไปยัง API
-                    try {
-                        const response = await axios.post('http://localhost:5000/api/diarylist/add', newTask);
+            // สร้างอ็อบเจ็กต์ใหม่สำหรับ Task
+            const newTask = {
+              diary_todoTopic: title, // ชื่อ Task
+              diary_todo: detail, // รายละเอียด Task
+              diary_color: color, // สีที่เลือก
+              diary_reminder: dateTime, // วันและเวลาที่เลือก
+              diary_namebook: diaryName, // ชื่อไดอารี่
+              diary_created: createdTime,
+              // วันที่และเวลาที่สร้าง Task
+            };
 
-                        console.log(response);
-                        if (response.status === 201) {
-                            setTasks([...tasks, newTask]); // เพิ่ม Task ใหม่เข้าไปใน state
-                            addNewDiary(...tasks, newTask);
-                            Swal.fire("Task Added!", `Your task: "${title}" has been added!`, "success");
-                        }
-                    } catch (error) {
+            // ส่งข้อมูลไปยัง API
+            try {
+              const response = await axios.post(
+                "http://localhost:5000/api/diarylist/add",
+                newTask
+              );
 
-                        console.error("Error adding task:", error);
-                        Swal.fire("Error!", "Failed to add task!", "error");
-                        
-                    }
-                }
+              console.log(response);
+              if (response.status === 201) {
+                setTasks([...tasks, newTask]); // เพิ่ม Task ใหม่เข้าไปใน state
+                addNewDiary(...tasks, newTask);
+                Swal.fire(
+                  "Task Added!",
+                  `Your task: "${title}" has been added!`,
+                  "success"
+                );
+              }
+            } catch (error) {
+              console.error("Error adding task:", error);
+              Swal.fire("Error!", "Failed to add task!", "error");
             }
+          }
         }
+      }
     }
-};
-
+  };
 
   return (
     <>
@@ -529,7 +570,7 @@ const Todomain = () => {
             <div
               className="todo-card-task"
               key={`${item.diary_id}-${index}`}
-              style={{ backgroundColor: "#f0f0f0" }}
+              style={{ backgroundColor: item.diary_color }}
             >
               <h3>{item.diary_todoTopic || "Diary Todo"}</h3>
               <div className="task-grid">
