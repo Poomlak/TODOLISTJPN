@@ -502,25 +502,29 @@ app.get("/api/diary/:username", (req, res) => {
   });
 });
 
-app.put("/api/diarylist/update", async (req, res) => {
-  const { diary_id, diary_todoTopic, diary_todo, diary_reminder } = req.body;
+app.put("/api/diarylist/update", (req, res) => {
+  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color } = req.body;
+  
+  // ตรวจสอบการรับค่าใน console.log
+ 
 
-  try {
-    const result = await db.query(
-      "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ? WHERE diary_id = ?",
-      [diary_todoTopic, diary_todo, diary_reminder, diary_id]
-    );
+  const sql = "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ?, diary_color = ? WHERE diary_id = ?";
+  
+  // ตรวจสอบการส่งพารามิเตอร์ให้ถูกต้อง
+  db.query(sql, [diary_todoTopic, diary_todo, diary_reminder, diary_color, diary_id], (err, result) => {
+    if (err) {
+      console.error("Error updating diary:", err);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
 
     if (result.affectedRows > 0) {
-      res.status(200).json({ message: "Diary updated successfully" });
+      return res.status(200).json({ message: "Diary updated successfully" });
     } else {
-      res.status(404).json({ message: "Diary not found" });
+      return res.status(404).json({ message: "Diary not found" });
     }
-  } catch (error) {
-    console.error("Error updating diary:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  });
 });
+
 
 app.delete("/api/diarylist/delete", (req, res) => {
   const { diary_id, diary_namebook, diary_todoTopic } = req.body;
