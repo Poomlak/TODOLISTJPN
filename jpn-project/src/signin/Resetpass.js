@@ -51,7 +51,7 @@ const Resetpass = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Invalid OTP or failed to reset password!",
+        text: "Invalid OTP or don't use the same password",
         confirmButtonText: "Try Again"
       });
     }

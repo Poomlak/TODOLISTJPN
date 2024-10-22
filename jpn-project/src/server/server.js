@@ -226,19 +226,38 @@ app.post("/reset-password", async (req, res) => {
     }
 
     const email = result[0].email;
-    const hashedPassword = await bcrypt.hash(newPassword, 10); // เข้ารหัสรหัสผ่าน
 
-    // อัพเดต password ใน DB
-    const updatePasswordQuery =
-      "UPDATE member_id SET member_password = ? WHERE member_email = ?";
-    db.query(updatePasswordQuery, [hashedPassword, email], (err) => {
-      if (err) {
-        return res.status(500).send("Failed to reset password");
+    // ดึงรหัสผ่านเก่าจากฐานข้อมูล
+    const getOldPasswordQuery = "SELECT member_password FROM member_id WHERE member_email = ?";
+    db.query(getOldPasswordQuery, [email], async (err, userResult) => {
+      if (err || userResult.length === 0) {
+        return res.status(404).send("User not found");
       }
-      res.status(200).send("Password reset successful");
+
+      const oldPassword = userResult[0].member_password;
+
+      // ตรวจสอบว่ารหัสผ่านใหม่ไม่เหมือนกับรหัสผ่านเก่า
+      const isSamePassword = await bcrypt.compare(newPassword, oldPassword);
+      if (isSamePassword) {
+        return res.status(400).send("New password must not be the same as the old password");
+      }
+
+      // เข้ารหัสรหัสผ่านใหม่
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      // อัพเดต password ใน DB
+      const updatePasswordQuery =
+        "UPDATE member_id SET member_password = ? WHERE member_email = ?";
+      db.query(updatePasswordQuery, [hashedPassword, email], (err) => {
+        if (err) {
+          return res.status(500).send("Failed to reset password");
+        }
+        res.status(200).send("Password reset successful");
+      });
     });
   });
 });
+
 
 // Profile API
 app.get("/api/profile/:username", (req, res) => {
