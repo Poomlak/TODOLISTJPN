@@ -5,6 +5,7 @@ import axios from "axios";
 import Navbarsignin from "../allnavbars/Navbarsignin";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Icon } from "@iconify/react";
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -38,13 +39,12 @@ const Signin = () => {
       const response = await axios.post("http://localhost:5000/login", {
         username: formData.username,
         password: formData.password,
-        
       });
       await Swal.fire({
-        icon: 'success',
-        title: 'Login Success',
-        text: 'คุณได้เข้าสู่ระบบเรียบร้อยแล้ว!',
-        confirmButtonText: 'ตกลง'
+        icon: "success",
+        title: "Login Success",
+        text: "คุณได้เข้าสู่ระบบเรียบร้อยแล้ว!",
+        confirmButtonText: "ตกลง",
       });
       console.log(response);
 
@@ -59,10 +59,10 @@ const Signin = () => {
     } catch (error) {
       console.error("Error logging in:", error.response.data);
       await Swal.fire({
-        icon: 'error',
-        title: 'Invalid User',
-        text: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง.',
-        confirmButtonText: 'ตกลง'
+        icon: "error",
+        title: "Invalid User",
+        text: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง.",
+        confirmButtonText: "ตกลง",
       });
     }
   };
@@ -106,13 +106,21 @@ const Signin = () => {
                   className="toggle-password-button"
                   onClick={togglePasswordVisibility}
                 >
-                  <img
-                    src={showPassword
-                      ? "https://cdn.discordapp.com/attachments/861532175925116928/1296001688376709130/image.png?ex=6710b321&is=670f61a1&hm=535724526a15ce2bbfea95b3f1785a3044f4336224c942bbe641957bede828c1&"
-                      : "https://cdn.discordapp.com/attachments/861532175925116928/1296001359476166726/image.png?ex=6710b2d2&is=670f6152&hm=18d411368535db5cc89775501579453130649b5b4fbfc6d94298b5496aef480d&"}
-                    alt="Toggle Password Visibility"
-                    className="password-toggle-icon"
-                  />
+                  {showPassword ? (
+                    <Icon
+                      icon="ion:eye-sharp"
+                      color="black"
+                      width="24"
+                      height="24"
+                    />
+                  ) : (
+                    <Icon
+                      icon="ion:eye-off"
+                      color="black"
+                      width="24"
+                      height="24"
+                    />
+                  )}
                 </button>
               </div>
             </div>

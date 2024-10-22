@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "26.11.35.119",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -334,12 +334,13 @@ app.post("/send-update-email", (req, res) => {
     from: "webapp.otp@gmail.com",
     to: email,
     subject: "Profile Update Notification",
-    text: `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
-          `- Username: ${username}\n` +
-          `- Birthday: ${changes.birthday}\n` +
-          `- Telephone: ${changes.telephone}\n` +
-          `- Profile Image URL: ${changes.imageUrl}\n\n` +
-          "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
+    text:
+      `Dear ${username},\n\nโปรไฟล์ของคุณได้มีการอัพเดท:\n\n` +
+      `- Username: ${username}\n` +
+      `- Birthday: ${changes.birthday}\n` +
+      `- Telephone: ${changes.telephone}\n` +
+      `- Profile Image URL: ${changes.imageUrl}\n\n` +
+      "หากคุณไม่ได้แก้ไขด้วยตัวเองโปรดติดต่อทีมงาน.\n\nด้วยความเคารพ,\nJPN-Todolist",
   };
 
   // ส่งอีเมล
@@ -353,12 +354,12 @@ app.post("/send-update-email", (req, res) => {
   });
 });
 
-
 app.get("/api/userDiary", (req, res) => {
   const username = req.query.username; // รับ username จาก query
   const diaryName = req.query.diaryName; // รับ diary_namebook จาก query
-  console.log(username,diaryName)
-  const sql = "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ? AND diary_namebook = ?";
+  console.log(username, diaryName);
+  const sql =
+    "SELECT diary_namebook, member_createdbook, member_lastupdatedbook FROM member_diary WHERE diary_username = ? AND diary_namebook = ?";
 
   db.query(sql, [username, diaryName], (err, result) => {
     if (err) {
@@ -374,22 +375,17 @@ app.get("/api/userDiary", (req, res) => {
   });
 });
 
-
-
-
-
 app.put("/api/diary/update-timestamp", (req, res) => {
   const diary_namebook = req.body.data.diary_namebook;
-  const diary_Username =req.body.data.diary_username;
-  console.log("data from frontend",req.body);
+  const diary_Username = req.body.data.diary_username;
+  console.log("data from frontend", req.body);
   // console.log("namebook",diary_namebook);
   // console.log("username",diary_Username);
 
   const sql =
     "UPDATE member_diary SET member_lastupdatedbook = NOW() WHERE diary_namebook = ? AND diary_username =?"; // อัปเดต timestamp ปัจจุบัน
-  
 
-  db.query(sql, [diary_namebook,diary_Username], (err, result) => {
+  db.query(sql, [diary_namebook, diary_Username], (err, result) => {
     if (err) {
       console.error("เกิดข้อผิดพลาดในการอัปเดต timestamp:", err);
       return res
@@ -405,13 +401,10 @@ app.put("/api/diary/update-timestamp", (req, res) => {
   });
 });
 
-
-
-
-
 app.post("/api/diary/create", (req, res) => {
   const { diaryName, username } = req.body;
-  const sql = "INSERT INTO member_diary (diary_namebook, member_createdbook, member_lastupdatedbook, diary_username) VALUES (?, NOW(), NOW(), ?)";
+  const sql =
+    "INSERT INTO member_diary (diary_namebook, member_createdbook, member_lastupdatedbook, diary_username) VALUES (?, NOW(), NOW(), ?)";
 
   db.query(sql, [diaryName, username], (err, result) => {
     if (err) {
@@ -431,7 +424,8 @@ app.put("/api/diary/update/:oldName", (req, res) => {
     return res.status(400).json({ message: "กรุณาส่งชื่อใหม่และชื่อผู้ใช้" });
   }
 
-  const sql = "UPDATE `member_diary` SET `diary_namebook` = ? WHERE `diary_namebook` = ? AND `diary_username` = ?";
+  const sql =
+    "UPDATE `member_diary` SET `diary_namebook` = ? WHERE `diary_namebook` = ? AND `diary_username` = ?";
 
   db.query(sql, [newName, oldName, username], (err, result) => {
     if (err) {
@@ -447,12 +441,10 @@ app.put("/api/diary/update/:oldName", (req, res) => {
   });
 });
 
-
-
-
 app.delete("/api/diary/delete", (req, res) => {
   const { name, username } = req.body;
-  const sql = "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
+  const sql =
+    "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
 
   db.query(sql, [name, username], (err, result) => {
     if (err) {
@@ -468,19 +460,25 @@ app.delete("/api/diary/delete", (req, res) => {
   });
 });
 
-app.get('/api/diary', (req, res) => {
+app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
 
-  db.query('SELECT * FROM diary_list WHERE diary_namebook = ?', [diaryName], (err, results) => {
-    if (err) {
-      return res.status(500).json({ message: "Error fetching diary", error: err });
+  db.query(
+    "SELECT * FROM diary_list WHERE diary_namebook = ?",
+    [diaryName],
+    (err, results) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: "Error fetching diary", error: err });
+      }
+      if (results.length > 0) {
+        res.json(results); // ส่งข้อมูลไดอารี
+      } else {
+        res.status(404).json({ message: "Diary not found" });
+      }
     }
-    if (results.length > 0) {
-      res.json(results); // ส่งข้อมูลไดอารี
-    } else {
-      res.status(404).json({ message: "Diary not found" });
-    }
-  });
+  );
 });
 
 app.get("/api/diary/:username", (req, res) => {
@@ -504,64 +502,54 @@ app.get("/api/diary/:username", (req, res) => {
   });
 });
 
-
-
-app.put('/api/diarylist/update', async (req, res) => {
+app.put("/api/diarylist/update", async (req, res) => {
   const { diary_id, diary_todoTopic, diary_todo, diary_reminder } = req.body;
 
   try {
     const result = await db.query(
-      'UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ? WHERE diary_id = ?',
+      "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ? WHERE diary_id = ?",
       [diary_todoTopic, diary_todo, diary_reminder, diary_id]
     );
 
     if (result.affectedRows > 0) {
-      res.status(200).json({ message: 'Diary updated successfully' });
+      res.status(200).json({ message: "Diary updated successfully" });
     } else {
-      res.status(404).json({ message: 'Diary not found' });
+      res.status(404).json({ message: "Diary not found" });
     }
   } catch (error) {
-    console.error('Error updating diary:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error updating diary:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-
-
-
-
-app.delete('/api/diarylist/delete', (req, res) => {
+app.delete("/api/diarylist/delete", (req, res) => {
   const { diary_id, diary_namebook, diary_todoTopic } = req.body;
 
-  console.log("Received delete request with:", { diary_id, diary_namebook, diary_todoTopic });
+  console.log("Received delete request with:", {
+    diary_id,
+    diary_namebook,
+    diary_todoTopic,
+  });
 
   // Query to delete diary based on multiple conditions
-  const sql = 'DELETE FROM diary_list WHERE diary_id = ? AND diary_namebook = ? AND diary_todoTopic = ?';
+  const sql =
+    "DELETE FROM diary_list WHERE diary_id = ? AND diary_namebook = ? AND diary_todoTopic = ?";
   db.query(sql, [diary_id, diary_namebook, diary_todoTopic], (err, result) => {
-      if (err) {
-          console.error('Error deleting diary:', err);
-          return res.status(500).json({ message: 'Internal Server Error' });
-      }
+    if (err) {
+      console.error("Error deleting diary:", err);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
 
-      console.log("Delete query result:", result); // Log the result from the query
+    console.log("Delete query result:", result); // Log the result from the query
 
-      if (result.affectedRows > 0) {
-          res.status(200).json({ message: 'Diary deleted successfully' });
-      } else {
-          console.log("Diary not found for given criteria."); // Log if nothing was found
-          res.status(404).json({ message: 'Diary not found' });
-      }
+    if (result.affectedRows > 0) {
+      res.status(200).json({ message: "Diary deleted successfully" });
+    } else {
+      console.log("Diary not found for given criteria."); // Log if nothing was found
+      res.status(404).json({ message: "Diary not found" });
+    }
   });
 });
-
-
-
-
-
-
-
-
-
 
 // Start the server
 app.listen(port, () => {
