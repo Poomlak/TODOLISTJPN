@@ -12,6 +12,7 @@
     "bootstrap": "^5.3.3",
     "crypto": "^1.0.1",
     "express": "^4.21.1",
+    "flatpickr": "^4.6.13",
     "iconify": "^1.4.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
