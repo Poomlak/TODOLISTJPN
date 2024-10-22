@@ -1,15 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbarmenutodo.css";
 import jpnLogo from "./jpn_logo.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Navbarmenutodo = () => {
-  const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState({
+    member_fname: "",
+    member_lname: "",
+    member_image_url: ""
+  });
+  const username = localStorage.getItem("username");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (username) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/profile/${username}`);
+          setProfile(response.data);
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        }
+      }
+    };
+    fetchProfile();
+  }, [username]);
 
   const goHome = () => {
-    navigate("/");
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/signin");
   };
- 
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
       <div className="container-fluid">
@@ -48,7 +71,19 @@ const Navbarmenutodo = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-nav">
+        <div className="navbar-nav d-flex align-items-center">
+          <div className="d-flex align-items-center me-3">
+            <span className="welcome-text me-2">ยินดีต้อนรับ, {profile.member_fname}</span>
+            <div className="profile-image-containerr">
+              <img
+                src={profile.member_image_url && profile.member_image_url.startsWith('http') 
+                  ? profile.member_image_url 
+                  : "https://via.placeholder.com/150"}
+                alt="Profile"
+                className="profile-image-small"
+              />
+            </div>
+          </div>
           <button className="btn btn-logout" onClick={goHome}>
             Log Out
           </button>

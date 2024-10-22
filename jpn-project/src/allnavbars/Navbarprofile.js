@@ -83,7 +83,7 @@ const Navbarprofile = () => {
         <div className="navbar-nav d-flex align-items-center">
           <div className="d-flex align-items-center me-3">
             <span className="welcome-text me-2">ยินดีต้อนรับ, {profile.member_fname}</span>
-            <div className="profile-image-container">
+            <div className="profile-image-containerr">
               <img
                 src={profile.member_image_url && profile.member_image_url.startsWith('http') 
                   ? profile.member_image_url 
