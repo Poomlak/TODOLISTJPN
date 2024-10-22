@@ -6,6 +6,8 @@ const Navbaraboutus = () => {
   const navigate = useNavigate(); // useNavigate ต้องทำงานภายใน <Router>
 
   const goSignIn = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
     navigate("/signin");
   };
   const goSignup = () => {

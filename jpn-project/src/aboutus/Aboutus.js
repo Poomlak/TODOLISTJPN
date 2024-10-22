@@ -14,7 +14,7 @@ const Aboutus = () => {
 
   const getNameStyle = (name) => {
     if (name === "นายภูมิลักษณ์ พรหมดนตรี") {
-      return { fontSize: "1.1rem" };
+      return { fontSize: "1.3rem" };
     }
     return {};
   };

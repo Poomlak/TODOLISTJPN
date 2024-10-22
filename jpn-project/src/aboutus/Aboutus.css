@@ -1,74 +1,150 @@
 .aboutus-container {
-  text-align: center;
-  padding: 40px;
-  background-color: #ffffff;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto  ;
   min-height: 100vh;
+  background-color: #f8f9fa;
 }
 
 .aboutus-title {
+  text-align: center;
+  color: #2c3e50;
   font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 40px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+  padding-top: 2rem;
+  font-weight: 700;
+  position: relative;
+}
+
+.aboutus-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  border-radius: 2px;
 }
 
 .profiles {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  padding: 1rem;
 }
 
 .profile {
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 280px;
+  padding: 2.5rem;  /* เพิ่ม padding */
+  min-height: 400px;  /* เพิ่มความสูง */
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -ms-border-radius: 25px;
+  -o-border-radius: 25px;
 }
 
 .profile:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .profile-image-container {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
+  width: 150px !important;
+  height: 150px !important;
   overflow: hidden;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  border: 4px solid #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 50%;  
+  background-color: #ffffff;
 }
 
 .profile-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover;  
+  object-position: top center;  
+  padding: 0;
+  transition: transform 0.3s ease;
+}
+
+.profile:hover .profile-image {
+  transform: scale(1.05);
 }
 
 .profile-info {
   text-align: center;
   width: 100%;
+  margin-top: 1rem;  /* เพิ่มระยะห่างจากรูป */
 }
 
 .profile-name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
   color: #2c3e50;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 0.5rem 0;
+  font-size: 1.4rem;  /* เพิ่มขนาดตัวอักษร */
+  font-weight: 600;
 }
 
 .profile-id {
-  font-size: 1.1rem;
   color: #7f8c8d;
-  font-weight: 500;
+  font-size: 1.2rem;  /* เพิ่มขนาดตัวอักษร */
+  margin: 0.25rem 0;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .aboutus-container {
+    padding: 1rem;
+  }
+
+  .aboutus-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .profiles {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .profile-image-container {
+    width: 220px;  /* ปรับขนาดให้เหมาะสมกับมือถือ */
+    height: 220px;
+  }
+
+  .profile-name {
+    font-size: 1.2rem;
+  }
+}
+
+/* Animation for loading */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.profiles > div:nth-child(1) { animation-delay: 0.1s; }
+.profiles > div:nth-child(2) { animation-delay: 0.2s; }
+.profiles > div:nth-child(3) { animation-delay: 0.3s; }
