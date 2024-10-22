@@ -443,22 +443,49 @@ app.put("/api/diary/update/:oldName", (req, res) => {
 
 app.delete("/api/diary/delete", (req, res) => {
   const { name, username } = req.body;
-  const sql =
-    "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
 
-  db.query(sql, [name, username], (err, result) => {
+  // สร้าง query สำหรับลบจาก member_diary และ diary_list
+  const sql1 = "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
+  const sql2 = "DELETE FROM `diary_list` WHERE `diary_namebook` = ?";
+
+  // เริ่มต้น transaction
+  db.beginTransaction((err) => {
     if (err) {
-      console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", err);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการลบข้อมูล" });
+      return res.status(500).json({ message: "Error starting transaction" });
     }
 
-    if (result.affectedRows > 0) {
-      res.json({ message: "ลบสำเร็จ" });
-    } else {
-      res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการลบ" });
-    }
+    // ลบจาก member_diary
+    db.query(sql1, [name, username], (err, result1) => {
+      if (err) {
+        return db.rollback(() => {
+          res.status(500).json({ message: "Error deleting from member_diary" });
+        });
+      }
+
+      // ลบจาก diary_list
+      db.query(sql2, [name], (err, result2) => {
+        if (err) {
+          return db.rollback(() => {
+            res.status(500).json({ message: "Error deleting from diary_list" });
+          });
+        }
+
+        // Commit transaction หลังจากที่ลบสำเร็จจากทั้งสองตาราง
+        db.commit((err) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ message: "Error committing transaction" });
+            });
+          }
+
+          // ถ้าลบสำเร็จทั้งสองตาราง
+          res.json({ message: "ลบสำเร็จจากทั้งสองตาราง" });
+        });
+      });
+    });
   });
 });
+
 
 app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
