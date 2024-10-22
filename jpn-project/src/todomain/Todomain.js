@@ -367,110 +367,137 @@ const Todomain = () => {
     }
   };
 
+
+
+
+
+  const addNewDiary = (newDiary) => {
+    // ใช้การกระจายเพื่อรวมข้อมูลเก่าและข้อมูลใหม่
+    setDiary(prevDiaries => [...prevDiaries, newDiary]);
+};
+
   const handleAddTaskWithDateTime = async () => {
     // ขั้นตอนแรก: ให้ผู้ใช้เลือกวันที่และเวลา
     const { value: dateTime } = await Swal.fire({
-      title: "Select Date and Time",
-      html: `
-        <input type="date" id="date-input" class="swal2-input" />
-        <input type="time" id="time-input" class="swal2-input" />
-      `,
-      confirmButtonText: "Confirm",
-      cancelButtonText: "Cancel",
-      showCancelButton: true,
-      confirmButtonColor: "#4CAF50",
-      cancelButtonColor: "#f44336",
-      preConfirm: () => {
-        const date = document.getElementById("date-input").value;
-        const time = document.getElementById("time-input").value;
-        if (!date || !time) {
-          Swal.showValidationMessage("Please select both date and time!");
-        }
-        console.log(`Selected Date: ${date}, Selected Time: ${time}`); // แสดงวันที่และเวลาใน console
-        return `${date} ${time}`; // รวมวันที่และเวลา
-      },
+        title: "Select Date and Time",
+        html: `
+            <input type="date" id="date-input" class="swal2-input" />
+            <input type="time" id="time-input" class="swal2-input" />
+        `,
+        confirmButtonText: "Confirm",
+        cancelButtonText: "Cancel",
+        showCancelButton: true,
+        confirmButtonColor: "#4CAF50",
+        cancelButtonColor: "#f44336",
+        preConfirm: () => {
+            const date = document.getElementById("date-input").value;
+            const time = document.getElementById("time-input").value;
+            if (!date || !time) {
+                Swal.showValidationMessage("Please select both date and time!");
+            }
+            console.log(`Selected Date: ${date}, Selected Time: ${time}`);
+            return `${date} ${time}`; // รวมวันที่และเวลา
+        },
     });
 
     // ถ้าเลือกวันที่และเวลาแล้ว
     if (dateTime) {
-      const { value: title } = await Swal.fire({
-        title: "Enter Task Title",
-        input: "text",
-        inputPlaceholder: "Enter task title here...",
-        showCancelButton: true,
-        confirmButtonText: "Next",
-        cancelButtonText: "Cancel",
-        preConfirm: (inputValue) => {
-          if (!inputValue) {
-            Swal.showValidationMessage("Please enter a title!");
-          }
-          return inputValue;
-        },
-      });
-
-      if (title) {
-        console.log(`Task Title: ${title}`); // แสดงชื่อ Task ใน console
-
-        const { value: detail } = await Swal.fire({
-          title: "Enter Task Details",
-          input: "text",
-          inputPlaceholder: "Enter task details here...",
-          showCancelButton: true,
-          confirmButtonText: "Add Task",
-          cancelButtonText: "Cancel",
-          preConfirm: (inputValue) => {
-            if (!inputValue) {
-              Swal.showValidationMessage("Please enter task details!");
-            }
-            return inputValue;
-          },
+        const { value: title } = await Swal.fire({
+            title: "Enter Task Title",
+            input: "text",
+            inputPlaceholder: "Enter task title here...",
+            showCancelButton: true,
+            confirmButtonText: "Next",
+            cancelButtonText: "Cancel",
+            preConfirm: (inputValue) => {
+                if (!inputValue) {
+                    Swal.showValidationMessage("Please enter a title!");
+                }
+                return inputValue;
+            },
         });
 
-        if (detail) {
-          console.log(`Task Details: ${detail}`); // แสดงรายละเอียด Task ใน console
+        if (title) {
+            console.log(`Task Title: ${title}`);
 
-          const { value: color } = await Swal.fire({
-            title: "Select Task Importance Color",
-            html: `
-              <div style="text-align: center;">
-                <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
-                <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
-                <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
-              </div>
-            `,
-            confirmButtonText: "Confirm",
-            cancelButtonText: "Cancel",
-            showCancelButton: true,
-            preConfirm: () => {
-              const colorValue = document.getElementById("color-input").value;
-              if (!colorValue) {
-                Swal.showValidationMessage("Please select a color!");
-              }
-              return colorValue;
-            },
-          });
+            const { value: detail } = await Swal.fire({
+                title: "Enter Task Details",
+                input: "text",
+                inputPlaceholder: "Enter task details here...",
+                showCancelButton: true,
+                confirmButtonText: "Add Task",
+                cancelButtonText: "Cancel",
+                preConfirm: (inputValue) => {
+                    if (!inputValue) {
+                        Swal.showValidationMessage("Please enter task details!");
+                    }
+                    return inputValue;
+                },
+            });
 
-          if (color) {
-            console.log(`Task Color: ${color}`); // แสดงสี Task ใน console
-            const createdTime = new Date().toLocaleString(); // รับวันที่และเวลาปัจจุบัน
-            const newTask = {
-              title: title,
-              details: detail,
-              color: color,
-              created: createdTime,
-              updated: dateTime, // ใช้วันที่และเวลาที่เลือก
-            };
-            setTasks([...tasks, newTask]); // เพิ่ม Task ใหม่เข้าไปใน state
-            Swal.fire(
-              "Task Added!",
-              `Your task: "${title}" has been added!`,
-              "success"
-            );
-          }
+            if (detail) {
+                console.log(`Task Details: ${detail}`);
+
+                const { value: color } = await Swal.fire({
+                    title: "Select Task Importance Color",
+                    html: `
+                        <div style="text-align: center;">
+                            <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
+                            <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
+                            <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
+                        </div>
+                    `,
+                    confirmButtonText: "Confirm",
+                    cancelButtonText: "Cancel",
+                    showCancelButton: true,
+                    preConfirm: () => {
+                        const colorValue = document.getElementById("color-input").value;
+                        if (!colorValue) {
+                            Swal.showValidationMessage("Please select a color!");
+                        }
+                        return colorValue;
+                    },
+                });
+                console.log("hello หนังสือชื่อไรครับ?",user.diary_namebook);
+                if (color) {
+                    console.log(`Task Color: ${color}`);
+                    const createdTime = new Date().toISOString(); // รับวันที่และเวลาปัจจุบันในรูปแบบ ISO
+                    const diaryName = user.diary_namebook; // แทนที่ด้วยชื่อไดอารี่ของคุณ
+                    console.log("สมุดไร",diaryName)
+                    
+                    // สร้างอ็อบเจ็กต์ใหม่สำหรับ Task
+                    const newTask = {
+                        diary_todoTopic: title,     // ชื่อ Task
+                        diary_todo: detail,         // รายละเอียด Task
+                        diary_color: color,         // สีที่เลือก
+                        diary_reminder: dateTime,   // วันและเวลาที่เลือก
+                        diary_namebook: diaryName,   // ชื่อไดอารี่
+                        diary_created: createdTime,
+                          // วันที่และเวลาที่สร้าง Task
+                    };
+
+                    // ส่งข้อมูลไปยัง API
+                    try {
+                        const response = await axios.post('http://localhost:5000/api/diarylist/add', newTask);
+
+                        console.log(response);
+                        if (response.status === 201) {
+                            setTasks([...tasks, newTask]); // เพิ่ม Task ใหม่เข้าไปใน state
+                            addNewDiary(...tasks, newTask);
+                            Swal.fire("Task Added!", `Your task: "${title}" has been added!`, "success");
+                        }
+                    } catch (error) {
+
+                        console.error("Error adding task:", error);
+                        Swal.fire("Error!", "Failed to add task!", "error");
+                        
+                    }
+                }
+            }
         }
-      }
     }
-  };
+};
+
 
   return (
     <>

@@ -551,6 +551,64 @@ app.delete("/api/diarylist/delete", (req, res) => {
   });
 });
 
+
+
+app.post('/api/diarylist/add', async (req, res) => {
+  const { 
+      diary_todoTopic, 
+      diary_todo, 
+      diary_color, 
+      diary_reminder, 
+      diary_namebook, 
+      diary_created 
+  } = req.body;
+
+  // ตรวจสอบว่ามีค่าที่จำเป็นทั้งหมด
+  if (!diary_todoTopic || !diary_todo || !diary_color || 
+      !diary_reminder || !diary_namebook || 
+      !diary_created) {
+      return res.status(400).json({ message: "Missing required fields." });
+  }
+
+  const sql = `INSERT INTO diary_list (
+      diary_todoTopic, 
+      diary_todo, 
+      diary_color, 
+      diary_reminder, 
+      diary_namebook, 
+      diary_created
+  ) VALUES (?, ?, ?, ?, ?, ?)`;
+
+  const values = [
+      diary_todoTopic, 
+      diary_todo, 
+      diary_color, 
+      diary_reminder, 
+      diary_namebook, 
+      diary_created
+  ];
+
+  db.query(sql, values, (err, result) => {
+      if (err) {
+          console.error("Error adding task:", err);
+          return res.status(500).json({ message: "Failed to add task." });
+      }
+
+      return res.status(201).json({ 
+          message: "Task created successfully!", 
+          taskId: result.insertId // ส่งกลับ ID ของ task ที่ถูกสร้าง
+      });
+  });
+});
+
+
+
+
+
+
+
+
+
 // Start the server
 app.listen(port, () => {
   console.log(
