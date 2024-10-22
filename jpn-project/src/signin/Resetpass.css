@@ -25,7 +25,9 @@
 /* Title styles */
 h1 {
   text-align: center;
-  font-size: 2rem;
+  color: #343a40;
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 2rem;
   background: linear-gradient(120deg, #2563eb, #3b82f6);
@@ -84,8 +86,32 @@ input:focus {
 }
 
 .btn-send-otp {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  min-width: 120px;
+  width: 120px;
+  padding: 0.75rem 0;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-send-otp:hover {
+  background-color: #0056b3;
+}
+
+.btn-send-otp:active {
+  transform: translateY(2px);
+}
+
+.reset-password-section {
+  width: 100%;
+}
+
+input[type="password"] {
+  font-family: "Itim", sans-serif;
 }
 
 .btn-reset-password {
@@ -99,24 +125,36 @@ input:focus {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
-.btn-send-otp:active, .btn-reset-password:active {
-  transform: translateY(1px);
+.btn-reset-password:active {
+  transform: translateY(2px);
 }
 
-/* Section styles */
-.send-otp-section, .reset-password-section {
-  width: 100%;
-  animation: sectionSlideUp 0.6s ease-out;
-}
-
-.input-btn-container {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.input-otp, .input-password {
+label {
+  align-self: flex-start;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: #6c757d;
   margin-bottom: 1rem;
+  display: block;
+}
+
+.send-otp-section,
+.reset-password-section {
+  width: 100%;
+}
+
+.reset-password-section input {
+  margin-top: 0.5rem;
+}
+
+.reset-password-section label {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+.input-otp,
+.input-password {
+  width: 100%; /* Make inputs take up full width for better alignment */
+  border-radius: 8px; /* For a modern look with rounded corners */
 }
 
 /* Animations */
@@ -191,7 +229,17 @@ input:focus {
     width: 100%;
   }
 
-  input, .btn-send-otp, .btn-reset-password {
+  input,
+  .btn-send-otp,
+  .btn-reset-password {
     font-size: 0.9rem;
+  }
+
+  input {
+    width: calc(100% - 110px);
+  }
+
+  .btn-send-otp {
+    width: 110px;
   }
 }

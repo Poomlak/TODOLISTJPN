@@ -254,6 +254,7 @@ const Todomain = () => {
     if (updatedFields) {
       // แปลงค่า reminder จาก '2024-10-13T21:00' เป็นรูปแบบที่ต้องการ
       const reminder = document.getElementById("swal-input3").value;
+
       const UpdateTime = new Date(reminder);
 
       // แปลงเวลาให้เป็นรูปแบบที่ต้องการ
@@ -268,6 +269,7 @@ const Todomain = () => {
 
       const updatedTask = {
         ...taskToUpdate,
+        
         diary_todoTopic: updatedFields.title,
         diary_todo: updatedFields.details,
         diary_reminder: formattedUpdateTime, // เปลี่ยนเป็นรูปแบบที่ต้องการ
@@ -302,6 +304,7 @@ const Todomain = () => {
         const updatedDiaryData = [...diaryData];
         updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
         setDiary(updatedDiaryData); // อัพเดต state
+        handleApply();
         console.error(
           "Error updating task:",
           error.response ? error.response.data : error.message
@@ -608,9 +611,6 @@ const Todomain = () => {
             </div>
           ))}
           <div className="add-task">Add some first book list Click +</div>
-        </div>
-        <div className="button-apply" onClick={handleApply}>
-          Apply
         </div>
       </div>
     </>
