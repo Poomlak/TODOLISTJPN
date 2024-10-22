@@ -8,30 +8,32 @@ import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
 const Todomain = () => {
   const location = useLocation();
   const { diaryName } = location.state || {};
-  console.log('hello',diaryName);
-  const [diary, setDiary] = useState({
-    diary_namebook: "",
-    member_createdbook: "",
-    member_lastupdatedbook: "",
-  });
+  console.log('hello', diaryName);
+  
+  // const [diary, setDiary] = useState({
+  //   diary_namebook: "",
+  //   member_createdbook: "",
+  //   member_lastupdatedbook: "",
+  // });
+  const [diaryData, setDiary] = useState([]);
   const [user, setUser] = useState({
     diary_namebook: "",
     member_createdbook: "",
     member_lastupdatedbook: "",
   });
-  
+
   const [tasks, setTasks] = useState([]); // State สำหรับเก็บ tasks
   const [selectedDateTime, setSelectedDateTime] = useState(""); // State สำหรับวันที่และเวลาที่เลือก
 
   const fetchUser = async () => {
     const username = localStorage.getItem("username"); // ดึง username จาก localStorage
     const diaryName = location.state?.diaryName; // ดึง diaryName
-  
+
     if (!diaryName) {
       console.error("diaryName is undefined");
       return;
     }
-  
+
     try {
       const response = await axios.get("http://localhost:5000/api/userDiary", {
         params: { username, diaryName } // ส่ง username และ diaryName ใน params
@@ -42,12 +44,12 @@ const Todomain = () => {
       console.error("Error fetching user:", error);
     }
   };
-  
-  
 
-  
+
+
+
   const fetchDiary = async () => {
-    
+
     try {
       // ตรวจสอบว่า diaryName มีค่าหรือไม่
       if (diaryName) {
@@ -62,18 +64,18 @@ const Todomain = () => {
       console.error("Error fetching diary:", error);
     }
   };
-  
+
   useEffect(() => {
-    
+
     if (diaryName) {
       fetchDiary();
       fetchUser();
-      
+
 
     } else {
       console.error("diaryName is undefined in useEffect");
     }
-    
+
   }, [diaryName]);
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -108,7 +110,7 @@ const Todomain = () => {
   };
 
 
-  
+
 
   const handleSelectDateTime = async () => {
     const { value: dateTime } = await Swal.fire({
@@ -298,10 +300,10 @@ const Todomain = () => {
   };
 
   const handleApply = async () => {
-   
+
     const diaryNamebook = diaryName; // เปลี่ยนเป็น username ที่คุณต้องการ
     const username = localStorage.getItem("username");
-    
+
     try {
       const response = await axios.put(
         "http://localhost:5000/api/diary/update-timestamp",
@@ -312,11 +314,11 @@ const Todomain = () => {
           },
         }
       );
-      console.log("testtt",response.data.member_lastupdatedbook)
+      console.log("testtt", response.data.member_lastupdatedbook)
       if (response.data) {
         setUser((prevState) => ({
           ...prevState,
-          member_lastupdatedbook: response.data.member_lastupdatedbook 
+          member_lastupdatedbook: response.data.member_lastupdatedbook
         }));
         Swal.fire("Success!", "Timestamp has been updated!", "success");
       }
@@ -325,8 +327,8 @@ const Todomain = () => {
       Swal.fire("Error!", "Failed to update timestamp!", "error");
     }
   };
-  
-  
+
+
 
   return (
     <>
@@ -356,22 +358,23 @@ const Todomain = () => {
               </button>
             </div>
           </div>
-          {tasks.map((task, index) => (
-            <div className="todo-card-task" key={index} style={{ backgroundColor: task.color }}>
-              <h3>{task.title}</h3>
+          {diaryData.map((item, index) => (
+            <div className="todo-card-task" key={index} style={{ backgroundColor: "#f0f0f0" }}> {/* ใช้สีพื้นหลังที่ต้องการ */}
+              <h3>{item.diary_todoTopic || "Diary Todo"}</h3> {/* แสดงชื่อไดอารี่ */}
               <div className="task-grid">
                 <div className="details-container-task">
                   <p>
-                    Details: <i>{task.details}</i>
+                    Details: <i>{item.diary_todo}</i> {/* แสดงรายละเอียดของทูโด */}
+                  </p>
+                  
+                  <p>
+                    Reminder: <i>{item.diary_reminder}</i> {/* แสดงการเตือน */}
                   </p>
                 </div>
                 <div></div>
                 <div className="timestamp-container-task">
                   <p>
-                    Created: <i>{task.created}</i>
-                  </p>
-                  <p>
-                    Notification Time: <i>{task.updated}</i>
+                    Created: <i>{item.diary_created}</i> {/* แสดงวันที่สร้าง */}
                   </p>
                 </div>
                 <div className="button-group-task">
