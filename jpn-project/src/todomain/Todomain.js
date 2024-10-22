@@ -215,93 +215,74 @@ const Todomain = () => {
     }
   };
 
-  const handleUpdateTask = async (index) => {
+const handleUpdateTask = async (index) => {
     const taskToUpdate = diaryData[index]; // Use diaryData to get the task
 
     if (!taskToUpdate) {
-      console.error("Task not found");
-      return;
+        console.error("Task not found");
+        return;
     }
 
-    // Show SweetAlert to update title
-    const { value: updatedTitle } = await Swal.fire({
-      title: "Update Task Title",
-      input: "text",
-      inputValue: taskToUpdate.diary_todoTopic, // Update this line
-      showCancelButton: true,
-      confirmButtonText: "Update",
-      cancelButtonText: "Cancel",
-      preConfirm: (inputValue) => {
-        if (!inputValue) {
-          Swal.showValidationMessage("Please enter a title!");
-        }
-        return inputValue;
-      },
-    });
-
-    if (updatedTitle) {
-      // Show SweetAlert to update details
-      const { value: updatedDetail } = await Swal.fire({
-        title: "Update Task Details",
-        input: "text",
-        inputValue: taskToUpdate.diary_todo, // Update this line
+    // Create a custom HTML string with multiple inputs
+    const { value: updatedFields } = await Swal.fire({
+        title: "Update Task",
+        html: `
+            <input id="swal-input1" class="swal2-input" placeholder="Task Title" value="${taskToUpdate.diary_todoTopic}">
+            <input id="swal-input2" class="swal2-input" placeholder="Task Details" value="${taskToUpdate.diary_todo}">
+            <input id="swal-input3" class="swal2-input" placeholder="Task Reminder" value="${taskToUpdate.diary_reminder}">
+        `,
+        focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: "Update",
-        cancelButtonText: "Cancel",
-        preConfirm: (inputValue) => {
-          if (!inputValue) {
-            Swal.showValidationMessage("Please enter task details!");
-          }
-          return inputValue;
-        },
-      });
+        preConfirm: () => {
+            const title = document.getElementById('swal-input1').value;
+            const details = document.getElementById('swal-input2').value;
+            const reminder = document.getElementById('swal-input3').value;
 
-      if (updatedDetail) {
-        // Show SweetAlert to update reminder
-        const { value: updatedReminder } = await Swal.fire({
-          title: "Update Task Reminder",
-          input: "text",
-          inputValue: taskToUpdate.diary_reminder, // Update this line
-          showCancelButton: true,
-          confirmButtonText: "Update",
-          cancelButtonText: "Cancel",
-          preConfirm: (inputValue) => {
-            if (!inputValue) {
-              Swal.showValidationMessage("Please enter a reminder!");
+            if (!title || !details || !reminder) {
+                Swal.showValidationMessage("Please fill in all fields!");
             }
-            return inputValue;
-          },
-        });
-
-        if (updatedReminder) {
-
-          // Create an updated task object
-          const updatedTask = {
-            ...taskToUpdate,
-            diary_todoTopic: updatedTitle,
-            diary_todo: updatedDetail,
-            diary_reminder: updatedReminder,
-          };
-          console.log("test", updatedTask);
-
-          // Call the update API
-          try {
-            await axios.put('http://localhost:5000/api/diarylist/update', updatedTask);
-            // Other success logic...
-          } catch (error) {
-            
-            Swal.fire("Update Failed!", "There was an error updating the task.", "error");
-          }
-          // Update the diaryData state with the new task details
-          const updatedDiaryData = [...diaryData];
-          updatedDiaryData[index] = updatedTask; // Replace the task at the given index
-          setDiary(updatedDiaryData); // Update the state
-
-          Swal.fire("Task Updated!", "Your task has been updated!", "success");
+            return { title, details, reminder }; // Return an object containing all values
         }
-      }
+    });
+
+    if (updatedFields) {
+        // Create an updated task object
+        const updatedTask = {
+            ...taskToUpdate,
+            diary_todoTopic: updatedFields.title,
+            diary_todo: updatedFields.details,
+            diary_reminder: updatedFields.reminder,
+        };
+        console.log("Updated Task:", updatedTask);
+
+        // Call the update API
+        try {
+            const response = await axios.put('http://localhost:5000/api/diarylist/update', updatedTask);
+            // console.log("Response from server:", response.data); // Log the response data
+
+            if (response.status === 200) { // Check if the status is 200
+                // Update the diaryData state with the new task details
+                const updatedDiaryData = [...diaryData];
+                updatedDiaryData[index] = updatedTask; // Replace the task at the given index
+                setDiary(updatedDiaryData); // Update the state
+
+                Swal.fire("Task Updated!", "Your task has been updated!", "success");
+            } else {
+                // If the status is not 200, show an error
+                Swal.fire("Update Failed!", "There was an error updating the task.", "error");
+            }
+        } catch (error) {
+          const updatedDiaryData = [...diaryData];
+                updatedDiaryData[index] = updatedTask; // Replace the task at the given index
+                setDiary(updatedDiaryData); // Update the state
+            console.error("Error updating task:", error.response ? error.response.data : error.message);
+            Swal.fire("Task Updated!", "Your task has been updated!", "success");
+        }
     }
-  };
+};
+
+
 
 
 
@@ -329,12 +310,11 @@ const Todomain = () => {
                 });
 
                 console.log("Response from server:", response.data);
-
+                const updatedDiaryData = diaryData.filter(task => task.diary_id !== diary_id);
+                    setDiary(updatedDiaryData); // Update the state with the new array
                 if (response.status === 200) {
                     // Reload the page after successful deletion
-                    Swal.fire("Deleted!", "Your task has been deleted.", "success").then(() => {
-                        window.location.reload(); // This reloads the current page
-                    });
+                    Swal.fire("Deleted!", "Your task has been deleted.", "success");
                 }
             } catch (error) {
                 console.error('Error deleting task:', error.response ? error.response.data : error.message);
