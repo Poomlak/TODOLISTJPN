@@ -64,8 +64,10 @@ app.get("/server/serverTest", (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
+  
   const { fname, lname, birthday, email, tel, username, password } = req.body;
-
+  console.log(req.body.username);
+  const lowercaseusername = username.toLowerCase();
   if (
     !fname ||
     !lname ||
@@ -86,7 +88,7 @@ app.post("/signup", async (req, res) => {
 
   db.query(
     query,
-    [fname, lname, birthday, email, tel, username, hashedPassword],
+    [fname, lname, birthday, email, tel, lowercaseusername, hashedPassword],
     (err, result) => {
       if (err) {
         console.error("MySQL Error:", err);
@@ -443,22 +445,49 @@ app.put("/api/diary/update/:oldName", (req, res) => {
 
 app.delete("/api/diary/delete", (req, res) => {
   const { name, username } = req.body;
-  const sql =
-    "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
 
-  db.query(sql, [name, username], (err, result) => {
+  // สร้าง query สำหรับลบจาก member_diary และ diary_list
+  const sql1 = "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
+  const sql2 = "DELETE FROM `diary_list` WHERE `diary_namebook` = ?";
+
+  // เริ่มต้น transaction
+  db.beginTransaction((err) => {
     if (err) {
-      console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", err);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการลบข้อมูล" });
+      return res.status(500).json({ message: "Error starting transaction" });
     }
 
-    if (result.affectedRows > 0) {
-      res.json({ message: "ลบสำเร็จ" });
-    } else {
-      res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการลบ" });
-    }
+    // ลบจาก member_diary
+    db.query(sql1, [name, username], (err, result1) => {
+      if (err) {
+        return db.rollback(() => {
+          res.status(500).json({ message: "Error deleting from member_diary" });
+        });
+      }
+
+      // ลบจาก diary_list
+      db.query(sql2, [name], (err, result2) => {
+        if (err) {
+          return db.rollback(() => {
+            res.status(500).json({ message: "Error deleting from diary_list" });
+          });
+        }
+
+        // Commit transaction หลังจากที่ลบสำเร็จจากทั้งสองตาราง
+        db.commit((err) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ message: "Error committing transaction" });
+            });
+          }
+
+          // ถ้าลบสำเร็จทั้งสองตาราง
+          res.json({ message: "ลบสำเร็จจากทั้งสองตาราง" });
+        });
+      });
+    });
   });
 });
+
 
 app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
@@ -502,25 +531,29 @@ app.get("/api/diary/:username", (req, res) => {
   });
 });
 
-app.put("/api/diarylist/update", async (req, res) => {
-  const { diary_id, diary_todoTopic, diary_todo, diary_reminder } = req.body;
+app.put("/api/diarylist/update", (req, res) => {
+  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color } = req.body;
+  
+  // ตรวจสอบการรับค่าใน console.log
+ 
 
-  try {
-    const result = await db.query(
-      "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ? WHERE diary_id = ?",
-      [diary_todoTopic, diary_todo, diary_reminder, diary_id]
-    );
+  const sql = "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ?, diary_color = ? WHERE diary_id = ?";
+  
+  // ตรวจสอบการส่งพารามิเตอร์ให้ถูกต้อง
+  db.query(sql, [diary_todoTopic, diary_todo, diary_reminder, diary_color, diary_id], (err, result) => {
+    if (err) {
+      console.error("Error updating diary:", err);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
 
     if (result.affectedRows > 0) {
-      res.status(200).json({ message: "Diary updated successfully" });
+      return res.status(200).json({ message: "Diary updated successfully" });
     } else {
-      res.status(404).json({ message: "Diary not found" });
+      return res.status(404).json({ message: "Diary not found" });
     }
-  } catch (error) {
-    console.error("Error updating diary:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+  });
 });
+
 
 app.delete("/api/diarylist/delete", (req, res) => {
   const { diary_id, diary_namebook, diary_todoTopic } = req.body;
