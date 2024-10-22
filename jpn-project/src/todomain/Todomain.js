@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+
 import axios from "axios";
 import "./Todomain.css";
 import { useLocation } from "react-router-dom";
@@ -9,7 +10,7 @@ const Todomain = () => {
   const location = useLocation();
   const { diaryName } = location.state || {};
   console.log('hello', diaryName);
-  
+
   // const [diary, setDiary] = useState({
   //   diary_namebook: "",
   //   member_createdbook: "",
@@ -66,7 +67,7 @@ const Todomain = () => {
   };
 
   useEffect(() => {
-
+    
     if (diaryName) {
       fetchDiary();
       fetchUser();
@@ -215,12 +216,18 @@ const Todomain = () => {
   };
 
   const handleUpdateTask = async (index) => {
-    const taskToUpdate = tasks[index];
+    const taskToUpdate = diaryData[index]; // Use diaryData to get the task
 
+    if (!taskToUpdate) {
+      console.error("Task not found");
+      return;
+    }
+
+    // Show SweetAlert to update title
     const { value: updatedTitle } = await Swal.fire({
       title: "Update Task Title",
       input: "text",
-      inputValue: taskToUpdate.title,
+      inputValue: taskToUpdate.diary_todoTopic, // Update this line
       showCancelButton: true,
       confirmButtonText: "Update",
       cancelButtonText: "Cancel",
@@ -233,10 +240,11 @@ const Todomain = () => {
     });
 
     if (updatedTitle) {
+      // Show SweetAlert to update details
       const { value: updatedDetail } = await Swal.fire({
         title: "Update Task Details",
         input: "text",
-        inputValue: taskToUpdate.details,
+        inputValue: taskToUpdate.diary_todo, // Update this line
         showCancelButton: true,
         confirmButtonText: "Update",
         cancelButtonText: "Cancel",
@@ -249,55 +257,105 @@ const Todomain = () => {
       });
 
       if (updatedDetail) {
-        const { value: updatedColor } = await Swal.fire({
-          title: "Select Task Importance Color",
-          html: `
-            <input type="color" id="color-input" value="${taskToUpdate.color}" style="width: 100%;" />
-          `,
-          confirmButtonText: "Confirm",
+        // Show SweetAlert to update reminder
+        const { value: updatedReminder } = await Swal.fire({
+          title: "Update Task Reminder",
+          input: "text",
+          inputValue: taskToUpdate.diary_reminder, // Update this line
+          showCancelButton: true,
+          confirmButtonText: "Update",
           cancelButtonText: "Cancel",
-          preConfirm: () => {
-            const colorValue = document.getElementById("color-input").value;
-            if (!colorValue) {
-              Swal.showValidationMessage("Please select a color!");
+          preConfirm: (inputValue) => {
+            if (!inputValue) {
+              Swal.showValidationMessage("Please enter a reminder!");
             }
-            return colorValue;
+            return inputValue;
           },
         });
 
-        if (updatedColor) {
+        if (updatedReminder) {
+
+          // Create an updated task object
           const updatedTask = {
             ...taskToUpdate,
-            title: updatedTitle,
-            details: updatedDetail,
-            color: updatedColor,
+            diary_todoTopic: updatedTitle,
+            diary_todo: updatedDetail,
+            diary_reminder: updatedReminder,
           };
-          const updatedTasks = [...tasks];
-          updatedTasks[index] = updatedTask; // แทนที่ task เดิม
-          setTasks(updatedTasks);
+          console.log("test", updatedTask);
+
+          // Call the update API
+          try {
+            await axios.put('http://localhost:5000/api/diarylist/update', updatedTask);
+            // Other success logic...
+          } catch (error) {
+            
+            Swal.fire("Update Failed!", "There was an error updating the task.", "error");
+          }
+          // Update the diaryData state with the new task details
+          const updatedDiaryData = [...diaryData];
+          updatedDiaryData[index] = updatedTask; // Replace the task at the given index
+          setDiary(updatedDiaryData); // Update the state
+
           Swal.fire("Task Updated!", "Your task has been updated!", "success");
         }
       }
     }
   };
 
-  const handleDeleteTask = (index) => {
+
+
+
+
+  const handleDeleteTask = async (diary_id, diary_namebook, diary_todoTopic) => {
+    if (!diary_id) {
+        console.error("Invalid diary ID:", diary_id);
+        return;
+    }
+
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const updatedTasks = tasks.filter((_, i) => i !== index); // ลบ task ที่เลือก
-        setTasks(updatedTasks);
-        Swal.fire("Deleted!", "Your task has been deleted.", "success");
-      }
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await axios.delete('http://localhost:5000/api/diarylist/delete', {
+                    data: { diary_id, diary_namebook, diary_todoTopic }
+                });
+
+                console.log("Response from server:", response.data);
+
+                if (response.status === 200) {
+                    // Reload the page after successful deletion
+                    Swal.fire("Deleted!", "Your task has been deleted.", "success").then(() => {
+                        window.location.reload(); // This reloads the current page
+                    });
+                }
+            } catch (error) {
+                console.error('Error deleting task:', error.response ? error.response.data : error.message);
+                Swal.fire("Error!", "Failed to delete task!", "error");
+            }
+        }
     });
-  };
+};
+
+
+
+
+
+
+  
+  
+  
+  
+  
+
+
 
   const handleApply = async () => {
 
@@ -359,27 +417,26 @@ const Todomain = () => {
             </div>
           </div>
           {diaryData.map((item, index) => (
-            <div className="todo-card-task" key={index} style={{ backgroundColor: "#f0f0f0" }}> {/* ใช้สีพื้นหลังที่ต้องการ */}
-              <h3>{item.diary_todoTopic || "Diary Todo"}</h3> {/* แสดงชื่อไดอารี่ */}
+            <div className="todo-card-task" key={`${item.diary_id}-${index}`} style={{ backgroundColor: "#f0f0f0" }}>
+              <h3>{item.diary_todoTopic || "Diary Todo"}</h3>
               <div className="task-grid">
                 <div className="details-container-task">
                   <p>
-                    Details: <i>{item.diary_todo}</i> {/* แสดงรายละเอียดของทูโด */}
+                    Details: <i>{item.diary_todo}</i>
                   </p>
-                  
                   <p>
-                    Reminder: <i>{item.diary_reminder}</i> {/* แสดงการเตือน */}
+                    Reminder: <i>{item.diary_reminder}</i>
                   </p>
                 </div>
                 <div></div>
                 <div className="timestamp-container-task">
                   <p>
-                    Created: <i>{item.diary_created}</i> {/* แสดงวันที่สร้าง */}
+                    Created: <i>{item.diary_created}</i>
                   </p>
                 </div>
                 <div className="button-group-task">
                   <button onClick={() => handleUpdateTask(index)}>Update</button>
-                  <button onClick={() => handleDeleteTask(index)}>Delete</button>
+                  <button onClick={() => handleDeleteTask(item.diary_id, item.diary_namebook, item.diary_todoTopic)}>Delete</button>
                 </div>
               </div>
             </div>

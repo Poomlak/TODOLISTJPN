@@ -504,6 +504,65 @@ app.get("/api/diary/:username", (req, res) => {
   });
 });
 
+
+
+app.put('/api/diarylist/update', async (req, res) => {
+  const { diary_id, diary_todoTopic, diary_todo, diary_reminder } = req.body;
+
+  try {
+    const result = await db.query(
+      'UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ? WHERE diary_id = ?',
+      [diary_todoTopic, diary_todo, diary_reminder, diary_id]
+    );
+
+    if (result.affectedRows > 0) {
+      res.status(200).json({ message: 'Diary updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Diary not found' });
+    }
+  } catch (error) {
+    console.error('Error updating diary:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
+app.delete('/api/diarylist/delete', (req, res) => {
+  const { diary_id, diary_namebook, diary_todoTopic } = req.body;
+
+  console.log("Received delete request with:", { diary_id, diary_namebook, diary_todoTopic });
+
+  // Query to delete diary based on multiple conditions
+  const sql = 'DELETE FROM diary_list WHERE diary_id = ? AND diary_namebook = ? AND diary_todoTopic = ?';
+  db.query(sql, [diary_id, diary_namebook, diary_todoTopic], (err, result) => {
+      if (err) {
+          console.error('Error deleting diary:', err);
+          return res.status(500).json({ message: 'Internal Server Error' });
+      }
+
+      console.log("Delete query result:", result); // Log the result from the query
+
+      if (result.affectedRows > 0) {
+          res.status(200).json({ message: 'Diary deleted successfully' });
+      } else {
+          console.log("Diary not found for given criteria."); // Log if nothing was found
+          res.status(404).json({ message: 'Diary not found' });
+      }
+  });
+});
+
+
+
+
+
+
+
+
+
+
 // Start the server
 app.listen(port, () => {
   console.log(
