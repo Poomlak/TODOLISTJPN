@@ -36,7 +36,7 @@ const Navbarsignup = () => {
         <div className="navbar-links">
           <a 
             href="/" 
-            className={`nav-link ${activeLink === "home" ? "active" : ""}`}
+            className={`nav-linkk ${activeLink === "home" ? "active" : ""}`}
             onMouseEnter={() => setActiveLink("home")}
             onMouseLeave={() => setActiveLink("")}
           >
@@ -45,7 +45,7 @@ const Navbarsignup = () => {
           </a>
           <a 
             href="/aboutus" 
-            className={`nav-link ${activeLink === "about" ? "active" : ""}`}
+            className={`nav-linkk ${activeLink === "about" ? "active" : ""}`}
             onMouseEnter={() => setActiveLink("about")}
             onMouseLeave={() => setActiveLink("")}
           >
@@ -54,7 +54,7 @@ const Navbarsignup = () => {
           </a>
           <a 
             href="/menutodo" 
-            className={`nav-link ${activeLink === "menu" ? "active" : ""}`}
+            className={`nav-linkk ${activeLink === "menu" ? "active" : ""}`}
             onMouseEnter={() => setActiveLink("menu")}
             onMouseLeave={() => setActiveLink("")}
           >

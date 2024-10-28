@@ -76,37 +76,56 @@
     align-items: center;
 }
 
-.nav-link {
+.nav-linkk {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    color: #2d3748;
     text-decoration: none;
+    color: #4a5568;
     font-family: 'Itim', sans-serif;
     font-size: 1.1rem;
+    padding: 0.5rem 2rem;
     border-radius: 8px;
     transition: all 0.3s ease;
-}
-
-.nav-link i {
+    position: relative;
+  }
+  
+  .nav-linkk i {
     font-size: 1.2rem;
     transition: transform 0.3s ease;
-}
-
-.nav-link:hover {
-    background-color: #ebf8ff;
+  }
+  
+  .nav-linkk:hover {
     color: #4299e1;
-}
-
-.nav-link:hover i {
+    background-color: rgba(66, 153, 225, 0.1);
+  }
+  
+  .nav-linkk:hover i {
     transform: translateY(-2px);
-}
-
-.nav-link.active {
-    background-color: #ebf8ff;
+  }
+  
+  .nav-linkk.active {
     color: #4299e1;
-}
+    background-color: rgba(66, 153, 225, 0.15);
+  }
+  
+  .nav-linkk::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: #4299e1;
+    transition: width 0.3s ease;
+  }
+  
+  .nav-linkk:hover::after,
+  .nav-linkk.active::after {
+    width: 80%;
+  }
+  
 
 .navbar-auth {
     display: flex;
@@ -128,6 +147,7 @@
     transition: all 0.3s ease;
     background-color: #4299e1;
     color: white;
+    margin-right: 5rem;
 }
 
 .btn-sign-up:hover {

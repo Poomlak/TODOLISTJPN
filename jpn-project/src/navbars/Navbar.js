@@ -1,4 +1,3 @@
-// Navbar.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
@@ -43,7 +42,7 @@ const Navbar = () => {
         <div className="navbar-links">
           <a 
             href="/" 
-            className={`nav-link ${activeLink === "home" ? "active" : ""}`}
+            className={`nav-linkk ${activeLink === "home" ? "active" : ""}`}
             onMouseEnter={() => setActiveLink("home")}
             onMouseLeave={() => setActiveLink("")}
           >
@@ -52,7 +51,7 @@ const Navbar = () => {
           </a>
           <a 
             href="/aboutus" 
-            className={`nav-link ${activeLink === "about" ? "active" : ""}`}
+            className={`nav-linkk ${activeLink === "about" ? "active" : ""}`}
             onMouseEnter={() => setActiveLink("about")}
             onMouseLeave={() => setActiveLink("")}
           >
@@ -61,7 +60,7 @@ const Navbar = () => {
           </a>
           <a 
             href="/menutodo" 
-            className={`nav-link ${activeLink === "menu" ? "active" : ""}`}
+            className={`nav-linkk ${activeLink === "menu" ? "active" : ""}`}
             onMouseEnter={() => setActiveLink("menu")}
             onMouseLeave={() => setActiveLink("")}
           >
@@ -71,14 +70,16 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-auth">
-          <button className="btn-sign-upp" onClick={goSignup}>
-            <i className="fas fa-user-plus"></i>
-            <span>Sign Up</span>
-          </button>
-          <button className="btn-sign-inn" onClick={goSignIn}>
-            <i className="fas fa-sign-in-alt"></i>
-            <span>Sign In</span>
-          </button>
+          <div className="auth-content">
+            <button className="btn-sign-upp" onClick={goSignup}>
+              <i className="fas fa-user-plus"></i>
+              <span>Sign Up</span>
+            </button>
+            <button className="btn-sign-inn" onClick={goSignIn}>
+              <i className="fas fa-sign-in-alt"></i>
+              <span>Sign In</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>

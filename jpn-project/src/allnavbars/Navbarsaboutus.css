@@ -14,8 +14,8 @@
 }
 
 .navbar-scrolled {
-  background-color: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-container {
@@ -66,100 +66,79 @@
   font-style: italic;
 }
 
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+.navbar-brand:hover .brand-text-main {
+  color: #4299e1;
 }
 
-.nav-linkk {
+.navbar-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #2d3748;
   text-decoration: none;
-  color: #4a5568;
   font-family: 'Itim', sans-serif;
   font-size: 1.1rem;
-  padding: 0.5rem 2rem;
   border-radius: 8px;
   transition: all 0.3s ease;
-  position: relative;
 }
 
-.nav-linkk i {
+.nav-link i {
   font-size: 1.2rem;
   transition: transform 0.3s ease;
 }
 
-.nav-linkk:hover {
+.nav-link:hover {
+  background-color: #ebf8ff;
   color: #4299e1;
-  background-color: rgba(66, 153, 225, 0.1);
 }
 
-.nav-linkk:hover i {
+.nav-link:hover i {
   transform: translateY(-2px);
 }
 
-.nav-linkk.active {
+.nav-link.active {
+  background-color: #ebf8ff;
   color: #4299e1;
-  background-color: rgba(66, 153, 225, 0.15);
 }
 
-.nav-linkk::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background-color: #4299e1;
-  transition: width 0.3s ease;
-}
-
-.nav-linkk:hover::after,
-.nav-linkk.active::after {
-  width: 80%;
-}
-
-/* Auth Section */
 .navbar-auth {
+  margin-left: 50px;
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-left: auto;
-}
-
-.auth-content {
-  display: flex;
-  align-items: center;
   gap: 1rem;
+  align-items: center;
 }
 
 .btn-sign-upp,
 .btn-sign-inn {
+  margin-left: 10px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
+  font-family: 'Itim', sans-serif;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: bold;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Itim', sans-serif;
-  white-space: nowrap;
 }
 
 .btn-sign-upp {
+  background-color: #4299e1;
   color: white;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
 }
 
 .btn-sign-inn {
+  background-color: #2d3748;
   color: white;
-  background: linear-gradient(135deg, #2d3748, #1a202c);
 }
 
 .btn-sign-upp:hover,
@@ -168,37 +147,25 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.btn-sign-upp:hover {
+  background-color: #3182ce;
+}
+
+.btn-sign-inn:hover {
+  background-color: #1a202c;
+}
+
+/* Animation for icons */
 .btn-sign-upp i,
 .btn-sign-inn i {
-  font-size: 1.1rem;
   transition: transform 0.3s ease;
+  -webkit-transition: transform 0.3s ease;
+  -moz-transition: transform 0.3s ease;
+  -ms-transition: transform 0.3s ease;
+  -o-transition: transform 0.3s ease;
 }
 
 .btn-sign-upp:hover i,
 .btn-sign-inn:hover i {
   transform: rotate(10deg);
-}
-
-/* Media Queries */
-@media (max-width: 1200px) {
-  .navbar {
-    min-width: 100%;
-  }
-
-  .navbar-container {
-    padding: 0 1rem;
-  }
-
-  .navbar-links {
-    gap: 1rem;
-  }
-
-  .nav-linkk {
-    padding: 0.5rem 1rem;
-  }
-
-  .btn-sign-upp span,
-  .btn-sign-inn span {
-    display: none;
-  }
 }

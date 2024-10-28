@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-
 import axios from "axios";
 import "./Todomain.css";
 import { useLocation } from "react-router-dom";
-import NavbartodomainAndprofile from "../allnavbars/Navbartodomain&profile";
+import Navbarprofile from "../allnavbars/Navbarprofile";
 
 const Todomain = () => {
   const location = useLocation();
@@ -485,7 +484,8 @@ const Todomain = () => {
                             <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
                             <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
                             <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
-                        </div>
+                        </div>import Navbarprofile from './../allnavbars/Navbarprofile';
+
                     `,
             confirmButtonText: "Confirm",
             cancelButtonText: "Cancel",
@@ -545,7 +545,7 @@ const Todomain = () => {
 
   return (
     <>
-      <NavbartodomainAndprofile />
+      <Navbarprofile />
       <div className="center-content">
         <div className="todo-container">
           <div className="todo-card">
