@@ -19,7 +19,7 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   flex-direction: row;
   justify-content: space-evenly;
   border-color: black;
@@ -170,4 +170,37 @@ button:hover {
 }
 .button-apply:hover {
   background-color: #e54c4c;
+}
+
+.diary-title {
+  font-size: 1.5rem; /* ขนาดฟอนต์ */
+  font-weight: bold; /* ตัวหนา */
+  color: #0a0c0a; /* สีเขียว */
+  text-align: center; /* จัดให้อยู่กลาง */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* เงา */
+  margin: 10px 0; /* ระยะห่างด้านบนและด้านล่าง */
+  padding: 10px; /* ระยะห่างภายใน */
+  border-bottom: 2px solid #4caf50; /* ขอบด้านล่าง */
+}
+
+.button-group-task button {
+  background-color: #4caf50; /* สีพื้นหลังสำหรับปุ่ม Update */
+  color: white; /* สีตัวอักษร */
+  border: none; /* ไม่มีขอบ */
+  padding: 10px 15px; /* เพิ่ม padding */
+  border-radius: 5px; /* มุมโค้ง */
+  cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อ hover */
+  transition: background-color 0.3s; /* เพิ่ม effect เมื่อ hover */
+}
+
+.button-group-task button:hover {
+  background-color: #45a049; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
+}
+
+.button-group-task button:nth-child(2) {
+  background-color: #f44336; /* สีพื้นหลังสำหรับปุ่ม Delete */
+}
+
+.button-group-task button:nth-child(2):hover {
+  background-color: #d32f2f; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
 }

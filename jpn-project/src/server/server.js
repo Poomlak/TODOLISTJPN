@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "26.11.35.119",
+  host: "localhost",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -64,7 +64,6 @@ app.get("/server/serverTest", (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  
   const { fname, lname, birthday, email, tel, username, password } = req.body;
   console.log(req.body.username);
   const lowercaseusername = username.toLowerCase();
@@ -228,7 +227,8 @@ app.post("/reset-password", async (req, res) => {
     const email = result[0].email;
 
     // ดึงรหัสผ่านเก่าจากฐานข้อมูล
-    const getOldPasswordQuery = "SELECT member_password FROM member_id WHERE member_email = ?";
+    const getOldPasswordQuery =
+      "SELECT member_password FROM member_id WHERE member_email = ?";
     db.query(getOldPasswordQuery, [email], async (err, userResult) => {
       if (err || userResult.length === 0) {
         return res.status(404).send("User not found");
@@ -239,7 +239,9 @@ app.post("/reset-password", async (req, res) => {
       // ตรวจสอบว่ารหัสผ่านใหม่ไม่เหมือนกับรหัสผ่านเก่า
       const isSamePassword = await bcrypt.compare(newPassword, oldPassword);
       if (isSamePassword) {
-        return res.status(400).send("New password must not be the same as the old password");
+        return res
+          .status(400)
+          .send("New password must not be the same as the old password");
       }
 
       // เข้ารหัสรหัสผ่านใหม่
@@ -257,7 +259,6 @@ app.post("/reset-password", async (req, res) => {
     });
   });
 });
-
 
 // Profile API
 app.get("/api/profile/:username", (req, res) => {
@@ -466,7 +467,8 @@ app.delete("/api/diary/delete", (req, res) => {
   const { name, username } = req.body;
 
   // สร้าง query สำหรับลบจาก member_diary และ diary_list
-  const sql1 = "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
+  const sql1 =
+    "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
   const sql2 = "DELETE FROM `diary_list` WHERE `diary_namebook` = ?";
 
   // เริ่มต้น transaction
@@ -506,7 +508,6 @@ app.delete("/api/diary/delete", (req, res) => {
     });
   });
 });
-
 
 app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
@@ -551,28 +552,32 @@ app.get("/api/diary/:username", (req, res) => {
 });
 
 app.put("/api/diarylist/update", (req, res) => {
-  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color } = req.body;
-  
+  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color } =
+    req.body;
+
   // ตรวจสอบการรับค่าใน console.log
- 
 
-  const sql = "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ?, diary_color = ? WHERE diary_id = ?";
-  
+  const sql =
+    "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ?, diary_color = ? WHERE diary_id = ?";
+
   // ตรวจสอบการส่งพารามิเตอร์ให้ถูกต้อง
-  db.query(sql, [diary_todoTopic, diary_todo, diary_reminder, diary_color, diary_id], (err, result) => {
-    if (err) {
-      console.error("Error updating diary:", err);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+  db.query(
+    sql,
+    [diary_todoTopic, diary_todo, diary_reminder, diary_color, diary_id],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating diary:", err);
+        return res.status(500).json({ message: "Internal Server Error" });
+      }
 
-    if (result.affectedRows > 0) {
-      return res.status(200).json({ message: "Diary updated successfully" });
-    } else {
-      return res.status(404).json({ message: "Diary not found" });
+      if (result.affectedRows > 0) {
+        return res.status(200).json({ message: "Diary updated successfully" });
+      } else {
+        return res.status(404).json({ message: "Diary not found" });
+      }
     }
-  });
+  );
 });
-
 
 app.delete("/api/diarylist/delete", (req, res) => {
   const { diary_id, diary_namebook, diary_todoTopic } = req.body;
@@ -603,23 +608,26 @@ app.delete("/api/diarylist/delete", (req, res) => {
   });
 });
 
-
-
-app.post('/api/diarylist/add', async (req, res) => {
-  const { 
-      diary_todoTopic, 
-      diary_todo, 
-      diary_color, 
-      diary_reminder, 
-      diary_namebook, 
-      diary_created 
+app.post("/api/diarylist/add", async (req, res) => {
+  const {
+    diary_todoTopic,
+    diary_todo,
+    diary_color,
+    diary_reminder,
+    diary_namebook,
+    diary_created,
   } = req.body;
 
   // ตรวจสอบว่ามีค่าที่จำเป็นทั้งหมด
-  if (!diary_todoTopic || !diary_todo || !diary_color || 
-      !diary_reminder || !diary_namebook || 
-      !diary_created) {
-      return res.status(400).json({ message: "Missing required fields." });
+  if (
+    !diary_todoTopic ||
+    !diary_todo ||
+    !diary_color ||
+    !diary_reminder ||
+    !diary_namebook ||
+    !diary_created
+  ) {
+    return res.status(400).json({ message: "Missing required fields." });
   }
 
   const sql = `INSERT INTO diary_list (
@@ -632,34 +640,26 @@ app.post('/api/diarylist/add', async (req, res) => {
   ) VALUES (?, ?, ?, ?, ?, ?)`;
 
   const values = [
-      diary_todoTopic, 
-      diary_todo, 
-      diary_color, 
-      diary_reminder, 
-      diary_namebook, 
-      diary_created
+    diary_todoTopic,
+    diary_todo,
+    diary_color,
+    diary_reminder,
+    diary_namebook,
+    diary_created,
   ];
 
   db.query(sql, values, (err, result) => {
-      if (err) {
-          console.error("Error adding task:", err);
-          return res.status(500).json({ message: "Failed to add task." });
-      }
+    if (err) {
+      console.error("Error adding task:", err);
+      return res.status(500).json({ message: "Failed to add task." });
+    }
 
-      return res.status(201).json({ 
-          message: "Task created successfully!", 
-          taskId: result.insertId // ส่งกลับ ID ของ task ที่ถูกสร้าง
-      });
+    return res.status(201).json({
+      message: "Task created successfully!",
+      taskId: result.insertId, // ส่งกลับ ID ของ task ที่ถูกสร้าง
+    });
   });
 });
-
-
-
-
-
-
-
-
 
 // Start the server
 app.listen(port, () => {

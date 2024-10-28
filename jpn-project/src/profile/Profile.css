@@ -75,16 +75,35 @@
 
 .btn.edit {
   background-color: #f44336;
+  color: white;
 }
 
 .btn.save {
   background-color: #4caf50;
+  color: white;
 }
 
 .btn.back {
   background-color: #2196f3;
+  color: white;
 }
 
 .btn:hover {
   opacity: 0.8;
+}
+
+.btn.menutodo-link {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn.menutodo-link:hover {
+  background-color: #45a049;
 }

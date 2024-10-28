@@ -268,11 +268,11 @@ const Todomain = () => {
 
       const updatedTask = {
         ...taskToUpdate,
-        
         diary_todoTopic: updatedFields.title,
         diary_todo: updatedFields.details,
-        diary_reminder: formattedUpdateTime, // เปลี่ยนเป็นรูปแบบที่ต้องการ
+        diary_reminder: formattedUpdateTime,
         diary_color: updatedFields.color,
+        diary_textColor: getContrastYIQ(updatedFields.color), // เพิ่มสีข้อความ
       };
 
       console.log("Updated Task:", updatedTask);
@@ -507,15 +507,14 @@ const Todomain = () => {
 
             // สร้างอ็อบเจ็กต์ใหม่สำหรับ Task
             const newTask = {
-              diary_todoTopic: title, // ชื่อ Task
-              diary_todo: detail, // รายละเอียด Task
-              diary_color: color, // สีที่เลือก
-              diary_reminder: dateTime, // วันและเวลาที่เลือก
-              diary_namebook: diaryName, // ชื่อไดอารี่
+              diary_todoTopic: title,
+              diary_todo: detail,
+              diary_color: color,
+              diary_reminder: dateTime,
+              diary_namebook: diaryName,
               diary_created: createdTime,
-              // วันที่และเวลาที่สร้าง Task
+              diary_textColor: getContrastYIQ(color), // เพิ่มสีข้อความ
             };
-
             // ส่งข้อมูลไปยัง API
             try {
               const response = await axios.post(
@@ -541,6 +540,19 @@ const Todomain = () => {
         }
       }
     }
+  };
+  const getContrastYIQ = (hexcolor) => {
+    // ลบ # ออกถ้ามี
+    hexcolor = hexcolor.replace(/#/g, "");
+
+    // แปลงเป็น RGB
+    const r = parseInt(hexcolor.substr(0, 2), 16);
+    const g = parseInt(hexcolor.substr(2, 2), 16);
+    const b = parseInt(hexcolor.substr(4, 2), 16);
+
+    // ใช้สูตร YIQ เพื่อคำนวณความสว่าง
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 128 ? "black" : "white"; // ถ้า YIQ >= 128 จะใช้สีดำ
   };
 
   return (
@@ -575,7 +587,9 @@ const Todomain = () => {
               key={`${item.diary_id}-${index}`}
               style={{ backgroundColor: item.diary_color }}
             >
-              <h3>{item.diary_todoTopic || "Diary Todo"}</h3>
+              <h3 style={{ color: item.diary_textColor }}>
+                {item.diary_todoTopic || "Diary Todo"}
+              </h3>
               <div className="task-grid">
                 <div className="details-container-task">
                   <p>
@@ -610,7 +624,12 @@ const Todomain = () => {
               </div>
             </div>
           ))}
-          <div className="add-task">Add some first book list Click +</div>
+          {/* แสดงข้อความนี้เฉพาะเมื่อไม่มีสมุดบันทึก */}
+          {diaryData.length === 0 && (
+            <div className="add-task">
+              Add some first book list Click Red button
+            </div>
+          )}
         </div>
       </div>
     </>
