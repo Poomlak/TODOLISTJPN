@@ -552,18 +552,18 @@ app.get("/api/diary/:username", (req, res) => {
 });
 
 app.put("/api/diarylist/update", (req, res) => {
-  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color } =
+  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color,diary_textColor } =
     req.body;
 
   // ตรวจสอบการรับค่าใน console.log
 
   const sql =
-    "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ?, diary_color = ? WHERE diary_id = ?";
+    "UPDATE diary_list SET diary_todoTopic = ?, diary_todo = ?, diary_reminder = ?, diary_color = ? ,diary_textColor = ? WHERE diary_id = ?";
 
   // ตรวจสอบการส่งพารามิเตอร์ให้ถูกต้อง
   db.query(
     sql,
-    [diary_todoTopic, diary_todo, diary_reminder, diary_color, diary_id],
+    [diary_todoTopic, diary_todo, diary_reminder, diary_color,diary_textColor, diary_id],
     (err, result) => {
       if (err) {
         console.error("Error updating diary:", err);
