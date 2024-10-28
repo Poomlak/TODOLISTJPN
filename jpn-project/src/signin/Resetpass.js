@@ -5,7 +5,11 @@ import Navbaraboutus from "../allnavbars/Navbarsaboutus";
 import "./Resetpass.css"; // สำหรับ styling เพิ่มเติม
 
 const Resetpass = () => {
-  const [formData, setFormData] = useState({ identifier: "", otp: "", newPassword: "" });
+  const [formData, setFormData] = useState({
+    identifier: "",
+    otp: "",
+    newPassword: "",
+  });
   const [isOtpSent, setIsOtpSent] = useState(false); // State to track if OTP is sent
 
   const handleChange = (e) => {
@@ -15,35 +19,40 @@ const Resetpass = () => {
 
   const handleSendOtp = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/send-otp", { identifier: formData.identifier });
+      const response = await axios.post("http://localhost:5000/send-otp", {
+        identifier: formData.identifier,
+      });
       Swal.fire({
         icon: "success",
         title: "OTP Sent",
-        text: "An OTP has been sent to your email!",
-        confirmButtonText: "OK"
+        html: "Your OTP has been sent successfully<br>Please check your email.",
+        confirmButtonText: "OK",
       });
       setIsOtpSent(true); // Enable OTP input field
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Username or email not found!",
-        confirmButtonText: "Try Again"
+        html: "Username or email not found!<br>Please try again.",
+        confirmButtonText: "Try Again",
       });
     }
   };
 
   const handleResetPassword = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/reset-password", {
-        otp: formData.otp,
-        newPassword: formData.newPassword
-      });
+      const response = await axios.post(
+        "http://localhost:5000/reset-password",
+        {
+          otp: formData.otp,
+          newPassword: formData.newPassword,
+        }
+      );
       Swal.fire({
         icon: "success",
         title: "Password Reset",
         text: "Your password has been successfully reset!",
-        confirmButtonText: "Login"
+        confirmButtonText: "Login",
       }).then(() => {
         window.location.pathname = "/signin"; // Redirect to sign in page
       });
@@ -52,7 +61,7 @@ const Resetpass = () => {
         icon: "error",
         title: "Error",
         text: "Invalid OTP or don't use the same password",
-        confirmButtonText: "Try Again"
+        confirmButtonText: "Try Again",
       });
     }
   };
@@ -65,19 +74,21 @@ const Resetpass = () => {
         <div className="resetpass-form">
           {!isOtpSent ? (
             <div className="send-otp-section">
-            <label>Username or Email</label>
-            <div className="input-btn-container">
-              <input
-                type="text"
-                name="identifier"
-                placeholder="Enter your username or email"
-                value={formData.identifier}
-                onChange={handleChange}
-                required
-              />
-              <button onClick={handleSendOtp} className="btn-send-otp">Send OTP</button>
+              <label>Username or Email</label>
+              <div className="input-btn-container">
+                <input
+                  type="text"
+                  name="identifier"
+                  placeholder="Enter your username or email"
+                  value={formData.identifier}
+                  onChange={handleChange}
+                  required
+                />
+                <button onClick={handleSendOtp} className="btn-send-otp">
+                  Send OTP
+                </button>
+              </div>
             </div>
-          </div>
           ) : (
             <div className="reset-password-section">
               <label>Enter OTP</label>
@@ -90,7 +101,7 @@ const Resetpass = () => {
                 onChange={handleChange}
                 required
               />
-              
+
               <label>New Password</label>
               <input
                 className="input-password"
@@ -101,7 +112,12 @@ const Resetpass = () => {
                 onChange={handleChange}
                 required
               />
-              <button onClick={handleResetPassword} className="btn-reset-password">Reset Password</button>
+              <button
+                onClick={handleResetPassword}
+                className="btn-reset-password"
+              >
+                Reset Password
+              </button>
             </div>
           )}
         </div>

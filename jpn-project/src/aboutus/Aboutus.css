@@ -1,7 +1,7 @@
 .aboutus-container {
   padding: 2rem;
   max-width: 1200px;
-  margin: 0 auto  ;
+  margin: 0 auto;
   min-height: 100vh;
   background-color: #f8f9fa;
 }
@@ -17,7 +17,7 @@
 }
 
 .aboutus-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -43,8 +43,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2.5rem;  /* เพิ่ม padding */
-  min-height: 400px;  /* เพิ่มความสูง */
+  padding: 2.5rem; /* เพิ่ม padding */
+  min-height: 400px; /* เพิ่มความสูง */
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
   -ms-border-radius: 25px;
@@ -67,15 +67,15 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  border-radius: 50%;  
+  border-radius: 50%;
   background-color: #ffffff;
 }
 
 .profile-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;  
-  object-position: top center;  
+  object-fit: cover;
+  object-position: top center;
   padding: 0;
   transition: transform 0.3s ease;
 }
@@ -87,19 +87,19 @@
 .profile-info {
   text-align: center;
   width: 100%;
-  margin-top: 1rem;  /* เพิ่มระยะห่างจากรูป */
+  margin-top: 1rem; /* เพิ่มระยะห่างจากรูป */
 }
 
 .profile-name {
   color: #2c3e50;
   margin: 0.5rem 0;
-  font-size: 1.4rem;  /* เพิ่มขนาดตัวอักษร */
+  font-size: 1.4rem; /* เพิ่มขนาดตัวอักษร */
   font-weight: 600;
 }
 
 .profile-id {
   color: #7f8c8d;
-  font-size: 1.2rem;  /* เพิ่มขนาดตัวอักษร */
+  font-size: 1.2rem; /* เพิ่มขนาดตัวอักษร */
   margin: 0.25rem 0;
 }
 
@@ -120,7 +120,7 @@
   }
 
   .profile-image-container {
-    width: 220px;  /* ปรับขนาดให้เหมาะสมกับมือถือ */
+    width: 220px; /* ปรับขนาดให้เหมาะสมกับมือถือ */
     height: 220px;
   }
 
@@ -145,6 +145,46 @@
   animation: fadeIn 0.6s ease-out forwards;
 }
 
-.profiles > div:nth-child(1) { animation-delay: 0.1s; }
-.profiles > div:nth-child(2) { animation-delay: 0.2s; }
-.profiles > div:nth-child(3) { animation-delay: 0.3s; }
+.profiles > div:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.profiles > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.profiles > div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.extra-boxes {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.extra-box {
+  width: 30%;
+  padding: 20px;
+  background-color: #f0f0f0;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s;
+}
+
+.extra-box:hover {
+  background-color: #e0e0e0;
+}
+
+.extra-box p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.profile-role {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #555;
+  margin: 5px 0;
+}

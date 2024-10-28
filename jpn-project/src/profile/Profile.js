@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom"; // นำเข้า Link จาก react-router-dom
 import axios from "axios";
 import Swal from "sweetalert2";
 import Navbarprofile from "../allnavbars/Navbarprofile";
@@ -15,7 +16,7 @@ const Profile = () => {
     member_tel: "",
     member_username: "",
     member_password: "",
-    member_image_url: "" // เพิ่มฟิลด์สำหรับ URL รูปภาพ
+    member_image_url: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,8 +26,9 @@ const Profile = () => {
     const fetchProfile = async () => {
       if (username) {
         try {
-          const response = await axios.get(`http://localhost:5000/api/profile/${username}`);
-          console.log(response.data); // ดูข้อมูลที่ได้รับจาก API
+          const response = await axios.get(
+            `http://localhost:5000/api/profile/${username}`
+          );
           setProfile(response.data);
         } catch (error) {
           console.error("Error fetching profile:", error);
@@ -35,7 +37,6 @@ const Profile = () => {
     };
     fetchProfile();
   }, [username]);
-  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -48,26 +49,26 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/profile/${profile.member_username}`, {
-        password: profile.member_password,
-        birthday: profile.member_birthday,
-        email: profile.member_email,
-        telephone: profile.member_tel,
-        imageUrl: profile.member_image_url, // ส่ง URL รูปภาพไปอัปเดตใน DB
-      });
-      console.log(response);
-  
-      // แสดง SweetAlert2 เมื่ออัปเดตสำเร็จ
+      const response = await axios.put(
+        `http://localhost:5000/api/profile/${profile.member_username}`,
+        {
+          password: profile.member_password,
+          birthday: profile.member_birthday,
+          email: profile.member_email,
+          telephone: profile.member_tel,
+          imageUrl: profile.member_image_url,
+        }
+      );
+
       await Swal.fire({
-        icon: 'success',
-        title: 'อัปเดตสำเร็จ!',
-        text: 'โปรไฟล์ของคุณได้ถูกอัปเดตแล้ว.',
-        confirmButtonText: 'ตกลง'
+        icon: "success",
+        title: "อัปเดตสำเร็จ!",
+        text: "โปรไฟล์ของคุณได้ถูกอัปเดตแล้ว.",
+        confirmButtonText: "ตกลง",
       });
-  
-      // ส่งอีเมลแจ้งเตือนเมื่ออัปเดตโปรไฟล์เสร็จ
+
       await axios.post("http://localhost:5000/send-update-email", {
-        email: profile.member_email, // ส่งอีเมลของผู้ใช้
+        email: profile.member_email,
         username: profile.member_username,
         changes: {
           birthday: profile.member_birthday,
@@ -75,37 +76,35 @@ const Profile = () => {
           imageUrl: profile.member_image_url,
         },
       });
-  
-      // รีเฟรชหน้าเพื่อดึงข้อมูลใหม่
+
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please check your input or try again later.");
+      Swal.fire(
+        "Failed to update profile. Please check your input or try again later."
+      );
     }
   };
-  
-
-  
-
-  
 
   return (
     <>
       <Navbarprofile />
       <div className="profile-container">
-        <h1>สวัสดี , {profile.member_fname} {profile.member_lname}</h1>
+        <h1>
+          สวัสดี , {profile.member_fname} {profile.member_lname}
+        </h1>
 
         <div className="profile-image">
-        
-
           <img
-            src={profile.member_image_url && profile.member_image_url.startsWith('http') ? profile.member_image_url : "https://via.placeholder.com/150"}
+            src={
+              profile.member_image_url &&
+              profile.member_image_url.startsWith("http")
+                ? profile.member_image_url
+                : "https://via.placeholder.com/150"
+            }
             alt="Profile"
             className="profile-picture"
           />
-
-
-
           {isEditing && (
             <input
               type="text"
@@ -119,6 +118,7 @@ const Profile = () => {
         </div>
 
         <div className="profile-details">
+          {/* ข้อมูลโปรไฟล์ */}
           <div className="input-group">
             <label htmlFor="username">Username :</label>
             <input
@@ -138,12 +138,14 @@ const Profile = () => {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="member_password"
-                // value={profile.member_password}
                 onChange={handleInputChange}
                 placeholder="You can change password here"
                 readOnly={!isEditing}
               />
-              <span onClick={togglePasswordVisibility} className="password-toggle">
+              <span
+                onClick={togglePasswordVisibility}
+                className="password-toggle"
+              >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
@@ -201,6 +203,11 @@ const Profile = () => {
               แก้ไข
             </button>
           )}
+
+          {/* ปุ่มลิงก์ไปยังหน้า menutodo */}
+          <Link to="/menutodo">
+            <button className="btn menutodo-link">ไปยังหน้าเมนู To-do</button>
+          </Link>
         </div>
       </div>
     </>
