@@ -80,6 +80,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s; /* เพิ่มการเปลี่ยนแปลงสี */
+  font-family: "Itim", sans-serif;
 }
 
 .add-button-Todo:hover {
@@ -107,6 +108,7 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   font-size: 18px;
   color: #555;
+  font-family: "Itim", sans-serif;
 }
 
 .timestamp-container {
@@ -115,6 +117,7 @@
   border-radius: 5px; /* มุมมน */
   margin: 10px 0; /* ระยะห่างด้านบนและล่าง */
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2); /* เงา */
+  font-family: "Itim", sans-serif;
 }
 
 .detail-container {
@@ -191,6 +194,7 @@ button:hover {
   border-radius: 5px; /* มุมโค้ง */
   cursor: pointer; /* เปลี่ยนเคอร์เซอร์เมื่อ hover */
   transition: background-color 0.3s; /* เพิ่ม effect เมื่อ hover */
+  font-family: "Itim", sans-serif;
 }
 
 .button-group-task button:hover {
@@ -203,4 +207,18 @@ button:hover {
 
 .button-group-task button:nth-child(2):hover {
   background-color: #d32f2f; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
+}
+
+.scrollable-tasks {
+  max-height: 450px; /* กำหนดความสูงของกล่องเลื่อน */
+  overflow-y: auto; /* เลื่อนตามแกน Y */
+  padding-right: 10px; /* เว้นที่ว่างให้ scrollbar */
+}
+
+h3 {
+  font-family: "Itim", sans-serif;
+}
+
+p {
+  font-family: "Itim", sans-serif;
 }
