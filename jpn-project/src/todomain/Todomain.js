@@ -453,14 +453,15 @@ const Todomain = () => {
     setDiary((prevDiaries) => [...prevDiaries, newDiary]);
   };
 
+
   const handleAddTaskWithDateTime = async () => {
-    // ขั้นตอนแรก: ให้ผู้ใช้เลือกวันที่และเวลา
+    // Step 1: Allow the user to select a date and time
     const { value: dateTime } = await Swal.fire({
       title: "Select Date and Time",
       html: `
-            <input type="date" id="date-input" class="swal2-input" />
-            <input type="time" id="time-input" class="swal2-input" />
-        `,
+        <input type="date" id="date-input" class="swal2-input" />
+        <input type="time" id="time-input" class="swal2-input" />
+      `,
       confirmButtonText: "Confirm",
       cancelButtonText: "Cancel",
       showCancelButton: true,
@@ -470,32 +471,29 @@ const Todomain = () => {
         const date = document.getElementById("date-input").value;
         const time = document.getElementById("time-input").value;
 
-        // เช็คว่ามีการเลือกวันและเวลาหรือไม่
+        // Check if both date and time are selected
         if (!date || !time) {
           Swal.showValidationMessage("Please select both date and time!");
-          return; // หยุดการประมวลผล
+          return;
         }
 
-        // แปลงรูปแบบวันที่และเวลา
-        const formattedDateTime = `${date}T${time}`; // ใช้ T เพื่อรวมวันและเวลาในรูปแบบ ISO
+        // Format date and time
+        const formattedDateTime = `${date}T${time}`;
         const dateTimeObject = new Date(formattedDateTime);
 
-        // แปลงเป็นรูปแบบที่ต้องการ
+        // Format to desired output
         const year = dateTimeObject.getFullYear();
-        const month = String(dateTimeObject.getMonth() + 1).padStart(2, "0"); // เพิ่ม 1 เพราะ months เริ่มที่ 0
+        const month = String(dateTimeObject.getMonth() + 1).padStart(2, "0");
         const day = String(dateTimeObject.getDate()).padStart(2, "0");
         const hours = String(dateTimeObject.getHours()).padStart(2, "0");
         const minutes = String(dateTimeObject.getMinutes()).padStart(2, "0");
         const seconds = String(dateTimeObject.getSeconds()).padStart(2, "0");
 
-        // คืนค่าตามรูปแบบที่ต้องการ
-        const formattedResult = `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
-        console.log(`Selected Date and Time: ${formattedResult}`); // แสดงผลใน console
-        return formattedResult; // ส่งคืนวันที่และเวลาในรูปแบบที่ต้องการ
+        return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
       },
     });
 
-    // ถ้าเลือกวันที่และเวลาแล้ว
+    // If date and time are selected
     if (dateTime) {
       const { value: title } = await Swal.fire({
         title: "Enter Task Title",
@@ -513,8 +511,6 @@ const Todomain = () => {
       });
 
       if (title) {
-        console.log(`Task Title: ${title}`);
-
         const { value: detail } = await Swal.fire({
           title: "Enter Task Details",
           input: "text",
@@ -531,17 +527,15 @@ const Todomain = () => {
         });
 
         if (detail) {
-          console.log(`Task Details: ${detail}`);
-
           const { value: color } = await Swal.fire({
             title: "Select Task Importance Color",
             html: `
-            <div style="text-align: center;">
+              <div style="text-align: center;">
                 <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
                 <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
                 <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
-            </div>
-        `,
+              </div>
+            `,
             confirmButtonText: "Confirm",
             cancelButtonText: "Cancel",
             showCancelButton: true,
@@ -553,14 +547,40 @@ const Todomain = () => {
               return colorValue;
             },
           });
-          console.log("hello หนังสือชื่อไรครับ?", user.diary_namebook);
-          if (color) {
-            console.log(`Task Color: ${color}`);
-            const createdTime = formatDate(new Date()); // รับวันที่และเวลาปัจจุบันในรูปแบบ ISO
-            const diaryName = user.diary_namebook; // แทนที่ด้วยชื่อไดอารี่ของคุณ
-            console.log("สมุดไร", diaryName);
 
-            // สร้างอ็อบเจ็กต์ใหม่สำหรับ Task
+          if (color) {
+            const createdTime = formatDate(new Date());
+            const diaryName = user.diary_namebook;
+
+            // Show loading alert
+            Swal.fire({
+              title: "Processing...",
+              text: "Please wait while we add your task.",
+              allowOutsideClick: false,
+              showConfirmButton: false, // Hides the OK button
+              onBeforeOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            // Fetch the email using the existing API
+            let email;
+            try {
+              const username = localStorage.getItem("username");
+              const response = await axios.post("http://localhost:5000/api/getEmailByUsername", {
+                member_username: username,
+              });
+
+              if (response.status === 200) {
+                email = response.data.email;
+              }
+            } catch (error) {
+              console.error("Error fetching email:", error);
+              Swal.fire("Error!", "Failed to fetch email!", "error");
+              return;
+            }
+
+            // Create a new task object
             const newTask = {
               diary_todoTopic: title,
               diary_todo: detail,
@@ -568,24 +588,23 @@ const Todomain = () => {
               diary_reminder: dateTime,
               diary_namebook: diaryName,
               diary_created: createdTime,
-              diary_textColor: getContrastYIQ(color), // เพิ่มสีข้อความ
+              diary_textColor: getContrastYIQ(color),
+              email: email,
             };
-            // ส่งข้อมูลไปยัง API
-            try {
-              const response = await axios.post(
-                "http://localhost:5000/api/diarylist/add",
-                newTask
-              );
 
-              console.log(response);
+            // Send data to the API
+            try {
+              const response = await axios.post("http://localhost:5000/api/diarylist/add", newTask);
+
               if (response.status === 201) {
-                setTasks([...tasks, newTask]); // เพิ่ม Task ใหม่เข้าไปใน state
+                setTasks([...tasks, newTask]);
                 addNewDiary(...tasks, newTask);
-                Swal.fire(
-                  "Task Added!",
-                  `Your task: "${title}" has been added!`,
-                  "success"
-                );
+
+                // Close the loading alert and show success message
+                Swal.fire("Task Added!", `Your task: "${title}" has been added!`, "success").then(() => {
+                  // Refresh the page after the success alert is closed
+                  window.location.reload();
+                });
               }
             } catch (error) {
               console.error("Error adding task:", error);
@@ -596,6 +615,8 @@ const Todomain = () => {
       }
     }
   };
+
+
   const getContrastYIQ = (hexcolor) => {
     // ลบ # ออกถ้ามี
     hexcolor = hexcolor.replace(/#/g, "");
