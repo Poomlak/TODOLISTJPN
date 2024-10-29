@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "26.11.35.119",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -552,8 +552,14 @@ app.get("/api/diary/:username", (req, res) => {
 });
 
 app.put("/api/diarylist/update", (req, res) => {
-  const { diary_id, diary_todoTopic, diary_todo, diary_reminder, diary_color,diary_textColor } =
-    req.body;
+  const {
+    diary_id,
+    diary_todoTopic,
+    diary_todo,
+    diary_reminder,
+    diary_color,
+    diary_textColor,
+  } = req.body;
 
   // ตรวจสอบการรับค่าใน console.log
 
@@ -563,7 +569,14 @@ app.put("/api/diarylist/update", (req, res) => {
   // ตรวจสอบการส่งพารามิเตอร์ให้ถูกต้อง
   db.query(
     sql,
-    [diary_todoTopic, diary_todo, diary_reminder, diary_color,diary_textColor, diary_id],
+    [
+      diary_todoTopic,
+      diary_todo,
+      diary_reminder,
+      diary_color,
+      diary_textColor,
+      diary_id,
+    ],
     (err, result) => {
       if (err) {
         console.error("Error updating diary:", err);
