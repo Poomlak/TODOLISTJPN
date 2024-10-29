@@ -222,7 +222,7 @@ const Menutodo = () => {
       <Navbarmenutodo />
       <div className="list-header">
         <div className="list-title">
-          List-Book - <span className="username">{username}</span>
+          List-Book : <span className="username">{username}</span>
         </div>
 
         <button className="main-create" onClick={handleCreate}>
@@ -230,42 +230,49 @@ const Menutodo = () => {
         </button>
       </div>
       <div className="list-container">
-        <div className="button-container">
-          {list.length === 0 ? (
-            <p
-              style={{ fontWeight: "bold", fontSize: "18px", color: "#f44336" }}
-            >
-              สร้างสมุดใหม่
-            </p>
-          ) : (
-            list.map((item, index) => (
-              <div key={index} className="list-item">
-                <div
-                  className="list-content"
-                  onClick={() => goTodomain(index, item.diary_namebook)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <h3>{item.diary_namebook}</h3>
-                  <p>Created: {item.member_createdbook}</p>
-                  <p>Last Update: {item.member_lastupdatedbook}</p>
-                </div>
-                <div className="action-buttons">
-                  <button
-                    className="rename-button"
-                    onClick={() => handleRename(index)}
+        <div className="list-wrappermenu">
+          <div className="button-container">
+            {list.length === 0 ? (
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  color: "#f44336",
+                }}
+              >
+                "ไม่มีสมุดบันทึกอยู่ในขณะนี้
+                เริ่มต้นสร้างสมุดบันทึกใหม่เพื่อบันทึกสิ่งที่ต้องทำกันเถอะ!"
+              </p>
+            ) : (
+              list.map((item, index) => (
+                <div key={index} className="list-item">
+                  <div
+                    className="list-content"
+                    onClick={() => goTodomain(index, item.diary_namebook)}
+                    style={{ cursor: "pointer" }}
                   >
-                    Rename
-                  </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete
-                  </button>
+                    <h3>{item.diary_namebook}</h3>
+                    <p>Created: {item.member_createdbook}</p>
+                    <p>Last Update: {item.member_lastupdatedbook}</p>
+                  </div>
+                  <div className="action-buttons">
+                    <button
+                      className="rename-button"
+                      onClick={() => handleRename(index)}
+                    >
+                      Rename
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDelete(index)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

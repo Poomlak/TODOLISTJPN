@@ -90,101 +90,103 @@ const Profile = () => {
     <>
       <Navbarprofile />
       <div className="profile-container">
-        <h1>
-          สวัสดี , {profile.member_fname} {profile.member_lname}
-        </h1>
+        <div className="profile-wrapper">
+          <h1>
+            สวัสดี , {profile.member_fname} {profile.member_lname}
+          </h1>
 
-        <div className="profile-image">
-          <img
-            src={
-              profile.member_image_url &&
-              profile.member_image_url.startsWith("http")
-                ? profile.member_image_url
-                : "https://via.placeholder.com/150"
-            }
-            alt="Profile"
-            className="profile-picture"
-          />
-          {isEditing && (
-            <input
-              type="text"
-              name="member_image_url"
-              value={profile.member_image_url}
-              onChange={handleInputChange}
-              placeholder="Enter image URL"
-              className="url-input"
+          <div className="profile-image">
+            <img
+              src={
+                profile.member_image_url &&
+                profile.member_image_url.startsWith("http")
+                  ? profile.member_image_url
+                  : "https://via.placeholder.com/150"
+              }
+              alt="Profile"
+              className="profile-picture"
             />
-          )}
-        </div>
-
-        <div className="profile-details">
-          {/* ข้อมูลโปรไฟล์ */}
-          <div className="input-group">
-            <label htmlFor="username">Username :</label>
-            <input
-              type="text"
-              id="username"
-              name="member_username"
-              value={profile.member_username}
-              onChange={handleInputChange}
-              readOnly={!isEditing}
-            />
+            {isEditing && (
+              <input
+                type="text"
+                name="member_image_url"
+                value={profile.member_image_url}
+                onChange={handleInputChange}
+                placeholder="Enter image URL"
+                className="url-input"
+              />
+            )}
           </div>
 
-          <div className="input-group">
-            <label htmlFor="password">Change Password :</label>
-            <div className="password-field">
+          <div className="profile-details">
+            {/* ข้อมูลโปรไฟล์ */}
+            <div className="input-group">
+              <label htmlFor="username">Username :</label>
               <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                name="member_password"
+                type="text"
+                id="username"
+                name="member_username"
+                value={profile.member_username}
                 onChange={handleInputChange}
-                placeholder="You can change password here"
                 readOnly={!isEditing}
               />
-              <span
-                onClick={togglePasswordVisibility}
-                className="password-toggle"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
             </div>
-          </div>
 
-          <div className="input-group">
-            <label htmlFor="birthday">Birthday :</label>
-            <input
-              type="text"
-              id="birthday"
-              name="member_birthday"
-              value={profile.member_birthday}
-              onChange={handleInputChange}
-              readOnly={!isEditing}
-            />
-          </div>
+            <div className="input-group">
+              <label htmlFor="password">Change Password :</label>
+              <div className="password-field">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  name="member_password"
+                  onChange={handleInputChange}
+                  placeholder="You can change password here"
+                  readOnly={!isEditing}
+                />
+                <span
+                  onClick={togglePasswordVisibility}
+                  className="password-toggle"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+            </div>
 
-          <div className="input-group">
-            <label htmlFor="email">E-mail :</label>
-            <input
-              type="email"
-              id="email"
-              name="member_email"
-              value={profile.member_email}
-              onChange={handleInputChange}
-              readOnly={!isEditing}
-            />
-          </div>
+            <div className="input-group">
+              <label htmlFor="birthday">Birthday :</label>
+              <input
+                type="text"
+                id="birthday"
+                name="member_birthday"
+                value={profile.member_birthday}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+              />
+            </div>
 
-          <div className="input-group">
-            <label htmlFor="tel">Telephone :</label>
-            <input
-              type="text"
-              id="tel"
-              name="member_tel"
-              value={profile.member_tel}
-              onChange={handleInputChange}
-              readOnly={!isEditing}
-            />
+            <div className="input-group">
+              <label htmlFor="email">E-mail :</label>
+              <input
+                type="email"
+                id="email"
+                name="member_email"
+                value={profile.member_email}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="tel">Telephone :</label>
+              <input
+                type="text"
+                id="tel"
+                name="member_tel"
+                value={profile.member_tel}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
+              />
+            </div>
           </div>
         </div>
 

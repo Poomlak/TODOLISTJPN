@@ -1,8 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Itim&display=swap");
 .profile-container {
   text-align: center;
   margin: 50px auto;
-  width: 400px;
-  font-family: Arial, sans-serif;
+  width: 550px;
+  min-height: 200px; /* ใช้ min-height แทนการตั้งค่า height คงที่ */
+  font-family: Itim, sans-serif;
+  background-color: #ffffff; /* เพิ่มพื้นหลังสีขาว */
+  padding: 20px; /* เพิ่ม padding สำหรับช่องว่างภายใน */
+  border-radius: 10px; /* ปรับขอบกล่องให้มน */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* เพิ่มเงา */
 }
 
 .profile-image {
@@ -95,15 +101,17 @@
 .btn.menutodo-link {
   background-color: #4caf50;
   color: white;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
 }
 
 .btn.menutodo-link:hover {
   background-color: #45a049;
+}
+
+.profile-wrapper {
+  display: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f0f0f0; /* สีพื้นหลังของหน้า */
+  height: auto;
 }

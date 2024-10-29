@@ -578,58 +578,60 @@ const Todomain = () => {
               className="add-button-Todo"
               onClick={handleAddTaskWithDateTime}
             >
-              Add Task with Date & Time
+              Add Task
             </button>
           </div>
-          {diaryData.map((item, index) => (
-            <div
-              className="todo-card-task"
-              key={`${item.diary_id}-${index}`}
-              style={{ backgroundColor: item.diary_color }}
-            >
-              <h3 style={{ color: item.diary_textColor }}>
-                {item.diary_todoTopic || "Diary Todo"}
-              </h3>
-              <div className="task-grid">
-                <div className="details-container-task">
-                  <p>
-                    Details: <i>{item.diary_todo}</i>
-                  </p>
-                  <p>
-                    Reminder: <i>{item.diary_reminder}</i>
-                  </p>
-                </div>
-                <div></div>
-                <div className="timestamp-container-task">
-                  <p>
-                    Created: <i>{item.diary_created}</i>
-                  </p>
-                </div>
-                <div className="button-group-task">
-                  <button onClick={() => handleUpdateTask(index)}>
-                    Update
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleDeleteTask(
-                        item.diary_id,
-                        item.diary_namebook,
-                        item.diary_todoTopic
-                      )
-                    }
-                  >
-                    Delete
-                  </button>
+          <div className="scrollable-tasks">
+            {diaryData.map((item, index) => (
+              <div
+                className="todo-card-task"
+                key={`${item.diary_id}-${index}`}
+                style={{ backgroundColor: item.diary_color }}
+              >
+                <h3 style={{ color: item.diary_textColor }}>
+                  {item.diary_todoTopic || "Diary Todo"}
+                </h3>
+                <div className="task-grid">
+                  <div className="details-container-task">
+                    <p>
+                      Details: <i>{item.diary_todo}</i>
+                    </p>
+                    <p>
+                      Reminder: <i>{item.diary_reminder}</i>
+                    </p>
+                  </div>
+                  <div></div>
+                  <div className="timestamp-container-task">
+                    <p>
+                      Created: <i>{item.diary_created}</i>
+                    </p>
+                  </div>
+                  <div className="button-group-task">
+                    <button onClick={() => handleUpdateTask(index)}>
+                      Update
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleDeleteTask(
+                          item.diary_id,
+                          item.diary_namebook,
+                          item.diary_todoTopic
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-          {/* แสดงข้อความนี้เฉพาะเมื่อไม่มีสมุดบันทึก */}
-          {diaryData.length === 0 && (
-            <div className="add-task">
-              Add some first book list Click Red button
-            </div>
-          )}
+            ))}
+            {/* แสดงข้อความนี้เฉพาะเมื่อไม่มีสมุดบันทึก */}
+            {diaryData.length === 0 && (
+              <div className="add-task">
+                Add some first book list Click Red button
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
