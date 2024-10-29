@@ -6,7 +6,7 @@ import Navbarsignin from "../allnavbars/Navbarsignin";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Icon } from "@iconify/react";
-
+ 
 const Signin = () => {
   const navigate = useNavigate();
 
@@ -126,7 +126,7 @@ const Signin = () => {
             </div>
             <div className="button-group">
               <div onClick={goReset} className="resetpass-button">
-                Resetpass
+                Reset Password
               </div>
 
               <button type="submit" className="signin-button">

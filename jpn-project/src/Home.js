@@ -3,12 +3,11 @@ import jpnLogoo from "./navbars/jpn_logo.png";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./navbars/Navbar";
-import Navbarprofile from "./allnavbars/Navbarprofile"; // Import Navbarprofile
+import Navbarprofile from "./allnavbars/Navbarprofile";
+import Swal from 'sweetalert2'; // ต้องติดตั้ง sweetalert2 ก่อน
 
 const Home = () => {
-  const navigate = useNavigate(); // useNavigate must work within <Router>
-
-  // Check if user is logged in by verifying if a token or username exists in localStorage
+  const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("username") || localStorage.getItem("token");
 
   const goSignIn = () => {
@@ -21,9 +20,29 @@ const Home = () => {
     navigate("/signup");
   };
 
+  const goMenutodo = () => {
+    if (!isLoggedIn) {
+      Swal.fire({
+        title: 'Access Denied!',
+        text: 'Please login to access the todo list',
+        icon: 'warning',
+        confirmButtonText: 'Login',
+        cancelButtonText: 'Cancel',
+        showCancelButton: true,
+        confirmButtonColor: '#3b82f6',
+        cancelButtonColor: '#ef4444',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/signin');
+        }
+      });
+      return;
+    }
+    navigate("/menutodo");
+  };
+
   return (
     <>
-      {/* Conditionally render Navbar or Navbarprofile based on login status */}
       {isLoggedIn ? <Navbarprofile /> : <Navbar />}
       
       <div className="center-content">
@@ -34,7 +53,11 @@ const Home = () => {
           Become focused, organized, and calm with todo app. The World's #1 task
           manager app.
         </p>
-        {!isLoggedIn && ( // Show sign-in and sign-up buttons only if the user is not logged in
+        {isLoggedIn ? (
+          <button className="start-button" onClick={goMenutodo}>
+            Start Now
+          </button>
+        ) : (
           <div className="buttons">
             <button className="sign-inn" onClick={goSignIn}>
               Sign In
