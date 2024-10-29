@@ -194,3 +194,90 @@
         justify-content: center;
     }
 }
+
+.custom-swal-popup {
+    font-family: 'Itim', sans-serif !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 10px 25px rgba(66, 153, 225, 0.2) !important;
+    padding: 2rem !important;
+  }
+  
+  .custom-swal-title {
+    font-family: 'Itim', sans-serif !important;
+    color: #2d3748 !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem !important;
+    padding-top: 1rem !important;
+  }
+  
+  .custom-swal-content {
+    padding: 1rem 0 !important;
+  }
+  
+  .custom-swal-icon {
+    border-color: #4299e1 !important;
+  }
+  
+  .custom-swal-icon.swal2-warning {
+    color: #4299e1 !important;
+    border-color: #4299e1 !important;
+  }
+  
+  .custom-swal-message {
+    font-family: 'Itim', sans-serif !important;
+    font-size: 1.1rem !important;
+    color: #4a5568 !important;
+    margin: 1rem 0 !important;
+  }
+  
+  .custom-swal-confirm-button,
+  .custom-swal-cancel-button {
+    padding: 0.8rem 1.5rem !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.3s ease !important;
+    font-family: 'Itim', sans-serif !important;
+  }
+  
+  
+  .custom-swal-confirm-button:hover,
+  .custom-swal-cancel-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  .custom-swal-backdrop {
+    backdrop-filter: blur(4px) !important;
+  }
+  
+  /* Animation classes */
+  .swal2-popup.swal2-show {
+    animation: customFadeIn 0.3s ease-out !important;
+  }
+  
+  .swal2-popup.swal2-hide {
+    animation: customFadeOut 0.3s ease-in !important;
+  }
+  
+  @keyframes customFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes customFadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  }
