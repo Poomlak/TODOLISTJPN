@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom"; // นำเข้า Link จาก react-router-dom
+import { Link, useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 import axios from "axios";
 import Swal from "sweetalert2";
 import Navbarprofile from "../allnavbars/Navbarprofile";
 
 const Profile = () => {
+  const navigate = useNavigate(); // เพิ่ม useNavigate hook
   const [profile, setProfile] = useState({
     member_id: null,
     member_fname: "",
@@ -23,6 +24,23 @@ const Profile = () => {
   const username = localStorage.getItem("username");
 
   useEffect(() => {
+    // เพิ่มการตรวจสอบ authentication
+    const checkAuth = () => {
+      if (!username) {
+        Swal.fire({
+          icon: "error",
+          title: "กรุณาเข้าสู่ระบบ",
+          text: "คุณต้องเข้าสู่ระบบก่อนเข้าถึงหน้านี้",
+          confirmButtonText: "ตกลง",
+        }).then((result) => {
+          navigate("/signin"); 
+        });
+        return;
+      }
+    };
+
+    checkAuth();
+
     const fetchProfile = async () => {
       if (username) {
         try {
@@ -32,11 +50,17 @@ const Profile = () => {
           setProfile(response.data);
         } catch (error) {
           console.error("Error fetching profile:", error);
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "ไม่สามารถดึงข้อมูลโปรไฟล์ได้",
+            confirmButtonText: "ตกลง",
+          });
         }
       }
     };
     fetchProfile();
-  }, [username]);
+  }, [username, navigate]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -80,11 +104,19 @@ const Profile = () => {
       window.location.reload();
     } catch (error) {
       console.error("Error updating profile:", error);
-      Swal.fire(
-        "Failed to update profile. Please check your input or try again later."
-      );
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถอัปเดตโปรไฟล์ได้ กรุณาลองใหม่อีกครั้ง",
+        confirmButtonText: "ตกลง",
+      });
     }
   };
+
+  // ถ้าไม่มี username ให้แสดงหน้าว่างระหว่างที่ redirect
+  if (!username) {
+    return null;
+  }
 
   return (
     <>
@@ -119,7 +151,6 @@ const Profile = () => {
           </div>
 
           <div className="profile-details">
-            {/* ข้อมูลโปรไฟล์ */}
             <div className="input-group">
               <label htmlFor="username">Username :</label>
               <input
@@ -188,30 +219,29 @@ const Profile = () => {
               />
             </div>
             <div className="profile-buttons">
-          {isEditing ? (
-            <>
-              <button className="btn save" onClick={handleSave}>
-                บันทึก
-              </button>
-              <button className="btn back" onClick={() => setIsEditing(false)}>
-                ย้อนกลับ
-              </button>
-            </>
-          ) : (
-            <button className="btn edit" onClick={() => setIsEditing(true)}>
-              แก้ไข
-            </button>
-          )}
+              {isEditing ? (
+                <>
+                  <button className="btn save" onClick={handleSave}>
+                    บันทึก
+                  </button>
+                  <button className="btn back" onClick={() => setIsEditing(false)}>
+                    ย้อนกลับ
+                  </button>
+                </>
+              ) : (
+                <button className="btn edit" onClick={() => setIsEditing(true)}>
+                  แก้ไข
+                </button>
+              )}
 
-          {/* ปุ่มลิงก์ไปยังหน้า menutodo */}
-          <Link to="/menutodo">
-            <button className="btn menutodo-link">ไปยังหน้าเมนู To-do</button>
-          </Link>
-        </div>
+              <Link to="/menutodo">
+                <button className="btn menutodo-link">
+                  ไปยังหน้าเมนู To-do
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
-
-        
       </div>
     </>
   );

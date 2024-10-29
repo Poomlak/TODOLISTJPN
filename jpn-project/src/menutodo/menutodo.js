@@ -36,7 +36,7 @@ const Menutodo = () => {
   // Format time function
   const formatTime = (date) => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // เพิ่ม 1 เพราะ months เริ่มที่ 0
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const hours = String(date.getHours()).padStart(2, "0");
     const minutes = String(date.getMinutes()).padStart(2, "0");
@@ -45,10 +45,28 @@ const Menutodo = () => {
     return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
   };
 
-  // Fetch diary entries on component mount
+  // Authentication check and data fetching
   useEffect(() => {
-    fetchDiary();
-  }, [username]);
+    // เพิ่มการตรวจสอบ authentication
+    const checkAuth = () => {
+      if (!username) {
+        Swal.fire({
+          icon: "error",
+          title: "กรุณาเข้าสู่ระบบ",
+          text: "คุณต้องเข้าสู่ระบบก่อนเข้าถึงหน้านี้",
+          confirmButtonText: "ตกลง",
+        }).then((result) => {
+          navigate("/signin");
+        });
+        return;
+      }
+    };
+
+    checkAuth();
+    if (username) {
+      fetchDiary();
+    }
+  }, [username, navigate]);
 
   // Navigate to "/todomain"
   const goTodomain = (index, diaryName) => {
@@ -97,8 +115,8 @@ const Menutodo = () => {
 
         const newItem = {
           diary_namebook: listName,
-          member_createdbook: formatTime(new Date()), // ใช้ formatTime
-          member_lastupdatedbook: formatTime(new Date()), // ใช้ formatTime
+          member_createdbook: formatTime(new Date()),
+          member_lastupdatedbook: formatTime(new Date()),
         };
         setList((prevList) => [...prevList, newItem]);
 
@@ -154,7 +172,7 @@ const Menutodo = () => {
             ? {
                 ...item,
                 diary_namebook: newName,
-                member_lastupdatedbook: formatTime(new Date()), // ใช้ formatTime
+                member_lastupdatedbook: formatTime(new Date()),
               }
             : item
         );
@@ -216,6 +234,11 @@ const Menutodo = () => {
       console.error("No username or delete confirmation provided.");
     }
   };
+
+  // ถ้าไม่มี username ให้แสดงหน้าว่างระหว่างที่ redirect
+  if (!username) {
+    return null;
+  }
 
   return (
     <div className="menu-container">
