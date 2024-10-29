@@ -28,31 +28,64 @@ const Signup = () => {
     // ตรวจสอบว่ารหัสผ่านตรงกัน
     if (formData.password !== formData.rePassword) {
       Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Passwords do not match!',
+        icon: "error",
+        title: "Oops...",
+        text: "Passwords do not match!",
+      });
+      return;
+    }
+
+    // ตรวจสอบ Firstname และ Lastname (ห้ามมีตัวเลข)
+    const namePattern = /^[A-Za-z]+$/;
+    if (!namePattern.test(formData.fname) || !namePattern.test(formData.lname)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Name",
+        text: "First name and Last name should not contain numbers.",
+      });
+      return;
+    }
+
+    // ตรวจสอบ Email รูปแบบ
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    // ตรวจสอบเบอร์โทรศัพท์ (ต้องเป็นตัวเลข 10-11 หลัก)
+    const telPattern = /^\d{9,10}$/;
+    if (!telPattern.test(formData.tel)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Telephone",
+        text: "Telephone number must be 9 or 10 digits.  ",
       });
       return;
     }
 
     try {
       // ตรวจสอบว่า username, email, tel เคยมีในระบบหรือไม่
-      const checkResponse = await axios.post('http://localhost:5000/checkUser', {
+      const checkResponse = await axios.post("http://localhost:5000/checkUser", {
         username: formData.username,
         email: formData.email,
-        tel: formData.tel
+        tel: formData.tel,
       });
 
       if (checkResponse.data.exists) {
         Swal.fire({
-          icon: 'error',
-          title: 'ผู้ใช้งานนี้ได้มีอยู่ในระบบแล้ว',
-          text: 'username, email, หรือ phone number ได้มีลงทะเบียนไว้ในระบบแล้ว โปรดลองใหม่อีกครั้ง.',
+          icon: "error",
+          title: "ผู้ใช้งานนี้ได้มีอยู่ในระบบแล้ว",
+          text: "username, email, หรือ phone number ได้มีลงทะเบียนไว้ในระบบแล้ว โปรดลองใหม่อีกครั้ง.",
         });
         return;
       }
 
-      const registerResponse = await axios.post('http://localhost:5000/signup', {
+      const registerResponse = await axios.post("http://localhost:5000/signup", {
         fname: formData.fname,
         lname: formData.lname,
         birthday: formData.birthday,
@@ -63,41 +96,42 @@ const Signup = () => {
       });
 
       Swal.fire({
-        icon: 'success',
-        title: 'ลงทะเบียนสำเร็จ',
-        text: 'โปรดรอสักครู่จะทำการเข้าไปหน้า login',
+        icon: "success",
+        title: "ลงทะเบียนสำเร็จ",
+        text: "โปรดรอสักครู่จะทำการเข้าไปหน้า login",
         showClass: {
-          popup: 'animate__animated animate__fadeInDown'
+          popup: "animate__animated animate__fadeInDown",
         },
         hideClass: {
-          popup: 'animate__animated animate__fadeOutUp'
+          popup: "animate__animated animate__fadeOutUp",
         },
-        confirmButtonText: 'OK'
+        confirmButtonText: "OK",
       }).then((result) => {
         if (result.isConfirmed) {
-          window.location.pathname = "/signin"; 
+          window.location.pathname = "/signin";
         }
       });
 
       setFormData({
-        fname: '',
-        lname: '',
-        birthday: '',
-        email: '',
-        tel: '',
-        username: '',
-        password: '',
-        rePassword: ''
+        fname: "",
+        lname: "",
+        birthday: "",
+        email: "",
+        tel: "",
+        username: "",
+        password: "",
+        rePassword: "",
       });
     } catch (error) {
-      console.error('There was an error registering the member!', error);
+      console.error("There was an error registering the member!", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'There was an error registering the member!',
+        icon: "error",
+        title: "Error",
+        text: "There was an error registering the member!",
       });
     }
   };
+
 
   return (
     <>
@@ -172,6 +206,8 @@ const Signup = () => {
                 onChange={handleChange}
                 placeholder="Re-enter your password"
                 required
+                onPaste={(e) => e.preventDefault()} // ป้องกันการก๊อปวาง
+                onCopy={(e) => e.preventDefault()} // ป้องกันการก๊อปวาง
               />
             </div>
 
