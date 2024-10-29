@@ -233,16 +233,18 @@ const Menutodo = () => {
         <div className="list-wrappermenu">
           <div className="button-container">
             {list.length === 0 ? (
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "20px",
-                  color: "#f44336",
-                }}
-              >
-                "ไม่มีสมุดบันทึกอยู่ในขณะนี้
-                เริ่มต้นสร้างสมุดบันทึกใหม่เพื่อบันทึกสิ่งที่ต้องทำกันเถอะ!"
-              </p>
+              <div className="empty-state">
+                <div className="empty-icon" onClick={handleCreate}></div>
+                <h3 className="empty-title">ยังไม่มีสมุดบันทึกในขณะนี้</h3>
+                <p className="empty-subtitle">
+                  เริ่มต้นสร้างสมุดบันทึกใหม่เพื่อจดบันทึกสิ่งที่ต้องทำกันเถอะ!
+                </p>
+                <div className="empty-dots">
+                  <div className="dot"></div>
+                  <div className="dot"></div>
+                  <div className="dot"></div>
+                </div>
+              </div>
             ) : (
               list.map((item, index) => (
                 <div key={index} className="list-item">
