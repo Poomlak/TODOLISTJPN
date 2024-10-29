@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import "./Todomain.css";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Navbarprofile from "../allnavbars/Navbarprofile";
 
 const Todomain = () => {
@@ -15,13 +15,18 @@ const Todomain = () => {
   //   member_createdbook: "",
   //   member_lastupdatedbook: "",
   // });
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true); // เก็บสถานะการโหลด
+  const [error, setError] = useState(null); // เก็บข้อผิดพลาด
   const [diaryData, setDiary] = useState([]);
   const [user, setUser] = useState({
     diary_namebook: "",
     member_createdbook: "",
     member_lastupdatedbook: "",
   });
-
+  const goMenutodo = () => {
+    navigate("/menutodo");
+  };
   const [tasks, setTasks] = useState([]); // State สำหรับเก็บ tasks
   const [selectedDateTime, setSelectedDateTime] = useState(""); // State สำหรับวันที่และเวลาที่เลือก
 
@@ -52,24 +57,75 @@ const Todomain = () => {
         const response = await axios.get(
           `http://localhost:5000/api/diary?diaryName=${diaryName}`
         );
-        setDiary(response.data);
-        console.log(response.data); // ส่งข้อมูลทั้งหมดที่พบ
+
+        // ตรวจสอบว่ามีข้อมูลใน response หรือไม่
+        if (response.data && response.data.length > 0) {
+          setDiary(response.data);
+          console.log(response.data); // ส่งข้อมูลทั้งหมดที่พบ
+        } else {
+          setError("ไม่พบข้อมูลสมุดบันทึก"); // ตั้งค่าข้อความเมื่อไม่มีข้อมูล
+        }
       } else {
         console.error("diaryName is undefined");
+        setError("ชื่อสมุดบันทึกไม่ถูกต้อง");
       }
     } catch (error) {
       console.error("Error fetching diary:", error);
+      setError("เกิดข้อผิดพลาดในการดึงข้อมูล");
+    } finally {
+      setLoading(false); // เปลี่ยนสถานะการโหลด
     }
   };
 
   useEffect(() => {
-    if (diaryName) {
-      fetchDiary();
-      fetchUser();
-    } else {
-      console.error("diaryName is undefined in useEffect");
-    }
+    const fetchData = async () => {
+      setLoading(true); // เริ่มโหลดข้อมูล
+      Swal.fire({
+        title: "Loading...",
+        text: "กำลังดึงข้อมูล...",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading(); // แสดง loading animation
+        },
+      });
+
+      try {
+        if (!diaryName) {
+          console.error("diaryName is undefined in useEffect");
+          setError("ชื่อสมุดบันทึกไม่ถูกต้อง");
+          Swal.close(); // ปิด SweetAlert เมื่อมีข้อผิดพลาด
+          return;
+        }
+
+        await fetchDiary();
+        await fetchUser(); // แฟนชั่นนี้ยังต้องเช็คว่ามีการจัดการเหมือนกัน
+
+        // ปิด SweetAlert เมื่อข้อมูลโหลดเสร็จ
+        Swal.close();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("เกิดข้อผิดพลาดในการดึงข้อมูล");
+        Swal.close(); // ปิด SweetAlert เมื่อมีข้อผิดพลาด
+      }
+    };
+
+    fetchData();
   }, [diaryName]);
+
+  // เช็คสถานะการโหลด
+  if (loading) {
+    Swal.fire({
+      title: "มีข้อผิดพลาด!",
+      text: "ไม่พบข้อมูลสมุดบันทึก",
+      icon: "warning", // ใช้ไอคอนตกใจ
+      confirmButtonText: "OK",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        goMenutodo(); // เรียกฟังก์ชันเมื่อผู้ใช้กด OK
+      }
+    });
+  }
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
     return date.toLocaleString("en-GB", {
@@ -480,13 +536,12 @@ const Todomain = () => {
           const { value: color } = await Swal.fire({
             title: "Select Task Importance Color",
             html: `
-                        <div style="text-align: center;">
-                            <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
-                            <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
-                            <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
-                        </div>import Navbarprofile from './../allnavbars/Navbarprofile';
-
-                    `,
+            <div style="text-align: center;">
+                <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
+                <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
+                <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
+            </div>
+        `,
             confirmButtonText: "Confirm",
             cancelButtonText: "Cancel",
             showCancelButton: true,
@@ -563,7 +618,7 @@ const Todomain = () => {
           <div className="todo-card">
             <div>
               <div>
-                <h3>{user.diary_namebook || "Diary Todo"}</h3>
+                <h3>{user.diary_namebook || "No Diary Todo Found"}</h3>
               </div>
               <div className="timestamp-container">
                 <p>
@@ -589,13 +644,13 @@ const Todomain = () => {
                 style={{ backgroundColor: item.diary_color }}
               >
                 <h3 style={{ color: item.diary_textColor }}>
-                  {item.diary_todoTopic || "Diary Todo"}
+                  {item.diary_todoTopic || "No Diary Todo Found"}
                 </h3>
                 <div className="task-grid">
                   <div className="details-container-task">
-                    <p>
+                    <div className="p-1">
                       Details: <i>{item.diary_todo}</i>
-                    </p>
+                    </div>
                     <p>
                       Reminder: <i>{item.diary_reminder}</i>
                     </p>
