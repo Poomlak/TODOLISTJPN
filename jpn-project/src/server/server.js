@@ -629,6 +629,8 @@ app.post("/api/diarylist/add", async (req, res) => {
     diary_reminder,
     diary_namebook,
     diary_created,
+    diary_textColor,
+    email,
   } = req.body;
 
   // ตรวจสอบว่ามีค่าที่จำเป็นทั้งหมด
@@ -638,7 +640,8 @@ app.post("/api/diarylist/add", async (req, res) => {
     !diary_color ||
     !diary_reminder ||
     !diary_namebook ||
-    !diary_created
+    !diary_created ||
+    !diary_textColor
   ) {
     return res.status(400).json({ message: "Missing required fields." });
   }
@@ -649,8 +652,9 @@ app.post("/api/diarylist/add", async (req, res) => {
       diary_color, 
       diary_reminder, 
       diary_namebook, 
-      diary_created
-  ) VALUES (?, ?, ?, ?, ?, ?)`;
+      diary_created,
+      diary_textColor
+  ) VALUES (?, ?, ?, ?, ?, ? ,?)`;
 
   const values = [
     diary_todoTopic,
@@ -659,20 +663,68 @@ app.post("/api/diarylist/add", async (req, res) => {
     diary_reminder,
     diary_namebook,
     diary_created,
+    diary_textColor,
   ];
 
-  db.query(sql, values, (err, result) => {
+  db.query(sql, values, async (err, result) => {
     if (err) {
       console.error("Error adding task:", err);
       return res.status(500).json({ message: "Failed to add task." });
     }
 
-    return res.status(201).json({
-      message: "Task created successfully!",
-      taskId: result.insertId, // ส่งกลับ ID ของ task ที่ถูกสร้าง
-    });
+    // ถ้างานถูกสร้างสำเร็จ ลองส่งอีเมลแจ้งเตือน
+    const mailOptions = {
+      from: "webapp.otp@gmail.com",
+      to: email, // กำหนดที่อยู่อีเมลผู้รับ
+      subject: "New Task Created",
+      text: `A new task has been created with the following details:
+      - Topic: ${diary_todoTopic}
+      - Details: ${diary_todo}
+      - Reminder: ${diary_reminder}
+      - Created: ${diary_created}`,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log("Email sent successfully!");
+      return res.status(201).json({
+        message: "Task created successfully, and email sent!",
+        taskId: result.insertId,
+      });
+    } catch (mailErr) {
+      console.error("Error sending email:", mailErr);
+      return res.status(500).json({
+        message: "Task created, but failed to send email.",
+        taskId: result.insertId,
+      });
+    }
   });
 });
+
+app.post("/api/getEmailByUsername", (req, res) => {
+  const { member_username } = req.body;
+  
+
+  if (!member_username) {
+    return res.status(400).json({ message: "Missing member_username" });
+  }
+
+  const sql = "SELECT member_email FROM member_id WHERE member_username = ?";
+  db.query(sql, [member_username], (err, result) => {
+    if (err) {
+      console.error("Error fetching email:", err);
+      return res.status(500).json({ message: "Error fetching email." });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const email = result[0].member_email;
+    return res.status(200).json({ email });
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {
