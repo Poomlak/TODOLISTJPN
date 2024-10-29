@@ -618,7 +618,7 @@ const Todomain = () => {
           <div className="todo-card">
             <div>
               <div>
-                <h3>{user.diary_namebook || "Diary Todo"}</h3>
+                <h3>{user.diary_namebook || "No Diary Todo Found"}</h3>
               </div>
               <div className="timestamp-container">
                 <p>
@@ -644,13 +644,13 @@ const Todomain = () => {
                 style={{ backgroundColor: item.diary_color }}
               >
                 <h3 style={{ color: item.diary_textColor }}>
-                  {item.diary_todoTopic || "Diary Todo"}
+                  {item.diary_todoTopic || "No Diary Todo Found"}
                 </h3>
                 <div className="task-grid">
                   <div className="details-container-task">
-                    <p>
+                    <div className="p-1">
                       Details: <i>{item.diary_todo}</i>
-                    </p>
+                    </div>
                     <p>
                       Reminder: <i>{item.diary_reminder}</i>
                     </p>
