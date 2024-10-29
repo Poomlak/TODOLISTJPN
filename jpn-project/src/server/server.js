@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "26.11.35.119",
+  host: "localhost",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -703,7 +703,6 @@ app.post("/api/diarylist/add", async (req, res) => {
 
 app.post("/api/getEmailByUsername", (req, res) => {
   const { member_username } = req.body;
-  
 
   if (!member_username) {
     return res.status(400).json({ message: "Missing member_username" });
@@ -724,7 +723,6 @@ app.post("/api/getEmailByUsername", (req, res) => {
     return res.status(200).json({ email });
   });
 });
-
 
 // Start the server
 app.listen(port, () => {
