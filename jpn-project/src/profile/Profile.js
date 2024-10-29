@@ -187,10 +187,7 @@ const Profile = () => {
                 readOnly={!isEditing}
               />
             </div>
-          </div>
-        </div>
-
-        <div className="profile-buttons">
+            <div className="profile-buttons">
           {isEditing ? (
             <>
               <button className="btn save" onClick={handleSave}>
@@ -211,6 +208,10 @@ const Profile = () => {
             <button className="btn menutodo-link">ไปยังหน้าเมนู To-do</button>
           </Link>
         </div>
+          </div>
+        </div>
+
+        
       </div>
     </>
   );
