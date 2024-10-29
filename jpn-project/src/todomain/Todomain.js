@@ -465,156 +465,128 @@ const Todomain = () => {
       confirmButtonText: "Confirm",
       cancelButtonText: "Cancel",
       showCancelButton: true,
-      confirmButtonColor: "#4CAF50",
-      cancelButtonColor: "#f44336",
       preConfirm: () => {
         const date = document.getElementById("date-input").value;
         const time = document.getElementById("time-input").value;
-
-        // Check if both date and time are selected
+  
         if (!date || !time) {
           Swal.showValidationMessage("Please select both date and time!");
           return;
         }
-
-        // Format date and time
+  
         const formattedDateTime = `${date}T${time}`;
-        const dateTimeObject = new Date(formattedDateTime);
-
-        // Format to desired output
-        const year = dateTimeObject.getFullYear();
-        const month = String(dateTimeObject.getMonth() + 1).padStart(2, "0");
-        const day = String(dateTimeObject.getDate()).padStart(2, "0");
-        const hours = String(dateTimeObject.getHours()).padStart(2, "0");
-        const minutes = String(dateTimeObject.getMinutes()).padStart(2, "0");
-        const seconds = String(dateTimeObject.getSeconds()).padStart(2, "0");
-
-        return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+        return new Date(formattedDateTime);
       },
     });
-
+  
     // If date and time are selected
     if (dateTime) {
-      const { value: title } = await Swal.fire({
-        title: "Enter Task Title",
-        input: "text",
-        inputPlaceholder: "Enter task title here...",
+      // Combine all prompts into one SweetAlert
+      const { value: inputs } = await Swal.fire({
+        title: "Add Task Details",
+        html: `
+          <input type="text" id="title-input" class="swal2-input" placeholder="Enter task title here..." />
+          <input type="text" id="detail-input" class="swal2-input" placeholder="Enter task details here..." />
+          <div style="text-align: center;">
+            <label for="color-input" style="display: block; margin: 10px 0;">Please pick a color:</label>
+            <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;" />
+            <p style="color: grey;">This color will be used to represent task importance.</p>
+          </div>
+        `,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: "Next",
-        cancelButtonText: "Cancel",
-        preConfirm: (inputValue) => {
-          if (!inputValue) {
+        confirmButtonText: "Add Task",
+        preConfirm: () => {
+          const title = document.getElementById("title-input").value;
+          const detail = document.getElementById("detail-input").value;
+          const colorValue = document.getElementById("color-input").value;
+  
+          if (!title) {
             Swal.showValidationMessage("Please enter a title!");
+            return;
           }
-          return inputValue;
+          if (!detail) {
+            Swal.showValidationMessage("Please enter task details!");
+            return;
+          }
+          if (!colorValue) {
+            Swal.showValidationMessage("Please select a color!");
+            return;
+          }
+  
+          return { title, detail, color: colorValue };
         },
       });
-
-      if (title) {
-        const { value: detail } = await Swal.fire({
-          title: "Enter Task Details",
-          input: "text",
-          inputPlaceholder: "Enter task details here...",
-          showCancelButton: true,
-          confirmButtonText: "Add Task",
-          cancelButtonText: "Cancel",
-          preConfirm: (inputValue) => {
-            if (!inputValue) {
-              Swal.showValidationMessage("Please enter task details!");
-            }
-            return inputValue;
+  
+      // If all inputs are valid
+      if (inputs) {
+        const { title, detail, color } = inputs;
+        const createdTime = formatDate(new Date());
+        const diaryName = user.diary_namebook;
+  
+        // Show loading alert
+        Swal.fire({
+          title: "Processing...",
+          text: "Please wait while we add your task.",
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          onBeforeOpen: () => {
+            Swal.showLoading();
           },
         });
-
-        if (detail) {
-          const { value: color } = await Swal.fire({
-            title: "Select Task Importance Color",
-            html: `
-              <div style="text-align: center;">
-                <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
-                <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
-                <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
-              </div>
-            `,
-            confirmButtonText: "Confirm",
-            cancelButtonText: "Cancel",
-            showCancelButton: true,
-            preConfirm: () => {
-              const colorValue = document.getElementById("color-input").value;
-              if (!colorValue) {
-                Swal.showValidationMessage("Please select a color!");
-              }
-              return colorValue;
-            },
+  
+        // Fetch the email using the existing API
+        let email;
+        try {
+          const username = localStorage.getItem("username");
+          const response = await axios.post("http://localhost:5000/api/getEmailByUsername", {
+            member_username: username,
           });
-
-          if (color) {
-            const createdTime = formatDate(new Date());
-            const diaryName = user.diary_namebook;
-
-            // Show loading alert
-            Swal.fire({
-              title: "Processing...",
-              text: "Please wait while we add your task.",
-              allowOutsideClick: false,
-              showConfirmButton: false, // Hides the OK button
-              onBeforeOpen: () => {
-                Swal.showLoading();
-              },
-            });
-
-            // Fetch the email using the existing API
-            let email;
-            try {
-              const username = localStorage.getItem("username");
-              const response = await axios.post("http://localhost:5000/api/getEmailByUsername", {
-                member_username: username,
-              });
-
-              if (response.status === 200) {
-                email = response.data.email;
-              }
-            } catch (error) {
-              console.error("Error fetching email:", error);
-              Swal.fire("Error!", "Failed to fetch email!", "error");
-              return;
-            }
-
-            // Create a new task object
-            const newTask = {
-              diary_todoTopic: title,
-              diary_todo: detail,
-              diary_color: color,
-              diary_reminder: dateTime,
-              diary_namebook: diaryName,
-              diary_created: createdTime,
-              diary_textColor: getContrastYIQ(color),
-              email: email,
-            };
-
-            // Send data to the API
-            try {
-              const response = await axios.post("http://localhost:5000/api/diarylist/add", newTask);
-
-              if (response.status === 201) {
-                setTasks([...tasks, newTask]);
-                addNewDiary(...tasks, newTask);
-
-                // Close the loading alert and show success message
-                Swal.fire("Task Added!", `Your task: "${title}" has been added!`, "success").then(() => {
-                  // Refresh the page after the success alert is closed
-                  window.location.reload();
-                });
-              }
-            } catch (error) {
-              console.error("Error adding task:", error);
-              Swal.fire("Error!", "Failed to add task!", "error");
-            }
+  
+          if (response.status === 200) {
+            email = response.data.email;
           }
+        } catch (error) {
+          console.error("Error fetching email:", error);
+          Swal.fire("Error!", "Failed to fetch email!", "error");
+          return;
+        }
+  
+        // Create a new task object
+        const newTask = {
+          diary_todoTopic: title,
+          diary_todo: detail,
+          diary_color: color,
+          diary_reminder: dateTime.toISOString(), // Store in ISO format
+          diary_namebook: diaryName,
+          diary_created: createdTime,
+          diary_textColor: getContrastYIQ(color),
+          email: email,
+        };
+  
+        // Send data to the API
+        try {
+          const response = await axios.post("http://localhost:5000/api/diarylist/add", newTask);
+  
+          if (response.status === 201) {
+            setTasks((prevTasks) => [...prevTasks, newTask]);
+            addNewDiary(...tasks, newTask);
+  
+            // Show success message and refresh the page
+            Swal.fire("Task Added!", `Your task: "${title}" has been added!`, "success").then(() => {
+              window.location.reload();
+            });
+          }
+        } catch (error) {
+          console.error("Error adding task:", error);
+          Swal.fire("Error!", "Failed to add task!", "error").then(() => {
+            window.location.reload();
+          });
         }
       }
     }
   };
+  
 
 
   const getContrastYIQ = (hexcolor) => {
