@@ -553,6 +553,7 @@ app.delete("/api/diary/delete", (req, res) => {
 app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
   const username = req.query.username; // ดึง username จาก query
+  console.log( diaryName,username);
 
   // ตรวจสอบว่า username มีค่าหรือไม่
   if (!username) {
@@ -679,6 +680,7 @@ app.post("/api/diarylist/add", async (req, res) => {
     diary_created,
     diary_textColor,
     email,
+    diary_username,
   } = req.body;
 
   // ตรวจสอบว่ามีค่าที่จำเป็นทั้งหมด
@@ -689,7 +691,8 @@ app.post("/api/diarylist/add", async (req, res) => {
     !diary_reminder ||
     !diary_namebook ||
     !diary_created ||
-    !diary_textColor
+    !diary_textColor ||
+    !diary_username // Ensure diary_username is also checked
   ) {
     return res.status(400).json({ message: "Missing required fields." });
   }
@@ -701,8 +704,9 @@ app.post("/api/diarylist/add", async (req, res) => {
       diary_reminder, 
       diary_namebook, 
       diary_created,
-      diary_textColor
-  ) VALUES (?, ?, ?, ?, ?, ? ,?)`;
+      diary_textColor,
+      diary_username
+  ) VALUES (?, ?, ?, ?, ?, ? ,? , ?)`;
 
   const values = [
     diary_todoTopic,
@@ -712,6 +716,7 @@ app.post("/api/diarylist/add", async (req, res) => {
     diary_namebook,
     diary_created,
     diary_textColor,
+    diary_username,
   ];
 
   db.query(sql, values, async (err, result) => {
@@ -748,6 +753,7 @@ app.post("/api/diarylist/add", async (req, res) => {
     }
   });
 });
+
 
 app.post("/api/getEmailByUsername", (req, res) => {
   const { member_username } = req.body;

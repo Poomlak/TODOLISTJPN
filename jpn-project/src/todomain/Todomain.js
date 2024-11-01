@@ -463,6 +463,7 @@ const Todomain = () => {
         }
 
         // Create a new task object
+        const username = localStorage.getItem("username");
         const newTask = {
           diary_todoTopic: title,
           diary_todo: detail,
@@ -472,6 +473,7 @@ const Todomain = () => {
           diary_created: createdTime,
           diary_textColor: getContrastYIQ(color),
           email: email,
+          diary_username:username,
         };
 
         // Send data to the API
