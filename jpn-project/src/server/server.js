@@ -425,17 +425,34 @@ app.put("/api/diary/update-timestamp", (req, res) => {
 
 app.post("/api/diary/create", (req, res) => {
   const { diaryName, username } = req.body;
-  const sql =
-    "INSERT INTO member_diary (diary_namebook, member_createdbook, member_lastupdatedbook, diary_username) VALUES (?, NOW(), NOW(), ?)";
 
-  db.query(sql, [diaryName, username], (err, result) => {
-    if (err) {
-      console.error("Error creating diary:", err);
-      return res.status(500).json({ message: "Error creating diary" });
+  // SQL query to check for existing diary with the same username and name
+  const checkSql = "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
+  db.query(checkSql, [diaryName, username], (checkErr, checkResult) => {
+    if (checkErr) {
+      console.error("Error checking for duplicate diary:", checkErr);
+      return res.status(500).json({ message: "Error checking for duplicate diary" });
     }
-    res.status(201).json({ message: "Diary created successfully!" });
+
+    if (checkResult.length > 0) {
+      // If a matching diary is found, send an error response
+      return res.status(400).json({ message: "Diary with the same name already exists for this user" });
+    }
+
+    // Proceed with insertion if no duplicate is found
+    const insertSql =
+      "INSERT INTO member_diary (diary_namebook, member_createdbook, member_lastupdatedbook, diary_username) VALUES (?, NOW(), NOW(), ?)";
+
+    db.query(insertSql, [diaryName, username], (insertErr, insertResult) => {
+      if (insertErr) {
+        console.error("Error creating diary:", insertErr);
+        return res.status(500).json({ message: "Error creating diary" });
+      }
+      res.status(201).json({ message: "Diary created successfully!" });
+    });
   });
 });
+
 
 app.put("/api/diary/update/:oldName", (req, res) => {
   const { newName, username } = req.body; // ดึงชื่อใหม่และ username จาก request body
