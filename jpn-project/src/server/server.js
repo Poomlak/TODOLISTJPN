@@ -552,10 +552,16 @@ app.delete("/api/diary/delete", (req, res) => {
 
 app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
+  const username = req.query.username; // ดึง username จาก query
+
+  // ตรวจสอบว่า username มีค่าหรือไม่
+  if (!username) {
+    return res.status(400).json({ message: "Username is required" });
+  }
 
   db.query(
-    "SELECT * FROM diary_list WHERE diary_namebook = ?",
-    [diaryName],
+    "SELECT * FROM diary_list WHERE diary_namebook = ? AND diary_username = ?",
+    [diaryName, username], // ใช้ username ในการค้นหา
     (err, results) => {
       if (err) {
         return res
@@ -570,6 +576,7 @@ app.get("/api/diary", (req, res) => {
     }
   );
 });
+
 
 app.get("/api/diary/:username", (req, res) => {
   const { token } = req.body; // ดึง token จาก request body
