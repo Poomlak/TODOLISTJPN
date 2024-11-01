@@ -29,7 +29,7 @@
 }
 
 .todo-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -57,13 +57,13 @@
   margin: 0;
   font-size: 1.8rem;
   color: #2c3e50;
-  font-weight: 600;
+
   position: relative;
   padding-bottom: 10px;
 }
 
 .todo-card h3::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -108,7 +108,7 @@
 }
 
 .add-button-Todo::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -291,11 +291,15 @@ h3 {
 
 p {
   font-family: "Itim", sans-serif;
+  color: #0a0c0a;
 }
 
 .p-1 {
   font-family: "Itim", sans-serif;
   font-size: 20px;
+}
+i {
+  color: #0a0c0a;
 }
 
 .empty-statee {
@@ -425,7 +429,7 @@ p {
 }
 
 .todo-card-task::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -450,16 +454,15 @@ p {
 }
 
 .todo-card-task h3 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin: 0 0 16px 0;
-  font-weight: 600;
   letter-spacing: 0.5px;
   position: relative;
   padding-bottom: 8px;
 }
 
 .todo-card-task h3::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -483,7 +486,7 @@ p {
 }
 
 .details-container-task .p-1 {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.5;
 }
 
@@ -535,7 +538,7 @@ p {
   .task-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .button-group-task {
     justify-content: flex-end;
     margin-top: 12px;
