@@ -424,8 +424,8 @@ app.put("/api/diary/update-timestamp", (req, res) => {
 });
 
 app.post("/api/diary/create", (req, res) => {
-  const { diaryName, username } = req.body;
-
+  const { diaryName, username,member_createdbook,member_lastupdatedbook} = req.body;
+  console.log(req.body)
   // SQL query to check for existing diary with the same username and name
   const checkSql =
     "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
@@ -448,9 +448,9 @@ app.post("/api/diary/create", (req, res) => {
 
     // Proceed with insertion if no duplicate is found
     const insertSql =
-      "INSERT INTO member_diary (diary_namebook, member_createdbook, member_lastupdatedbook, diary_username) VALUES (?, NOW(), NOW(), ?)";
+      "INSERT INTO member_diary (diary_namebook, diary_username, member_createdbook, member_lastupdatedbook) VALUES (?,?, ?, ?)";
 
-    db.query(insertSql, [diaryName, username], (insertErr, insertResult) => {
+    db.query(insertSql, [diaryName, username,member_createdbook,member_lastupdatedbook], (insertErr, insertResult) => {
       if (insertErr) {
         console.error("Error creating diary:", insertErr);
         return res.status(500).json({ message: "Error creating diary" });

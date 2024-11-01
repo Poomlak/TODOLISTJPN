@@ -108,9 +108,13 @@ const Menutodo = () => {
 
     if (listName && username) {
       try {
+        const time_create=formatTime(new Date());
+        const time_update=formatTime(new Date());
         await axios.post("http://localhost:5000/api/diary/create", {
           diaryName: listName,
           username: username,
+          member_createdbook: time_create,
+          member_lastupdatedbook: time_update,
         });
 
         const newItem = {
