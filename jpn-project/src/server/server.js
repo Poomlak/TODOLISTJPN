@@ -698,15 +698,15 @@ app.post("/api/diarylist/add", async (req, res) => {
   }
 
   const sql = `INSERT INTO diary_list (
-      diary_todoTopic, 
-      diary_todo, 
-      diary_color, 
-      diary_reminder, 
-      diary_namebook, 
-      diary_created,
-      diary_textColor,
-      diary_username
-  ) VALUES (?, ?, ?, ?, ?, ? ,? , ?)`;
+    diary_todoTopic, 
+    diary_todo, 
+    diary_color, 
+    diary_reminder, 
+    diary_namebook, 
+    diary_created,
+    diary_textColor,
+    diary_username
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   const values = [
     diary_todoTopic,
@@ -716,14 +716,25 @@ app.post("/api/diarylist/add", async (req, res) => {
     diary_namebook,
     diary_created,
     diary_textColor,
-    diary_username,
+    diary_username, // ค่าทั้งหมด 8 ค่า
   ];
 
-  db.query(sql, values, async (err, result) => {
-    if (err) {
-      console.error("Error adding task:", err);
-      return res.status(500).json({ message: "Failed to add task." });
-    }
+  try {
+    // เพิ่มข้อมูลเข้าไปในฐานข้อมูล
+    const result = await new Promise((resolve, reject) => {
+      db.query(sql, values, (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(result);
+      });
+    });
+
+    // ส่ง response ทันทีหลังจากสร้าง Task เสร็จ
+    res.status(201).json({
+      message: "Task created successfully, and email will be sent!",
+      taskId: result.insertId,
+    });
 
     // ถ้างานถูกสร้างสำเร็จ ลองส่งอีเมลแจ้งเตือน
     const mailOptions = {
@@ -737,22 +748,17 @@ app.post("/api/diarylist/add", async (req, res) => {
       - Created: ${diary_created}`,
     };
 
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log("Email sent successfully!");
-      return res.status(201).json({
-        message: "Task created successfully, and email sent!",
-        taskId: result.insertId,
-      });
-    } catch (mailErr) {
-      console.error("Error sending email:", mailErr);
-      return res.status(500).json({
-        message: "Task created, but failed to send email.",
-        taskId: result.insertId,
-      });
-    }
-  });
+    // ส่งอีเมลใน background
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully!");
+
+  } catch (err) {
+    console.error("Error adding task or sending email:", err);
+    return res.status(500).json({ message: "Failed to add task or send email." });
+  }
 });
+
+
 
 
 app.post("/api/getEmailByUsername", (req, res) => {
