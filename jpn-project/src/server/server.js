@@ -23,7 +23,7 @@ const generateOtp = () => {
 };
 
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "26.11.35.119",
   user: "root",
   password: "root",
   database: "jpn-project",
@@ -427,16 +427,23 @@ app.post("/api/diary/create", (req, res) => {
   const { diaryName, username } = req.body;
 
   // SQL query to check for existing diary with the same username and name
-  const checkSql = "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
+  const checkSql =
+    "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
   db.query(checkSql, [diaryName, username], (checkErr, checkResult) => {
     if (checkErr) {
       console.error("Error checking for duplicate diary:", checkErr);
-      return res.status(500).json({ message: "Error checking for duplicate diary" });
+      return res
+        .status(500)
+        .json({ message: "Error checking for duplicate diary" });
     }
 
     if (checkResult.length > 0) {
       // If a matching diary is found, send an error response
-      return res.status(400).json({ message: "Diary with the same name already exists for this user" });
+      return res
+        .status(400)
+        .json({
+          message: "Diary with the same name already exists for this user",
+        });
     }
 
     // Proceed with insertion if no duplicate is found
@@ -453,7 +460,6 @@ app.post("/api/diary/create", (req, res) => {
   });
 });
 
-
 app.put("/api/diary/update/:oldName", (req, res) => {
   const { newName, username } = req.body;
   const oldName = req.params.oldName;
@@ -463,11 +469,14 @@ app.put("/api/diary/update/:oldName", (req, res) => {
   }
 
   // Check if a diary with the new name already exists for the user
-  const checkSql = "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
+  const checkSql =
+    "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
   db.query(checkSql, [newName, username], (checkErr, checkResult) => {
     if (checkErr) {
       console.error("Error checking for duplicate name:", checkErr);
-      return res.status(500).json({ message: "Error checking for duplicate name" });
+      return res
+        .status(500)
+        .json({ message: "Error checking for duplicate name" });
     }
 
     if (checkResult.length > 0) {
@@ -481,7 +490,9 @@ app.put("/api/diary/update/:oldName", (req, res) => {
     db.query(updateSql, [newName, oldName, username], (updateErr, result) => {
       if (updateErr) {
         console.error("เกิดข้อผิดพลาดในการอัปเดตชื่อ:", updateErr);
-        return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตชื่อ" });
+        return res
+          .status(500)
+          .json({ message: "เกิดข้อผิดพลาดในการอัปเดตชื่อ" });
       }
 
       if (result.affectedRows > 0) {
@@ -492,7 +503,6 @@ app.put("/api/diary/update/:oldName", (req, res) => {
     });
   });
 });
-
 
 app.delete("/api/diary/delete", (req, res) => {
   const { name, username } = req.body;
