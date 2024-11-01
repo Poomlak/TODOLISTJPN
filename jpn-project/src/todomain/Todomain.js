@@ -544,54 +544,66 @@ const Todomain = () => {
             </button>
           </div>
           <div className="scrollable-tasks">
-            {diaryData.map((item, index) => (
-              <div
-                className="todo-card-task"
-                key={`${item.diary_id}-${index}`}
-                style={{ backgroundColor: item.diary_color }}
-              >
-                <h3 style={{ color: item.diary_textColor }}>
-                  {item.diary_todoTopic || "No Diary Todo Found"}
-                </h3>
-                <div className="task-grid">
-                  <div className="details-container-task">
-                    <div className="p-1">
-                      Details: <i>{item.diary_todo}</i>
-                    </div>
-                    <p>
-                      Reminder: <i>{item.diary_reminder}</i>
-                    </p>
-                  </div>
-                  <div></div>
-                  <div className="timestamp-container-task">
-                    <p>
-                      Created: <i>{item.diary_created}</i>
-                    </p>
-                  </div>
-                  <div className="button-group-task">
-                    <button onClick={() => handleUpdateTask(index)}>
-                      Update
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleDeleteTask(
-                          item.diary_id,
-                          item.diary_namebook,
-                          item.diary_todoTopic
-                        )
-                      }
-                    >
-                      Delete
-                    </button>
-                  </div>
+            {diaryData.length === 0 ? (
+              <div className="empty-state">
+                <div
+                  className="empty-icon"
+                  onClick={handleAddTaskWithDateTime}
+                ></div>
+                <h3 className="empty-title">ยังไม่มีสมุดบันทึกในขณะนี้</h3>
+                <p className="empty-subtitle">
+                  เริ่มต้นสร้างสมุดบันทึกใหม่เพื่อจดบันทึกสิ่งที่ต้องทำกันเถอะ!
+                </p>
+                <div className="empty-dots">
+                  <div className="dot"></div>
+                  <div className="dot"></div>
+                  <div className="dot"></div>
                 </div>
               </div>
-            ))}
-            {/* แสดงข้อความนี้เฉพาะเมื่อไม่มีสมุดบันทึก */}
-            {diaryData.length === 0 && (
-              <div className="add-task">
-                Add some first book list Click Red button
-              </div>
+            ) : (
+              diaryData.map((item, index) => (
+                <div
+                  className="todo-card-task"
+                  key={`${item.diary_id}-${index}`}
+                  style={{ backgroundColor: item.diary_color }}
+                >
+                  <h3 style={{ color: item.diary_textColor }}>
+                    {item.diary_todoTopic || "No Diary Todo Found"}
+                  </h3>
+                  <div className="task-grid">
+                    <div className="details-container-task">
+                      <div className="p-1">
+                        Details: <i>{item.diary_todo}</i>
+                      </div>
+                      <p>
+                        Reminder: <i>{item.diary_reminder}</i>
+                      </p>
+                    </div>
+                    <div></div>
+                    <div className="timestamp-container-task">
+                      <p>
+                        Created: <i>{item.diary_created}</i>
+                      </p>
+                    </div>
+                    <div className="button-group-task">
+                      <button onClick={() => handleUpdateTask(index)}>
+                        Update
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDeleteTask(
+                            item.diary_id,
+                            item.diary_namebook,
+                            item.diary_todoTopic
+                          )
+                        }
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         </div>
