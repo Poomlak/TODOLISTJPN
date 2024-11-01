@@ -545,19 +545,19 @@ const Todomain = () => {
           </div>
           <div className="scrollable-tasks">
             {diaryData.length === 0 ? (
-              <div className="empty-state">
+              <div className="empty-statee">
                 <div
-                  className="empty-icon"
+                  className="empty-iconn"
                   onClick={handleAddTaskWithDateTime}
                 ></div>
-                <h3 className="empty-title">ยังไม่มีสมุดบันทึกในขณะนี้</h3>
-                <p className="empty-subtitle">
-                  เริ่มต้นสร้างสมุดบันทึกใหม่เพื่อจดบันทึกสิ่งที่ต้องทำกันเถอะ!
+                <h3 className="empty-titlee">ยังไม่มีรายการบันทึกในขณะนี้</h3>
+                <p className="empty-subtitlee">
+                  เริ่มต้นสร้างรายการบันทึกใหม่เพื่อจดบันทึกสิ่งที่ต้องทำกันเถอะ!
                 </p>
-                <div className="empty-dots">
-                  <div className="dot"></div>
-                  <div className="dot"></div>
-                  <div className="dot"></div>
+                <div className="empty-dotss">
+                  <div className="dott"></div>
+                  <div className="dott"></div>
+                  <div className="dott"></div>
                 </div>
               </div>
             ) : (
