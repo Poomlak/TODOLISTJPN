@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import Navbaraboutus from "../allnavbars/Navbarsaboutus";
@@ -10,7 +10,8 @@ const Resetpass = () => {
     otp: "",
     newPassword: "",
   });
-  const [isOtpSent, setIsOtpSent] = useState(false); // State to track if OTP is sent
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [otpExpiryTime, setOtpExpiryTime] = useState(180); // 3 minutes in seconds
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +30,7 @@ const Resetpass = () => {
         confirmButtonText: "OK",
       });
       setIsOtpSent(true); // Enable OTP input field
+      setOtpExpiryTime(180); // Reset the countdown timer
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -66,6 +68,19 @@ const Resetpass = () => {
     }
   };
 
+  // Timer effect for OTP expiry
+  useEffect(() => {
+    let timer;
+    if (isOtpSent && otpExpiryTime > 0) {
+      timer = setInterval(() => {
+        setOtpExpiryTime((prev) => prev - 1);
+      }, 1000);
+    }
+
+    // Clear interval on cleanup
+    return () => clearInterval(timer);
+  }, [isOtpSent, otpExpiryTime]);
+
   return (
     <>
       <Navbaraboutus />
@@ -91,7 +106,7 @@ const Resetpass = () => {
             </div>
           ) : (
             <div className="reset-password-section">
-              <label>Enter OTP</label>
+              <label>Enter OTP {otpExpiryTime > 0 ? `(${Math.floor(otpExpiryTime / 60)}:${(otpExpiryTime % 60).toString().padStart(2, '0')})` : "(OTP Expired)"}</label>
               <input
                 className="input-otp"
                 type="text"
@@ -115,6 +130,7 @@ const Resetpass = () => {
               <button
                 onClick={handleResetPassword}
                 className="btn-reset-password"
+                disabled={otpExpiryTime <= 0} // Disable button if OTP has expired
               >
                 Reset Password
               </button>
