@@ -6,9 +6,7 @@
   padding: 2.5rem;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 20px;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.05),
-    0 20px 48px rgba(0, 0, 0, 0.05),
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 20px 48px rgba(0, 0, 0, 0.05),
     0 1px 4px rgba(0, 0, 0, 0.1);
   transform-style: preserve-3d;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -17,9 +15,7 @@
 
 .resetpass-container:hover {
   transform: translateY(-5px);
-  box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.1),
-    0 25px 58px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 25px 58px rgba(0, 0, 0, 0.1);
 }
 
 /* Title styles */
@@ -70,7 +66,8 @@ input:focus {
 }
 
 /* Button styles */
-.btn-send-otp, .btn-reset-password {
+.btn-send-otp,
+.btn-reset-password {
   padding: 0.85rem 1.5rem;
   border-radius: 12px;
   font-weight: 600;
@@ -94,17 +91,20 @@ input:focus {
   margin-top: 1.5rem;
 }
 
-.btn-send-otp:hover, .btn-reset-password:hover {
+.btn-send-otp:hover,
+.btn-reset-password:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
-.btn-send-otp:active, .btn-reset-password:active {
+.btn-send-otp:active,
+.btn-reset-password:active {
   transform: translateY(1px);
 }
 
 /* Section styles */
-.send-otp-section, .reset-password-section {
+.send-otp-section,
+.reset-password-section {
   width: 100%;
   animation: sectionSlideUp 0.6s ease-out;
 }
@@ -115,7 +115,8 @@ input:focus {
   align-items: center;
 }
 
-.input-otp, .input-password {
+.input-otp,
+.input-password {
   margin-bottom: 1rem;
 }
 
@@ -154,12 +155,17 @@ input:focus {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Loading state for buttons */
-.btn-send-otp:disabled, .btn-reset-password:disabled {
+.btn-send-otp:disabled,
+.btn-reset-password:disabled {
   background: #94a3b8;
   cursor: not-allowed;
   transform: none;
@@ -167,9 +173,15 @@ input:focus {
 
 /* Success state animations */
 @keyframes successPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .success {
@@ -191,7 +203,12 @@ input:focus {
     width: 100%;
   }
 
-  input, .btn-send-otp, .btn-reset-password {
+  input,
+  .btn-send-otp,
+  .btn-reset-password {
     font-size: 0.9rem;
   }
+}
+h1 {
+  font-family: "Itim", sans-serif;
 }
