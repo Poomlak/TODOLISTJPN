@@ -51,13 +51,14 @@ const Todomain = () => {
   };
 
   const fetchDiary = async () => {
+    const username = localStorage.getItem("username"); // ดึง username จาก localStorage
     try {
       // ตรวจสอบว่า diaryName มีค่าหรือไม่
-      if (diaryName) {
+      if (diaryName && username) { // ตรวจสอบว่า username มีค่าด้วย
         const response = await axios.get(
-          `http://localhost:5000/api/diary?diaryName=${diaryName}`
+          `http://localhost:5000/api/diary?diaryName=${diaryName}&username=${username}`
         );
-
+  
         // ตรวจสอบว่ามีข้อมูลใน response หรือไม่
         if (response.data && response.data.length > 0) {
           setDiary(response.data);
@@ -66,8 +67,8 @@ const Todomain = () => {
           setError("ไม่พบข้อมูลสมุดบันทึก"); // ตั้งค่าข้อความเมื่อไม่มีข้อมูล
         }
       } else {
-        console.error("diaryName is undefined");
-        setError("ชื่อสมุดบันทึกไม่ถูกต้อง");
+        console.error("diaryName or username is undefined");
+        setError("ชื่อสมุดบันทึกหรือชื่อผู้ใช้ไม่ถูกต้อง");
       }
     } catch (error) {
       console.error("Error fetching diary:", error);
@@ -76,6 +77,7 @@ const Todomain = () => {
       setLoading(false); // เปลี่ยนสถานะการโหลด
     }
   };
+  
 
   useEffect(() => {
     const fetchData = async () => {
