@@ -455,30 +455,44 @@ app.post("/api/diary/create", (req, res) => {
 
 
 app.put("/api/diary/update/:oldName", (req, res) => {
-  const { newName, username } = req.body; // ดึงชื่อใหม่และ username จาก request body
-  const oldName = req.params.oldName; // ดึงชื่อสมุดเดิมจาก params
+  const { newName, username } = req.body;
+  const oldName = req.params.oldName;
 
-  // ตรวจสอบว่ามีการส่งทั้งชื่อใหม่และ username มาหรือไม่
   if (!newName || !username) {
     return res.status(400).json({ message: "กรุณาส่งชื่อใหม่และชื่อผู้ใช้" });
   }
 
-  const sql =
-    "UPDATE `member_diary` SET `diary_namebook` = ? WHERE `diary_namebook` = ? AND `diary_username` = ?";
-
-  db.query(sql, [newName, oldName, username], (err, result) => {
-    if (err) {
-      console.error("เกิดข้อผิดพลาดในการอัปเดตชื่อ:", err);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตชื่อ" });
+  // Check if a diary with the new name already exists for the user
+  const checkSql = "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
+  db.query(checkSql, [newName, username], (checkErr, checkResult) => {
+    if (checkErr) {
+      console.error("Error checking for duplicate name:", checkErr);
+      return res.status(500).json({ message: "Error checking for duplicate name" });
     }
 
-    if (result.affectedRows > 0) {
-      res.json({ message: "อัปเดตชื่อเรียบร้อยแล้ว" });
-    } else {
-      res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+    if (checkResult.length > 0) {
+      // If a diary with the new name already exists, return an error
+      return res.status(400).json({ message: "ชื่อสมุดรายการนี้มีอยู่แล้ว" });
     }
+
+    // Proceed with update if no duplicate is found
+    const updateSql =
+      "UPDATE `member_diary` SET `diary_namebook` = ? WHERE `diary_namebook` = ? AND `diary_username` = ?";
+    db.query(updateSql, [newName, oldName, username], (updateErr, result) => {
+      if (updateErr) {
+        console.error("เกิดข้อผิดพลาดในการอัปเดตชื่อ:", updateErr);
+        return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตชื่อ" });
+      }
+
+      if (result.affectedRows > 0) {
+        res.json({ message: "อัปเดตชื่อเรียบร้อยแล้ว" });
+      } else {
+        res.status(404).json({ message: "ไม่พบข้อมูลที่ต้องการอัปเดต" });
+      }
+    });
   });
 });
+
 
 app.delete("/api/diary/delete", (req, res) => {
   const { name, username } = req.body;
