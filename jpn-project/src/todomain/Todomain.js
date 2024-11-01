@@ -139,6 +139,35 @@ const Todomain = () => {
     });
   };
 
+  const handleApply = async () => {
+    const diaryNamebook = diaryName; // เปลี่ยนเป็น username ที่คุณต้องการ
+    const username = localStorage.getItem("username");
+
+    try {
+      const response = await axios.put(
+        "http://localhost:5000/api/diary/update-timestamp",
+        {
+          data: {
+            diary_namebook: diaryNamebook,
+            diary_username: username,
+          },
+        }
+      );
+      console.log("testtt", response.data.member_lastupdatedbook);
+      if (response.data) {
+        setUser((prevState) => ({
+          ...prevState,
+          member_lastupdatedbook: response.data.member_lastupdatedbook,
+        }));
+      }
+    } catch (error) {
+      console.error(
+        "Error updating timestamp:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
   // ฟังก์ชันเพื่ออัปเดต last updated timestamp
   const handleUpdateTimestamp = async () => {
     try {
@@ -157,113 +186,6 @@ const Todomain = () => {
       console.error("Error updating timestamp:", error);
     }
   };
-
-  // const handleSelectDateTime = async () => {
-  //   const { value: dateTime } = await Swal.fire({
-  //     title: "Select Date and Time",
-  //     html: `
-  //       <input type="date" id="date-input" class="swal2-input" />
-  //       <input type="time" id="time-input" class="swal2-input" />
-  //     `,
-  //     confirmButtonText: "Confirm",
-  //     cancelButtonText: "Cancel",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#4CAF50",
-  //     cancelButtonColor: "#f44336",
-  //     preConfirm: () => {
-  //       const date = document.getElementById("date-input").value;
-  //       const time = document.getElementById("time-input").value;
-  //       if (!date || !time) {
-  //         Swal.showValidationMessage("Please select both date and time!");
-  //       }
-  //       return `${date} ${time}`; // รวมวันที่และเวลา
-  //     },
-  //   });
-
-  //   if (dateTime) {
-  //     setSelectedDateTime(dateTime); // เก็บวันที่และเวลาที่เลือก
-  //     Swal.fire(`You selected: ${dateTime}`);
-  //   }
-  // };
-
-  // const handleAddTask = async () => {
-  //   if (!selectedDateTime) {
-  //     Swal.fire("Please select date and time first!"); // แจ้งเตือนหากยังไม่เลือกวันที่และเวลา
-  //     return;
-  //   }
-
-  //   const { value: title } = await Swal.fire({
-  //     title: "Enter Task Title",
-  //     input: "text",
-  //     inputPlaceholder: "Enter task title here...",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Next",
-  //     cancelButtonText: "Cancel",
-  //     preConfirm: (inputValue) => {
-  //       if (!inputValue) {
-  //         Swal.showValidationMessage("Please enter a title!");
-  //       }
-  //       return inputValue;
-  //     },
-  //   });
-
-  //   if (title) {
-  //     const { value: detail } = await Swal.fire({
-  //       title: "Enter Task Details",
-  //       input: "text",
-  //       inputPlaceholder: "Enter task details here...",
-  //       showCancelButton: true,
-  //       confirmButtonText: "Add Task",
-  //       cancelButtonText: "Cancel",
-  //       preConfirm: (inputValue) => {
-  //         if (!inputValue) {
-  //           Swal.showValidationMessage("Please enter task details!");
-  //         }
-  //         return inputValue;
-  //       },
-  //     });
-
-  //     if (detail) {
-  //       const { value: color } = await Swal.fire({
-  //         title: "Select Task Importance Color",
-  //         html: `
-  //           <div style="text-align: center;">
-  //             <label for="color-input" style="display: block; margin-bottom: 10px;">Please pick a color:</label>
-  //             <input type="color" id="color-input" style="width: 50%; height: 50px; border: none; cursor: pointer;"/>
-  //             <p style="margin-top: 10px; color: grey;">This color will be used to represent task importance.</p>
-  //           </div>
-  //         `,
-  //         confirmButtonText: "Confirm",
-  //         cancelButtonText: "Cancel",
-  //         showCancelButton: true,
-  //         preConfirm: () => {
-  //           const colorValue = document.getElementById("color-input").value;
-  //           if (!colorValue) {
-  //             Swal.showValidationMessage("Please select a color!");
-  //           }
-  //           return colorValue;
-  //         },
-  //       });
-
-  //       if (color) {
-  //         const createdTime = new Date().toLocaleString(); // รับวันที่และเวลาปัจจุบัน
-  //         const newTask = {
-  //           title: title, // เพิ่มชื่อ task
-  //           details: detail, // เพิ่มรายละเอียดของ task
-  //           color: color, // เพิ่มสีที่เลือก
-  //           created: createdTime, // ใช้เวลาที่สร้าง
-  //           updated: selectedDateTime, // ใช้วันที่และเวลาที่เลือก
-  //         };
-  //         setTasks([...tasks, newTask]); // เพิ่ม Task ใหม่เข้าไปใน state
-  //         Swal.fire(
-  //           "Task Added!",
-  //           `Your task: "${title}" has been added!`,
-  //           "success"
-  //         );
-  //       }
-  //     }
-  //   }
-  // };
 
   const handleUpdateTask = async (index) => {
     const taskToUpdate = diaryData[index]; // ใช้ diaryData เพื่อดึงข้อมูล Task
@@ -345,7 +267,7 @@ const Todomain = () => {
           const updatedDiaryData = [...diaryData];
           updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
           setDiary(updatedDiaryData); // อัพเดต state
-
+          handleApply();
           Swal.fire("Task Updated!", "Your task has been updated!", "success");
         } else {
           // ถ้าสถานะไม่เป็น 200 ให้แสดงข้อผิดพลาด
@@ -359,11 +281,12 @@ const Todomain = () => {
         const updatedDiaryData = [...diaryData];
         updatedDiaryData[index] = updatedTask; // แทนที่ Task ที่ตำแหน่งที่กำหนด
         setDiary(updatedDiaryData); // อัพเดต state
-        handleApply();
+
         console.error(
           "Error updating task:",
           error.response ? error.response.data : error.message
         );
+
         Swal.fire("Task Updated!", "Your task has been updated!", "success");
       }
     }
@@ -404,6 +327,7 @@ const Todomain = () => {
           setDiary(updatedDiaryData); // Update the state with the new array
           if (response.status === 200) {
             // Reload the page after successful deletion
+            handleApply();
             Swal.fire("Deleted!", "Your task has been deleted.", "success");
           }
         } catch (error) {
@@ -415,37 +339,6 @@ const Todomain = () => {
         }
       }
     });
-  };
-
-  const handleApply = async () => {
-    const diaryNamebook = diaryName; // เปลี่ยนเป็น username ที่คุณต้องการ
-    const username = localStorage.getItem("username");
-
-    try {
-      const response = await axios.put(
-        "http://localhost:5000/api/diary/update-timestamp",
-        {
-          data: {
-            diary_namebook: diaryNamebook,
-            diary_username: username,
-          },
-        }
-      );
-      console.log("testtt", response.data.member_lastupdatedbook);
-      if (response.data) {
-        setUser((prevState) => ({
-          ...prevState,
-          member_lastupdatedbook: response.data.member_lastupdatedbook,
-        }));
-        Swal.fire("Success!", "Timestamp has been updated!", "success");
-      }
-    } catch (error) {
-      console.error(
-        "Error updating timestamp:",
-        error.response ? error.response.data : error.message
-      );
-      Swal.fire("Error!", "Failed to update timestamp!", "error");
-    }
   };
 
   const addNewDiary = (newDiary) => {
@@ -596,6 +489,7 @@ const Todomain = () => {
               `Your task: "${title}" has been added!`,
               "success"
             ).then(() => {
+              handleApply();
               window.location.reload();
             });
           }
