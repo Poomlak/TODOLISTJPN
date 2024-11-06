@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import jpnLogo from "../navbars/jpn_logo.png";
 import "./Signup.css";
 import axios from "axios";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import Navbarsignup from "../allnavbars/Navbarsignup";
 
 const Signup = () => {
@@ -36,8 +36,11 @@ const Signup = () => {
     }
 
     // ตรวจสอบ Firstname และ Lastname (ห้ามมีตัวเลข)
-    const namePattern = /^[A-Za-z]+$/;
-    if (!namePattern.test(formData.fname) || !namePattern.test(formData.lname)) {
+    const namePattern = /^[A-Za-zก-๙\s]+$/;
+    if (
+      !namePattern.test(formData.fname) ||
+      !namePattern.test(formData.lname)
+    ) {
       Swal.fire({
         icon: "error",
         title: "Invalid Name",
@@ -70,11 +73,14 @@ const Signup = () => {
 
     try {
       // ตรวจสอบว่า username, email, tel เคยมีในระบบหรือไม่
-      const checkResponse = await axios.post("http://localhost:5000/checkUser", {
-        username: formData.username,
-        email: formData.email,
-        tel: formData.tel,
-      });
+      const checkResponse = await axios.post(
+        "http://localhost:5000/checkUser",
+        {
+          username: formData.username,
+          email: formData.email,
+          tel: formData.tel,
+        }
+      );
 
       if (checkResponse.data.exists) {
         Swal.fire({
@@ -85,15 +91,18 @@ const Signup = () => {
         return;
       }
 
-      const registerResponse = await axios.post("http://localhost:5000/signup", {
-        fname: formData.fname,
-        lname: formData.lname,
-        birthday: formData.birthday,
-        email: formData.email,
-        tel: formData.tel,
-        username: formData.username,
-        password: formData.password,
-      });
+      const registerResponse = await axios.post(
+        "http://localhost:5000/signup",
+        {
+          fname: formData.fname,
+          lname: formData.lname,
+          birthday: formData.birthday,
+          email: formData.email,
+          tel: formData.tel,
+          username: formData.username,
+          password: formData.password,
+        }
+      );
 
       Swal.fire({
         icon: "success",
@@ -131,7 +140,6 @@ const Signup = () => {
       });
     }
   };
-
 
   return (
     <>
