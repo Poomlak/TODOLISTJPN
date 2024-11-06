@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 //const ของ reset password นะอิอิ
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-//  https://myaccount.google.com/apppasswords
+//  https://myaccount.google.com/apppassword
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -424,8 +424,9 @@ app.put("/api/diary/update-timestamp", (req, res) => {
 });
 
 app.post("/api/diary/create", (req, res) => {
-  const { diaryName, username,member_createdbook,member_lastupdatedbook} = req.body;
-  console.log(req.body)
+  const { diaryName, username, member_createdbook, member_lastupdatedbook } =
+    req.body;
+  console.log(req.body);
   // SQL query to check for existing diary with the same username and name
   const checkSql =
     "SELECT * FROM member_diary WHERE diary_namebook = ? AND diary_username = ?";
@@ -439,24 +440,26 @@ app.post("/api/diary/create", (req, res) => {
 
     if (checkResult.length > 0) {
       // If a matching diary is found, send an error response
-      return res
-        .status(400)
-        .json({
-          message: "Diary with the same name already exists for this user",
-        });
+      return res.status(400).json({
+        message: "Diary with the same name already exists for this user",
+      });
     }
 
     // Proceed with insertion if no duplicate is found
     const insertSql =
       "INSERT INTO member_diary (diary_namebook, diary_username, member_createdbook, member_lastupdatedbook) VALUES (?,?, ?, ?)";
 
-    db.query(insertSql, [diaryName, username,member_createdbook,member_lastupdatedbook], (insertErr, insertResult) => {
-      if (insertErr) {
-        console.error("Error creating diary:", insertErr);
-        return res.status(500).json({ message: "Error creating diary" });
+    db.query(
+      insertSql,
+      [diaryName, username, member_createdbook, member_lastupdatedbook],
+      (insertErr, insertResult) => {
+        if (insertErr) {
+          console.error("Error creating diary:", insertErr);
+          return res.status(500).json({ message: "Error creating diary" });
+        }
+        res.status(201).json({ message: "Diary created successfully!" });
       }
-      res.status(201).json({ message: "Diary created successfully!" });
-    });
+    );
   });
 });
 
@@ -510,7 +513,8 @@ app.delete("/api/diary/delete", (req, res) => {
   // สร้าง query สำหรับลบจาก member_diary และ diary_list
   const sql1 =
     "DELETE FROM `member_diary` WHERE `diary_namebook` = ? AND `diary_username` = ?";
-  const sql2 = "DELETE FROM `diary_list` WHERE `diary_namebook` = ?";
+  const sql2 =
+    "DELETE FROM `diary_list` WHERE `diary_namebook` = ? AND `diary_username` = ?";
 
   // เริ่มต้น transaction
   db.beginTransaction((err) => {
@@ -527,7 +531,7 @@ app.delete("/api/diary/delete", (req, res) => {
       }
 
       // ลบจาก diary_list
-      db.query(sql2, [name], (err, result2) => {
+      db.query(sql2, [name, username], (err, result2) => {
         if (err) {
           return db.rollback(() => {
             res.status(500).json({ message: "Error deleting from diary_list" });
@@ -553,7 +557,7 @@ app.delete("/api/diary/delete", (req, res) => {
 app.get("/api/diary", (req, res) => {
   const diaryName = req.query.diaryName; // ดึง diaryName จาก query
   const username = req.query.username; // ดึง username จาก query
-  console.log( diaryName,username);
+  console.log(diaryName, username);
 
   // ตรวจสอบว่า username มีค่าหรือไม่
   if (!username) {
@@ -577,7 +581,6 @@ app.get("/api/diary", (req, res) => {
     }
   );
 });
-
 
 app.get("/api/diary/:username", (req, res) => {
   const { token } = req.body; // ดึง token จาก request body
@@ -751,15 +754,13 @@ app.post("/api/diarylist/add", async (req, res) => {
     // ส่งอีเมลใน background
     await transporter.sendMail(mailOptions);
     console.log("Email sent successfully!");
-
   } catch (err) {
     console.error("Error adding task or sending email:", err);
-    return res.status(500).json({ message: "Failed to add task or send email." });
+    return res
+      .status(500)
+      .json({ message: "Failed to add task or send email." });
   }
 });
-
-
-
 
 app.post("/api/getEmailByUsername", (req, res) => {
   const { member_username } = req.body;
